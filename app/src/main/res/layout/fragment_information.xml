@@ -8,5 +8,41 @@
 
     <!-- TODO: Update blank fragment layout -->
 
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+
+
+        <Button
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textSize="30sp"
+            android:text="שכר מינימום"
+            android:layout_margin="5dp"
+            android:background="@drawable/rounded_button"
+            android:id="@+id/btnMinSalary"/>
+
+        <Button
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textSize="30sp"
+            android:text="דמי נסיעות"
+            android:layout_margin="5dp"
+            android:background="@drawable/rounded_button"
+            android:id="@+id/btnTravelExpenses"/>
+
+        <Button
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textSize="30sp"
+            android:text="שעות נוספות"
+            android:layout_margin="5dp"
+            android:background="@drawable/rounded_button"
+            android:id="@+id/btnOvertime"/>
+
+
+
+    </LinearLayout>
 
 </FrameLayout>

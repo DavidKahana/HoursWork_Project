@@ -48,7 +48,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         if (v == btnEntrance){
             getSupportFragmentManager().beginTransaction().replace(R.id.container , entrance).commit();
         }
-
         else if (v == btnHoursReport){
             getSupportFragmentManager().beginTransaction().replace(R.id.container , hoursReport).commit();
         }
