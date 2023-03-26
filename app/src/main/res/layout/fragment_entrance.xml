@@ -16,12 +16,18 @@
         <Button
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:id="@+id/btnDateAndTime"
+            android:id="@+id/btnDate"
             android:textSize="30sp"
             android:layout_margin="30dp"
-            android:text="select date and time!"/>
+            android:text="select date!"/>
 
-
+        <Button
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/btnTime"
+            android:textSize="30sp"
+            android:layout_margin="30dp"
+            android:text="select time!"/>
         <Button
             android:layout_width="match_parent"
             android:layout_height="wrap_content"

@@ -28,9 +28,8 @@ import java.util.logging.Handler;
  */
 public class Entrance extends Fragment {
 
-    private Button btnStartStop , btnDate;
-    private TextView mTextView;
-    private Calendar mCalendar;
+    Button btnStartStop , btnDate , btnTime;
+    TextView tvTime;
 
 
     // TODO: Rename parameter arguments, choose names that match
@@ -79,57 +78,74 @@ public class Entrance extends Fragment {
         View view = inflater.inflate(R.layout.fragment_entrance, container, false);
 
         btnStartStop = view.findViewById(R.id.btnStartStop);
-        btnDate = view.findViewById(R.id.btnDateAndTime);
-        mTextView = view.findViewById(R.id.tvTime);
-        mCalendar = Calendar.getInstance();
+        btnDate = view.findViewById(R.id.btnDate);
+        btnTime = view.findViewById(R.id.btnTime);
+        tvTime = view.findViewById(R.id.tvTime);
 
         btnDate.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                final Calendar currentDate = Calendar.getInstance();
-                int year = currentDate.get(Calendar.YEAR);
-                int month = currentDate.get(Calendar.MONTH);
-                int day = currentDate.get(Calendar.DAY_OF_MONTH);
-                int hour = currentDate.get(Calendar.HOUR_OF_DAY);
-                int minute = currentDate.get(Calendar.MINUTE);
 
-                DatePickerDialog datePicker = new DatePickerDialog(getActivity(),
-                        new DatePickerDialog.OnDateSetListener() {
-                            @Override
-                            public void onDateSet(DatePicker view, int year, int monthOfYear, int dayOfMonth) {
-                                mCalendar.set(Calendar.YEAR, year);
-                                mCalendar.set(Calendar.MONTH, monthOfYear);
-                                mCalendar.set(Calendar.DAY_OF_MONTH, dayOfMonth);
+                if(v==btnDate)
+                {
+                    Calendar systemCalender = Calendar.getInstance();
+                    int year = systemCalender.get(Calendar.YEAR);
+                    int month = systemCalender.get(Calendar.MONTH);
+                    int day = systemCalender.get(Calendar.DAY_OF_MONTH);
+                    DatePickerDialog datePickerDialog = new DatePickerDialog(view.getContext(),new SetDate(),year,month,day);
+                    datePickerDialog.show();
 
-                                TimePickerDialog timePicker = new TimePickerDialog(getActivity(),
-                                        new TimePickerDialog.OnTimeSetListener() {
-                                            @Override
-                                            public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
-                                                mCalendar.set(Calendar.HOUR_OF_DAY, hourOfDay);
-                                                mCalendar.set(Calendar.MINUTE, minute);
 
-                                                long differenceInMillis = Calendar.getInstance().getTimeInMillis() - mCalendar.getTimeInMillis();
-                                                String timePassed = String.format("%02d:%02d:%02d", TimeUnit.MILLISECONDS.toHours(differenceInMillis),
-                                                        TimeUnit.MILLISECONDS.toMinutes(differenceInMillis) - TimeUnit.HOURS.toMinutes(TimeUnit.MILLISECONDS.toHours(differenceInMillis)),
-                                                        TimeUnit.MILLISECONDS.toSeconds(differenceInMillis) - TimeUnit.MINUTES.toSeconds(TimeUnit.MILLISECONDS.toMinutes(differenceInMillis)));
-                                                mTextView.setText("Time passed: " + timePassed);
-                                            }
-                                        },
-                                        hour,
-                                        minute,
-                                        android.text.format.DateFormat.is24HourFormat(getActivity()));
 
-                                timePicker.show();
-                            }
-                        },
-                        year,
-                        month,
-                        day);
+                }
+            }
+        });
 
-                datePicker.show();
+        btnTime.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                if(v==btnTime)
+                {
+                    Calendar systemCalendar = Calendar.getInstance();
+                    int hour = systemCalendar.get(Calendar.HOUR_OF_DAY);
+                    int minute = systemCalendar.get(Calendar.MINUTE);
+                    TimePickerDialog timePickerDialog = new TimePickerDialog(view.getContext(),new SetYourTime(),hour,minute,true);
+                    timePickerDialog.show();;
+
+
+                }
             }
         });
 
         return view;
     }
+
+    public  class SetDate implements DatePickerDialog.OnDateSetListener
+    {
+
+        @Override
+        public void onDateSet(DatePicker view, int year, int monthOfYear, int dayOfMonth) {
+            monthOfYear = monthOfYear +1;
+
+            String str = "You selected :" + dayOfMonth + "/" + monthOfYear +"/" + year;
+            Toast.makeText(view.getContext(),str,Toast.LENGTH_LONG).show();
+            btnDate.setText(str);
+
+        }
+    }
+
+    public class  SetYourTime implements TimePickerDialog.OnTimeSetListener
+    {
+
+        @Override
+        public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
+
+            String str = "Time is :" + hourOfDay +":" + minute;
+            Toast.makeText(view.getContext(),str,Toast.LENGTH_LONG).show();
+            btnTime.setText(str);
+
+        }
+    }
 }
+
