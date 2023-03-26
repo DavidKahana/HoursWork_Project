@@ -9,12 +9,17 @@ import android.widget.TextView;
 
 import androidx.fragment.app.Fragment;
 
+import java.util.Arrays;
+
 /**
  * A simple {@link Fragment} subclass.
  * Use the {@link Information#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class Information extends Fragment  {
+public class Information extends Fragment implements View.OnClickListener {
+
+    Button btnMinSalary , btnTravelExpenses , btnOvertime;
+    TextView tvDisplay;
 
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -68,15 +73,50 @@ public class Information extends Fragment  {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_information, container, false);
 
-        Button btnMinSalary = view.findViewById(R.id.btnInformation);
-        Button btnTravelExpenses = view.findViewById(R.id.btnTravelExpenses);
-        Button btnOvertime = view.findViewById(R.id.btnOvertime);
-
-        TextView tvDisplay = view.findViewById(R.id.tvDisdlay);
+        tvDisplay = view.findViewById(R.id.tvDisdlay);
 
 
+        btnMinSalary = view.findViewById(R.id.btnInformation);
+        btnTravelExpenses = view.findViewById(R.id.btnTravelExpenses);
+        btnOvertime = view.findViewById(R.id.btnOvertime);
+
+        if (btnMinSalary != null) {
+            btnMinSalary.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    if (v == btnMinSalary){
+                        tvDisplay.setText("שכר מינימום");
+                    }
+                }
+            });
+        }
+        if (btnTravelExpenses != null) {
+            btnTravelExpenses.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    if (v == btnTravelExpenses){
+                        tvDisplay.setText("דמי נסיעות");
+                    }
+                }
+            });
+        }
+        if (btnOvertime != null) {
+            btnOvertime.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    if (v == btnOvertime){
+                        tvDisplay.setText("שעות נוספות");
+                    }
+                }
+            });
+        }
         return view;
     }
 
+    @Override
+    public void onClick(View v) {
 
+
+
+    }
 }
