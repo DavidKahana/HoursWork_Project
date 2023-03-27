@@ -17,6 +17,7 @@ import androidx.fragment.app.Fragment;
 
 import java.text.DateFormat;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.Locale;
 import java.util.concurrent.TimeUnit;
 import java.util.logging.Handler;
@@ -30,6 +31,7 @@ public class Entrance extends Fragment {
 
     Button btnStartStop , btnDate , btnTime;
     TextView tvTime;
+    Date dateAndTime;
 
 
     // TODO: Rename parameter arguments, choose names that match
@@ -95,6 +97,11 @@ public class Entrance extends Fragment {
                     DatePickerDialog datePickerDialog = new DatePickerDialog(view.getContext(),new SetDate(),year,month,day);
                     datePickerDialog.show();
 
+                    systemCalender.set(Calendar.YEAR, year);
+                    systemCalender.set(Calendar.MONTH, month);
+                    systemCalender.set(Calendar.DAY_OF_MONTH, day);
+
+                    dateAndTime = systemCalender.getTime();
 
 
                 }
@@ -113,7 +120,33 @@ public class Entrance extends Fragment {
                     TimePickerDialog timePickerDialog = new TimePickerDialog(view.getContext(),new SetYourTime(),hour,minute,true);
                     timePickerDialog.show();;
 
+                    systemCalendar.set(Calendar.HOUR_OF_DAY, hour);
+                    systemCalendar.set(Calendar.MINUTE, minute);
 
+                    dateAndTime = systemCalendar.getTime();
+
+                }
+            }
+        });
+
+        btnStartStop.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                int count = 0;
+                if(v==btnStartStop)
+                {
+
+                    if (btnStartStop.getText().equals("start") && dateAndTime != null){
+                        btnDate.setText("select date!");
+                        btnTime.setText("select time!");
+                        btnStartStop.setText("stop");
+                    }
+                    else if (btnStartStop.getText().equals("stop") && dateAndTime != null){
+                        btnDate.setText("select date!");
+                        btnTime.setText("select time!");
+                        btnStartStop.setText("start");
+                    }
                 }
             }
         });
@@ -141,11 +174,30 @@ public class Entrance extends Fragment {
         @Override
         public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
 
-            String str = "Time is :" + hourOfDay +":" + minute;
+            String str = fixStr(hourOfDay,minute);
             Toast.makeText(view.getContext(),str,Toast.LENGTH_LONG).show();
             btnTime.setText(str);
 
         }
+    }
+
+    public String fixStr ( int hourOfDay, int minute){
+        String str = "";
+
+        if (hourOfDay < 10 && minute < 10){
+            str = "Time is :" + "0"  + hourOfDay +":" + "0" + minute;
+        }
+        else if (hourOfDay < 10 && minute >= 10){
+            str = "Time is :" +"0" + hourOfDay +":" + minute;
+        }
+        else if (hourOfDay >= 10 && minute < 10){
+            str = "Time is :" + hourOfDay +":" + "0" + minute;
+        }
+        else{
+            str = "Time is :" + hourOfDay +":" + minute;
+        }
+
+        return str;
     }
 }
 
