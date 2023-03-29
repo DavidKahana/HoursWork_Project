@@ -2,8 +2,11 @@ package com.example.hourswork_project;
 
 import android.app.DatePickerDialog;
 import android.app.TimePickerDialog;
+import android.content.Context;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.CountDownTimer;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -15,7 +18,11 @@ import android.widget.Toast;
 
 import androidx.fragment.app.Fragment;
 
+import java.sql.Time;
 import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.Locale;
@@ -29,9 +36,15 @@ import java.util.logging.Handler;
  */
 public class Entrance extends Fragment {
 
-    Button btnStartStop , btnDate , btnTime;
-    TextView tvTime;
+    Button btnStartStop, btnDateAndTime;
+    TextView tvTimeEnter;
     Date dateAndTime;
+    SharedPreferences sharedPreferences;
+    private SimpleDateFormat dateFormat;
+    private String date;
+
+    private DatePickerDialog datePickerDialog;
+    private TimePickerDialog timePickerDialog;
 
 
     // TODO: Rename parameter arguments, choose names that match
@@ -80,52 +93,19 @@ public class Entrance extends Fragment {
         View view = inflater.inflate(R.layout.fragment_entrance, container, false);
 
         btnStartStop = view.findViewById(R.id.btnStartStop);
-        btnDate = view.findViewById(R.id.btnDate);
-        btnTime = view.findViewById(R.id.btnTime);
-        tvTime = view.findViewById(R.id.tvTime);
+        tvTimeEnter = view.findViewById(R.id.tvTimeEnter);
+        sharedPreferences = getContext().getSharedPreferences("Dates", 0);
 
-        btnDate.setOnClickListener(new View.OnClickListener() {
+
+        btnDateAndTime = view.findViewById(R.id.btnDate);
+        btnDateAndTime.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
 
-                if(v==btnDate)
-                {
-                    Calendar systemCalender = Calendar.getInstance();
-                    int year = systemCalender.get(Calendar.YEAR);
-                    int month = systemCalender.get(Calendar.MONTH);
-                    int day = systemCalender.get(Calendar.DAY_OF_MONTH);
-                    DatePickerDialog datePickerDialog = new DatePickerDialog(view.getContext(),new SetDate(),year,month,day);
-                    datePickerDialog.show();
-
-                    systemCalender.set(Calendar.YEAR, year);
-                    systemCalender.set(Calendar.MONTH, month);
-                    systemCalender.set(Calendar.DAY_OF_MONTH, day);
-
-                    dateAndTime = systemCalender.getTime();
+                Log.d("ron" , "1: " + dateAndTime);
+                showDateTimeDialog();
 
 
-                }
-            }
-        });
-
-        btnTime.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-
-                if(v==btnTime)
-                {
-                    Calendar systemCalendar = Calendar.getInstance();
-                    int hour = systemCalendar.get(Calendar.HOUR_OF_DAY);
-                    int minute = systemCalendar.get(Calendar.MINUTE);
-                    TimePickerDialog timePickerDialog = new TimePickerDialog(view.getContext(),new SetYourTime(),hour,minute,true);
-                    timePickerDialog.show();;
-
-                    systemCalendar.set(Calendar.HOUR_OF_DAY, hour);
-                    systemCalendar.set(Calendar.MINUTE, minute);
-
-                    dateAndTime = systemCalendar.getTime();
-
-                }
             }
         });
 
@@ -133,71 +113,86 @@ public class Entrance extends Fragment {
             @Override
             public void onClick(View v) {
 
-                int count = 0;
                 if(v==btnStartStop)
                 {
 
-                    if (btnStartStop.getText().equals("start") && dateAndTime != null){
-                        btnDate.setText("select date!");
-                        btnTime.setText("select time!");
+                    Log.d("ron" , "2: " + dateAndTime);
+
+                    if (btnStartStop.getText().equals("start") ){
+
+                        long l = sharedPreferences.getLong("enter" , 0);
+                        dateAndTime = new Date(l);
+                        dateFormat = new SimpleDateFormat("MM-dd-yyyy HH:mm:ss" );
+                        date = dateFormat.format(dateAndTime);
+                        tvTimeEnter.setText(date);
+
+                        btnDateAndTime.setText("select date!");
                         btnStartStop.setText("stop");
                     }
-                    else if (btnStartStop.getText().equals("stop") && dateAndTime != null){
-                        btnDate.setText("select date!");
-                        btnTime.setText("select time!");
+                    else if (btnStartStop.getText().equals("stop")){
+
+                        btnDateAndTime.setText("select time!");
                         btnStartStop.setText("start");
                     }
                 }
             }
         });
-
         return view;
-    }
+}
 
-    public  class SetDate implements DatePickerDialog.OnDateSetListener
-    {
+    private void showDateTimeDialog() {
+        // Create a Calendar instance to get the current date and time
+        Calendar calendar = Calendar.getInstance();
 
-        @Override
-        public void onDateSet(DatePicker view, int year, int monthOfYear, int dayOfMonth) {
-            monthOfYear = monthOfYear +1;
+        // Create the DatePickerDialog with the current date
+        datePickerDialog = new DatePickerDialog(getActivity(),
+                new DatePickerDialog.OnDateSetListener() {
+                    @Override
+                    public void onDateSet(DatePicker view, int year, int monthOfYear, int dayOfMonth) {
+                        // Set the selected date to the calendar instance
+                        calendar.set(Calendar.YEAR, year);
+                        calendar.set(Calendar.MONTH, monthOfYear);
+                        calendar.set(Calendar.DAY_OF_MONTH, dayOfMonth);
 
-            String str = "You selected :" + dayOfMonth + "/" + monthOfYear +"/" + year;
-            Toast.makeText(view.getContext(),str,Toast.LENGTH_LONG).show();
-            btnDate.setText(str);
+                        // Create the TimePickerDialog with the current time
+                        timePickerDialog = new TimePickerDialog(getActivity(),
+                                new TimePickerDialog.OnTimeSetListener() {
+                                    @Override
+                                    public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
+                                        // Set the selected time to the calendar instance
+                                        calendar.set(Calendar.HOUR_OF_DAY, hourOfDay);
+                                        calendar.set(Calendar.MINUTE, minute);
 
-        }
-    }
 
-    public class  SetYourTime implements TimePickerDialog.OnTimeSetListener
-    {
+                                        // Check if the device is set to 24-hour time format
+                                        boolean is24HourFormat = DateTimeFormatter.ofPattern("H").format(LocalDateTime.now()) == "H";
 
-        @Override
-        public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
+                                        // Update your UI with the selected date and time
+                                        // Example: updateTextView(calendar.getTime(), is24HourFormat);
+                                    }
+                                },
+                                calendar.get(Calendar.HOUR_OF_DAY),
+                                calendar.get(Calendar.MINUTE),
+                                DateTimeFormatter.ofPattern("H").format(LocalDateTime.now()) == "H"
+                        );
 
-            String str = fixStr(hourOfDay,minute);
-            Toast.makeText(view.getContext(),str,Toast.LENGTH_LONG).show();
-            btnTime.setText(str);
+                        // Show the TimePickerDialog
+                        timePickerDialog.show();
+                    }
+                },
+                calendar.get(Calendar.YEAR),
+                calendar.get(Calendar.MONTH),
+                calendar.get(Calendar.DAY_OF_MONTH)
+        );
 
-        }
-    }
+        // Show the DatePickerDialog
+        datePickerDialog.show();
+        dateAndTime = calendar.getTime();
+        SharedPreferences.Editor editor = sharedPreferences.edit();
 
-    public String fixStr ( int hourOfDay, int minute){
-        String str = "";
-
-        if (hourOfDay < 10 && minute < 10){
-            str = "Time is :" + "0"  + hourOfDay +":" + "0" + minute;
-        }
-        else if (hourOfDay < 10 && minute >= 10){
-            str = "Time is :" +"0" + hourOfDay +":" + minute;
-        }
-        else if (hourOfDay >= 10 && minute < 10){
-            str = "Time is :" + hourOfDay +":" + "0" + minute;
-        }
-        else{
-            str = "Time is :" + hourOfDay +":" + minute;
-        }
-
-        return str;
+        editor.putLong("enter" , dateAndTime.getTime());
+        editor.commit();
     }
 }
+
 
