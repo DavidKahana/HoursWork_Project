@@ -12,6 +12,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.DatePicker;
+import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.TimePicker;
 import android.widget.Toast;
@@ -20,6 +21,7 @@ import androidx.fragment.app.Fragment;
 
 import java.sql.Time;
 import java.text.DateFormat;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
@@ -37,11 +39,12 @@ import java.util.logging.Handler;
 public class Entrance extends Fragment {
 
     Button btnStartStop, btnDateAndTime;
-    TextView tvTimeEnter;
+    TextView tvTimeEnter , tvSelected;
     Date dateAndTime;
     SharedPreferences sharedPreferences;
-    private SimpleDateFormat dateFormat;
-    private String date;
+    SimpleDateFormat dateFormat;
+    String date;
+
 
     private DatePickerDialog datePickerDialog;
     private TimePickerDialog timePickerDialog;
@@ -95,17 +98,16 @@ public class Entrance extends Fragment {
         btnStartStop = view.findViewById(R.id.btnStartStop);
         tvTimeEnter = view.findViewById(R.id.tvTimeEnter);
         sharedPreferences = getContext().getSharedPreferences("Dates", 0);
-
+        tvSelected = view.findViewById(R.id.tvSelected);
 
         btnDateAndTime = view.findViewById(R.id.btnDate);
         btnDateAndTime.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
 
-                Log.d("ron" , "1: " + dateAndTime);
-                showDateTimeDialog();
-
-
+                if (v == btnDateAndTime) {
+                    showDateTimeDialog();
+                }
             }
         });
 
@@ -116,12 +118,13 @@ public class Entrance extends Fragment {
                 if(v==btnStartStop)
                 {
 
-                    Log.d("ron" , "2: " + dateAndTime);
 
                     if (btnStartStop.getText().equals("start") ){
 
                         long l = sharedPreferences.getLong("enter" , 0);
                         dateAndTime = new Date(l);
+
+
                         dateFormat = new SimpleDateFormat("MM-dd-yyyy HH:mm:ss" );
                         date = dateFormat.format(dateAndTime);
                         tvTimeEnter.setText(date);
@@ -141,57 +144,35 @@ public class Entrance extends Fragment {
 }
 
     private void showDateTimeDialog() {
-        // Create a Calendar instance to get the current date and time
-        Calendar calendar = Calendar.getInstance();
+        final Calendar calendar = Calendar.getInstance();
 
-        // Create the DatePickerDialog with the current date
-        datePickerDialog = new DatePickerDialog(getActivity(),
-                new DatePickerDialog.OnDateSetListener() {
+        DatePickerDialog.OnDateSetListener dateSetListener = new DatePickerDialog.OnDateSetListener() {
+            @Override
+            public void onDateSet(DatePicker view, int year, int monthOfYear, int dayOfMonth) {
+                calendar.set(Calendar.YEAR, year);
+                calendar.set(Calendar.MONTH, monthOfYear);
+                calendar.set(Calendar.DAY_OF_MONTH, dayOfMonth);
+
+                TimePickerDialog.OnTimeSetListener timeSetListener = new TimePickerDialog.OnTimeSetListener() {
                     @Override
-                    public void onDateSet(DatePicker view, int year, int monthOfYear, int dayOfMonth) {
-                        // Set the selected date to the calendar instance
-                        calendar.set(Calendar.YEAR, year);
-                        calendar.set(Calendar.MONTH, monthOfYear);
-                        calendar.set(Calendar.DAY_OF_MONTH, dayOfMonth);
-
-                        // Create the TimePickerDialog with the current time
-                        timePickerDialog = new TimePickerDialog(getActivity(),
-                                new TimePickerDialog.OnTimeSetListener() {
-                                    @Override
-                                    public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
-                                        // Set the selected time to the calendar instance
-                                        calendar.set(Calendar.HOUR_OF_DAY, hourOfDay);
-                                        calendar.set(Calendar.MINUTE, minute);
+                    public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
+                        calendar.set(Calendar.HOUR_OF_DAY, hourOfDay);
+                        calendar.set(Calendar.MINUTE, minute);
 
 
-                                        // Check if the device is set to 24-hour time format
-                                        boolean is24HourFormat = DateTimeFormatter.ofPattern("H").format(LocalDateTime.now()) == "H";
+                        SharedPreferences.Editor editor = sharedPreferences.edit();
+                        editor.putLong("enter" , calendar.getTime().getTime());
+                        editor.commit();
 
-                                        // Update your UI with the selected date and time
-                                        // Example: updateTextView(calendar.getTime(), is24HourFormat);
-                                    }
-                                },
-                                calendar.get(Calendar.HOUR_OF_DAY),
-                                calendar.get(Calendar.MINUTE),
-                                DateTimeFormatter.ofPattern("H").format(LocalDateTime.now()) == "H"
-                        );
-
-                        // Show the TimePickerDialog
-                        timePickerDialog.show();
+                        Log.d("ron" , "0: " + dateAndTime);
                     }
-                },
-                calendar.get(Calendar.YEAR),
-                calendar.get(Calendar.MONTH),
-                calendar.get(Calendar.DAY_OF_MONTH)
-        );
+                };
 
-        // Show the DatePickerDialog
-        datePickerDialog.show();
-        dateAndTime = calendar.getTime();
-        SharedPreferences.Editor editor = sharedPreferences.edit();
+                new TimePickerDialog(getContext(), timeSetListener, calendar.get(Calendar.HOUR_OF_DAY), calendar.get(Calendar.MINUTE), false).show();
+            }
+        };
 
-        editor.putLong("enter" , dateAndTime.getTime());
-        editor.commit();
+        new DatePickerDialog(getContext(), dateSetListener, calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH), calendar.get(Calendar.DAY_OF_MONTH)).show();
     }
 }
 
