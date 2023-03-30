@@ -3,6 +3,7 @@ package com.example.hourswork_project;
 import android.app.DatePickerDialog;
 import android.app.TimePickerDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.CountDownTimer;
@@ -39,16 +40,12 @@ import java.util.logging.Handler;
 public class Entrance extends Fragment {
 
     Button btnStartStop, btnDateAndTime;
-    TextView tvTimeEnter , tvSelected;
-    Date dateAndTime;
+    TextView tvTimeEnter , tvSelected , tvTimeStop , tvDuration;
+    Date dateAndTime , dateStart , dateStop;
     SharedPreferences sharedPreferences;
     SimpleDateFormat dateFormat;
     String date;
-
-
-    private DatePickerDialog datePickerDialog;
-    private TimePickerDialog timePickerDialog;
-
+    long duration;
 
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -95,10 +92,13 @@ public class Entrance extends Fragment {
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_entrance, container, false);
 
+
         btnStartStop = view.findViewById(R.id.btnStartStop);
         tvTimeEnter = view.findViewById(R.id.tvTimeEnter);
         sharedPreferences = getContext().getSharedPreferences("Dates", 0);
         tvSelected = view.findViewById(R.id.tvSelected);
+        tvTimeStop = view.findViewById(R.id.tvTimeStop);
+        tvDuration = view.findViewById(R.id.tvDuration);
 
         btnDateAndTime = view.findViewById(R.id.btnDate);
         btnDateAndTime.setOnClickListener(new View.OnClickListener() {
@@ -121,20 +121,34 @@ public class Entrance extends Fragment {
 
                     if (btnStartStop.getText().equals("start") ){
 
-                        long l = sharedPreferences.getLong("enter" , 0);
+                        long l = sharedPreferences.getLong("date" , 0);
                         dateAndTime = new Date(l);
 
 
-                        dateFormat = new SimpleDateFormat("MM-dd-yyyy HH:mm:ss" );
+                        dateFormat = new SimpleDateFormat("MM-dd-yyyy HH:mm" );
                         date = dateFormat.format(dateAndTime);
-                        tvTimeEnter.setText(date);
+                        tvTimeEnter.setText( "שעת כניסה:" + '\n' + date);
 
-                        btnDateAndTime.setText("select date!");
+                        dateStart = dateAndTime;
+
+                        btnDateAndTime.setText("select date and time!");
                         btnStartStop.setText("stop");
                     }
-                    else if (btnStartStop.getText().equals("stop")){
+                    else if (btnStartStop.getText().equals("stop") && dateAndTime  != null){
 
-                        btnDateAndTime.setText("select time!");
+                        long l = sharedPreferences.getLong("date" , 0);
+                        dateAndTime = new Date(l);
+
+
+                        dateFormat = new SimpleDateFormat("MM-dd-yyyy HH:mm" );
+                        date = dateFormat.format(dateAndTime);
+                        tvTimeStop.setText( "שעת יציאה:" + '\n' + date);
+
+                        dateStop = dateAndTime;
+                        duration = getDurationMillis(dateStart ,dateStop );
+                        tvDuration.setText(formatDuration(duration));
+
+                        btnDateAndTime.setText("select date and time!");
                         btnStartStop.setText("start");
                     }
                 }
@@ -153,6 +167,8 @@ public class Entrance extends Fragment {
                 calendar.set(Calendar.MONTH, monthOfYear);
                 calendar.set(Calendar.DAY_OF_MONTH, dayOfMonth);
 
+
+
                 TimePickerDialog.OnTimeSetListener timeSetListener = new TimePickerDialog.OnTimeSetListener() {
                     @Override
                     public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
@@ -161,10 +177,18 @@ public class Entrance extends Fragment {
 
 
                         SharedPreferences.Editor editor = sharedPreferences.edit();
-                        editor.putLong("enter" , calendar.getTime().getTime());
+                        editor.putLong("date" , calendar.getTime().getTime());
                         editor.commit();
 
-                        Log.d("ron" , "0: " + dateAndTime);
+                        long l = sharedPreferences.getLong("date" , 0);
+                        dateAndTime = new Date(l);
+
+
+                        dateFormat = new SimpleDateFormat("MM-dd-yyyy HH:mm" );
+                        date = dateFormat.format(dateAndTime);
+                        String str = "You selected :" + date;
+                        Toast.makeText(getContext(),str,Toast.LENGTH_LONG).show();
+                        btnDateAndTime.setText(date);
                     }
                 };
 
@@ -173,7 +197,39 @@ public class Entrance extends Fragment {
         };
 
         new DatePickerDialog(getContext(), dateSetListener, calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH), calendar.get(Calendar.DAY_OF_MONTH)).show();
+
     }
+
+    public static long getDurationMillis(Date startDate, Date endDate) {
+        return endDate.getTime() - startDate.getTime();
+    }
+
+    public static String formatDuration(long duration) {
+        long seconds = duration / 1000;
+        long minutes = seconds / 60;
+        long hours = minutes / 60;
+        long days = hours / 24;
+
+        String result = "";
+        if (days > 0) {
+            result += days + " ימים ";
+        }
+        if (hours > 0) {
+            result += hours % 24 + " שעות ";
+        }
+        if (minutes > 0) {
+            result += minutes % 60 + " דקות ";
+        }
+        if (result.equals("")) {
+            result = "0 דקות";
+        }
+
+        return result;
+    }
+
+
+
+
 }
 
 
