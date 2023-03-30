@@ -23,6 +23,16 @@
             android:background="@drawable/rounded_button"
             android:id="@+id/btnMinSalary"/>
 
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textSize="30sp"
+            android:background="@drawable/rounded_button"
+            android:textColor="@color/black"
+            android:visibility="gone"
+            android:layout_gravity="center"
+            android:id="@+id/tvMinSalary"/>
+
         <Button
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -31,6 +41,15 @@
             android:layout_margin="5dp"
             android:background="@drawable/rounded_button"
             android:id="@+id/btnTravelExpenses"/>
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textSize="30sp"
+            android:background="@drawable/rounded_button"
+            android:textColor="@color/black"
+            android:visibility="gone"
+            android:layout_gravity="center"
+            android:id="@+id/tvTravelExpenses"/>
 
         <Button
             android:layout_width="match_parent"
@@ -40,25 +59,15 @@
             android:layout_margin="5dp"
             android:background="@drawable/rounded_button"
             android:id="@+id/btnOvertime"/>
-
-
-        <LinearLayout
+        <TextView
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:orientation="vertical">
-
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:textSize="30sp"
-                android:background="@drawable/rounded_button"
-                android:textColor="@color/black"
-                android:layout_gravity="center"
-                android:id="@+id/tvDisdlay"/>
-
-
-        </LinearLayout>
-
+            android:layout_height="wrap_content"
+            android:textSize="30sp"
+            android:background="@drawable/rounded_button"
+            android:textColor="@color/black"
+            android:visibility="gone"
+            android:layout_gravity="center"
+            android:id="@+id/tvOvertime"/>
 
 
     </LinearLayout>

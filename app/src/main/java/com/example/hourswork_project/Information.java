@@ -16,10 +16,10 @@ import java.util.Arrays;
  * Use the {@link Information#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class Information extends Fragment implements View.OnClickListener {
+public class Information extends Fragment {
 
     Button btnMinSalary , btnTravelExpenses , btnOvertime;
-    TextView tvDisplay;
+    TextView tvMinSalary , tvTravelExpenses , tvOvertime;
 
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -73,10 +73,12 @@ public class Information extends Fragment implements View.OnClickListener {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_information, container, false);
 
-        tvDisplay = view.findViewById(R.id.tvDisdlay);
+        tvMinSalary = view.findViewById(R.id.tvMinSalary);
+        tvTravelExpenses = view.findViewById(R.id.tvTravelExpenses);
+        tvOvertime = view.findViewById(R.id.tvOvertime);
 
 
-        btnMinSalary = view.findViewById(R.id.btnInformation);
+        btnMinSalary = view.findViewById(R.id.btnMinSalary);
         btnTravelExpenses = view.findViewById(R.id.btnTravelExpenses);
         btnOvertime = view.findViewById(R.id.btnOvertime);
 
@@ -85,7 +87,12 @@ public class Information extends Fragment implements View.OnClickListener {
                 @Override
                 public void onClick(View v) {
                     if (v == btnMinSalary){
-                        tvDisplay.setText("שכר מינימום");
+                        if (tvMinSalary.getVisibility() == View.GONE) {
+                            tvMinSalary.setVisibility(View.VISIBLE);
+                        }
+                        else {
+                            tvMinSalary.setVisibility(View.GONE);
+                        }
                     }
                 }
             });
@@ -95,7 +102,12 @@ public class Information extends Fragment implements View.OnClickListener {
                 @Override
                 public void onClick(View v) {
                     if (v == btnTravelExpenses){
-                        tvDisplay.setText("דמי נסיעות");
+                        if (tvTravelExpenses.getVisibility() == View.GONE) {
+                            tvTravelExpenses.setVisibility(View.VISIBLE);
+                        }
+                        else {
+                            tvTravelExpenses.setVisibility(View.GONE);
+                        }
                     }
                 }
             });
@@ -105,18 +117,18 @@ public class Information extends Fragment implements View.OnClickListener {
                 @Override
                 public void onClick(View v) {
                     if (v == btnOvertime){
-                        tvDisplay.setText("שעות נוספות");
+                        if (tvOvertime.getVisibility() == View.GONE) {
+                            tvOvertime.setVisibility(View.VISIBLE);
+                        }
+                        else {
+                            tvOvertime.setVisibility(View.GONE);
+                        }
                     }
                 }
             });
         }
+
         return view;
     }
 
-    @Override
-    public void onClick(View v) {
-
-
-
-    }
 }
