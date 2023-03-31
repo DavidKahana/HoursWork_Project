@@ -1,9 +1,12 @@
 package com.example.hourswork_project;
 
+import android.app.Dialog;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.NumberPicker;
 
 import androidx.fragment.app.Fragment;
 
@@ -13,6 +16,10 @@ import androidx.fragment.app.Fragment;
  * create an instance of this fragment.
  */
 public class Definitions extends Fragment {
+
+    NumberPicker numberPicker;
+    Button btnSelectAge;
+    int selectedNumber;
 
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -58,6 +65,37 @@ public class Definitions extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_definitions, container, false);
+        View view = inflater.inflate(R.layout.fragment_definitions, container, false);
+
+        btnSelectAge = view.findViewById(R.id.btnSelectAge);
+        btnSelectAge.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (v == btnSelectAge) {
+                    Dialog dialog = new Dialog(view.getContext());
+                    dialog.setContentView(R.layout.number_picker_dialog);
+                    NumberPicker numberPicker = dialog.findViewById(R.id.number_picker);
+                    numberPicker.setMinValue(1);
+                    numberPicker.setMaxValue(99);
+                    Button okButton = dialog.findViewById(R.id.btnOk);
+                    okButton.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            if (v == okButton) {
+                                selectedNumber = numberPicker.getValue();
+                                btnSelectAge.setText("הגיל שלך הוא: "+ selectedNumber);
+                                dialog.dismiss();
+                            }
+                        }
+                    });
+                    dialog.show();
+                }
+            }
+        });
+
+
+
+        return view;
+
     }
 }
