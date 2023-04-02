@@ -6,7 +6,10 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.CheckBox;
+import android.widget.EditText;
 import android.widget.NumberPicker;
+import android.widget.TextView;
 
 import androidx.fragment.app.Fragment;
 
@@ -19,7 +22,10 @@ public class Definitions extends Fragment {
 
     NumberPicker numberPicker;
     Button btnSelectAge;
-    int selectedNumber;
+    int selectedNumber , HourlyWage;
+    CheckBox cbMinSalary;
+    EditText etAnother;
+    TextView tvHourlyWage;
 
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -74,10 +80,10 @@ public class Definitions extends Fragment {
                 if (v == btnSelectAge) {
                     Dialog dialog = new Dialog(view.getContext());
                     dialog.setContentView(R.layout.number_picker_dialog);
-                    NumberPicker numberPicker = dialog.findViewById(R.id.number_picker);
+                    numberPicker = dialog.findViewById(R.id.number_picker);
                     numberPicker.setMinValue(1);
                     numberPicker.setMaxValue(99);
-                    Button okButton = dialog.findViewById(R.id.btnOk);
+                    Button okButton = dialog.findViewById(R.id.btnOk_number_picker);
                     okButton.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
@@ -93,9 +99,66 @@ public class Definitions extends Fragment {
             }
         });
 
+        cbMinSalary = view.findViewById(R.id.cbMinSalary);
+        tvHourlyWage = view.findViewById(R.id.tvHourlyWage);
+
+        cbMinSalary.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (cbMinSalary.isChecked()) {
+
+                    tvHourlyWage.setText(minSalary(selectedNumber) + " לשעה");
+
+                }
+                else {
+                    Dialog dialog = new Dialog(view.getContext());
+                    dialog.setContentView(R.layout.hourlywage_picker_dialog);
+                    etAnother = dialog.findViewById(R.id.etAnother);
+                    Button okButton = dialog.findViewById(R.id.btnOk_etAnother);
+                    okButton.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            if (v == okButton) {
+                                String strNumber = etAnother.getText().toString();
+
+                                if (!strNumber.isEmpty()) {
+                                    int number = Integer.parseInt(strNumber);
+                                    tvHourlyWage.setText(strNumber + " לשעה");
+                                    dialog.dismiss();
+                                }
+                                else{
+
+                                }
+                            }
+                        }
+                    });
+                    dialog.show();
+                }
+            }
+        });
+
+
 
 
         return view;
+
+    }
+
+    public double minSalary (int age){
+        double minSalary = 0;
+
+        if (age < 16)
+            minSalary = 21.45;
+        else if (age < 17 && age >= 16)
+            minSalary = 22.98;
+        else if (age < 18 && age >= 17)
+            minSalary = 25.43;
+        else if (age > 18)
+            minSalary = 28.49;
+
+        return minSalary;
+
+
 
     }
 }

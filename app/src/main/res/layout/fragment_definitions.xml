@@ -9,7 +9,8 @@
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:background="@drawable/customborder">
 
         <Button
             android:layout_width="match_parent"
@@ -18,14 +19,40 @@
             android:text="גיל"
             android:textSize="40sp"
             android:layout_gravity="center"
+            android:background="@drawable/rounded_button"
             android:gravity="center"
             android:textColor="#FFEB3B"
             android:layout_margin="40dp"/>
 
+    </LinearLayout>
 
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/customborder"
+        android:layout_marginTop="5dp">
+
+        <CheckBox
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/cbMinSalary"
+            android:checked="true"
+            android:text="שכר מינימום"
+            android:textSize="30sp"/>
+
+
+        <TextView
+            android:id="@+id/tvHourlyWage"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginRight="25dp"
+            android:text="*** לשעה"
+            android:textColor="#FA1E0E"
+            android:textSize="30sp" />
 
 
     </LinearLayout>
+
 
 
 </LinearLayout>
