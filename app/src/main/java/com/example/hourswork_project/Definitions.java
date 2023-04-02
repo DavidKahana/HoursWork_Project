@@ -21,11 +21,12 @@ import androidx.fragment.app.Fragment;
 public class Definitions extends Fragment {
 
     NumberPicker numberPicker;
-    Button btnSelectAge;
+    Button btnSelectAge , btnSelectTimeOfBreak;
     int selectedNumber , HourlyWage;
-    CheckBox cbMinSalary;
+    CheckBox cbMinSalary , cbSalaryOnBreak;
     EditText etAnother;
     TextView tvHourlyWage;
+    boolean SalaryOnBreak;
 
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -138,6 +139,48 @@ public class Definitions extends Fragment {
         });
 
 
+        btnSelectTimeOfBreak = view.findViewById(R.id.btnSelectTimeOfBreak);
+        btnSelectTimeOfBreak.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (v == btnSelectTimeOfBreak) {
+                    Dialog dialog = new Dialog(view.getContext());
+                    dialog.setContentView(R.layout.number_picker_dialog);
+                    numberPicker = dialog.findViewById(R.id.number_picker);
+                    numberPicker.setMinValue(1);
+                    numberPicker.setMaxValue(200);
+                    Button okButton = dialog.findViewById(R.id.btnOk_number_picker);
+                    okButton.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            if (v == okButton) {
+                                selectedNumber = numberPicker.getValue();
+                                btnSelectTimeOfBreak.setText("אורך ההפסקה בדקות הוא: "+ selectedNumber);
+                                dialog.dismiss();
+                            }
+                        }
+                    });
+                    dialog.show();
+                }
+            }
+        });
+
+        cbSalaryOnBreak = view.findViewById(R.id.cbSalaryOnBreak);
+        cbSalaryOnBreak.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (cbSalaryOnBreak.isChecked()) {
+                    SalaryOnBreak = true;
+                }
+                else {
+                    SalaryOnBreak = false;
+                }
+            }
+
+        });
+
+
+
 
 
         return view;
@@ -149,7 +192,7 @@ public class Definitions extends Fragment {
 
         if (age < 16)
             minSalary = 21.45;
-        else if (age < 17 && age >= 16)
+        else if (age < 17 && age >=  16)
             minSalary = 22.98;
         else if (age < 18 && age >= 17)
             minSalary = 25.43;
