@@ -84,9 +84,23 @@ public class Definitions extends Fragment {
 
         sharedPreferences = getContext().getSharedPreferences("Definitions", 0);
 
+        if (sharedPreferences.getInt("selectedNumber" , 0) > 0){
+            btnSelectAge.setText("הגיל שלך הוא: "+ sharedPreferences.getInt("selectedNumber" , 0));
+        }
+        if (sharedPreferences.getInt("numberHourlyWage" , 0) > 0){
+            tvHourlyWage.setText(sharedPreferences.getInt("numberHourlyWage" , 0) + " לשעה");
+        }
+        if (sharedPreferences.getInt("numberSelectTimeOfBreak" , 0) > 0) {
+            btnSelectTimeOfBreak.setText("אורך ההפסקה בדקות הוא: "+ sharedPreferences.getInt("numberSelectTimeOfBreak", 0));
+        }
+        cbSalaryOnBreak.setChecked(sharedPreferences.getBoolean("SalaryOnBreak" , false));
 
 
-        btnSelectAge.setOnClickListener(new View.OnClickListener() {
+
+
+
+
+            btnSelectAge.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 if (v == btnSelectAge) {
@@ -169,7 +183,7 @@ public class Definitions extends Fragment {
                         public void onClick(View v) {
                             if (v == okButton) {
                                 numberSelectTimeOfBreak = numberPicker.getValue();
-                                btnSelectTimeOfBreak.setText("אורך ההפסקה בדקות הוא: "+ selectedNumber);
+                                btnSelectTimeOfBreak.setText("אורך ההפסקה בדקות הוא: "+ numberSelectTimeOfBreak);
                                 SharedPreferences.Editor editor = sharedPreferences.edit();
                                 editor.putInt("numberSelectTimeOfBreak" , numberSelectTimeOfBreak);
                                 editor.commit();
@@ -188,9 +202,15 @@ public class Definitions extends Fragment {
             public void onClick(View view) {
                 if (cbSalaryOnBreak.isChecked()) {
                     SalaryOnBreak = true;
+                    SharedPreferences.Editor editor = sharedPreferences.edit();
+                    editor.putBoolean("SalaryOnBreak" , SalaryOnBreak);
+                    editor.commit();
                 }
                 else {
                     SalaryOnBreak = false;
+                    SharedPreferences.Editor editor = sharedPreferences.edit();
+                    editor.putBoolean("SalaryOnBreak" , SalaryOnBreak);
+                    editor.commit();
                 }
             }
 
