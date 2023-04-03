@@ -1,6 +1,7 @@
 package com.example.hourswork_project;
 
 import android.app.Dialog;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -22,11 +23,12 @@ public class Definitions extends Fragment {
 
     NumberPicker numberPicker;
     Button btnSelectAge , btnSelectTimeOfBreak;
-    int selectedNumber , HourlyWage;
+    int selectedNumber , numberSelectTimeOfBreak;
     CheckBox cbMinSalary , cbSalaryOnBreak;
     EditText etAnother;
     TextView tvHourlyWage;
     boolean SalaryOnBreak;
+    SharedPreferences sharedPreferences;
 
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -74,7 +76,16 @@ public class Definitions extends Fragment {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_definitions, container, false);
 
+        cbSalaryOnBreak = view.findViewById(R.id.cbSalaryOnBreak);
+        cbMinSalary = view.findViewById(R.id.cbMinSalary);
+        tvHourlyWage = view.findViewById(R.id.tvHourlyWage);
         btnSelectAge = view.findViewById(R.id.btnSelectAge);
+        btnSelectTimeOfBreak = view.findViewById(R.id.btnSelectTimeOfBreak);
+
+        sharedPreferences = getContext().getSharedPreferences("Definitions", 0);
+
+
+
         btnSelectAge.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -91,6 +102,9 @@ public class Definitions extends Fragment {
                             if (v == okButton) {
                                 selectedNumber = numberPicker.getValue();
                                 btnSelectAge.setText("הגיל שלך הוא: "+ selectedNumber);
+                                SharedPreferences.Editor editor = sharedPreferences.edit();
+                                editor.putInt("selectedNumber" , selectedNumber);
+                                editor.commit();
                                 dialog.dismiss();
                             }
                         }
@@ -100,8 +114,6 @@ public class Definitions extends Fragment {
             }
         });
 
-        cbMinSalary = view.findViewById(R.id.cbMinSalary);
-        tvHourlyWage = view.findViewById(R.id.tvHourlyWage);
 
         cbMinSalary.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -123,8 +135,11 @@ public class Definitions extends Fragment {
                                 String strNumber = etAnother.getText().toString();
 
                                 if (!strNumber.isEmpty()) {
-                                    int number = Integer.parseInt(strNumber);
+                                    int numberHourlyWage = Integer.parseInt(strNumber);
                                     tvHourlyWage.setText(strNumber + " לשעה");
+                                    SharedPreferences.Editor editor = sharedPreferences.edit();
+                                    editor.putInt("numberHourlyWage" , numberHourlyWage);
+                                    editor.commit();
                                     dialog.dismiss();
                                 }
                                 else{
@@ -139,7 +154,6 @@ public class Definitions extends Fragment {
         });
 
 
-        btnSelectTimeOfBreak = view.findViewById(R.id.btnSelectTimeOfBreak);
         btnSelectTimeOfBreak.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -154,8 +168,11 @@ public class Definitions extends Fragment {
                         @Override
                         public void onClick(View v) {
                             if (v == okButton) {
-                                selectedNumber = numberPicker.getValue();
+                                numberSelectTimeOfBreak = numberPicker.getValue();
                                 btnSelectTimeOfBreak.setText("אורך ההפסקה בדקות הוא: "+ selectedNumber);
+                                SharedPreferences.Editor editor = sharedPreferences.edit();
+                                editor.putInt("numberSelectTimeOfBreak" , numberSelectTimeOfBreak);
+                                editor.commit();
                                 dialog.dismiss();
                             }
                         }
@@ -165,7 +182,7 @@ public class Definitions extends Fragment {
             }
         });
 
-        cbSalaryOnBreak = view.findViewById(R.id.cbSalaryOnBreak);
+
         cbSalaryOnBreak.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -178,9 +195,6 @@ public class Definitions extends Fragment {
             }
 
         });
-
-
-
 
 
         return view;
