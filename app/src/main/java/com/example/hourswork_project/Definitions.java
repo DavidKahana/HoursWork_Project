@@ -22,8 +22,8 @@ import androidx.fragment.app.Fragment;
 public class Definitions extends Fragment {
 
     NumberPicker numberPicker;
-    Button btnSelectAge , btnSelectTimeOfBreak;
-    int selectedNumber , numberSelectTimeOfBreak;
+    Button btnSelectAge , btnSelectTimeOfBreak , btnRestart;
+    int selectedNumber , numberSelectTimeOfBreak , numberHourlyWage;
     CheckBox cbMinSalary , cbSalaryOnBreak;
     EditText etAnother;
     TextView tvHourlyWage;
@@ -81,6 +81,7 @@ public class Definitions extends Fragment {
         tvHourlyWage = view.findViewById(R.id.tvHourlyWage);
         btnSelectAge = view.findViewById(R.id.btnSelectAge);
         btnSelectTimeOfBreak = view.findViewById(R.id.btnSelectTimeOfBreak);
+        btnRestart = view.findViewById(R.id.btnRestart);
 
         sharedPreferences = getContext().getSharedPreferences("Definitions", 0);
 
@@ -149,7 +150,7 @@ public class Definitions extends Fragment {
                                 String strNumber = etAnother.getText().toString();
 
                                 if (!strNumber.isEmpty()) {
-                                    int numberHourlyWage = Integer.parseInt(strNumber);
+                                    numberHourlyWage = Integer.parseInt(strNumber);
                                     tvHourlyWage.setText(strNumber + " לשעה");
                                     SharedPreferences.Editor editor = sharedPreferences.edit();
                                     editor.putInt("numberHourlyWage" , numberHourlyWage);
@@ -214,6 +215,29 @@ public class Definitions extends Fragment {
                 }
             }
 
+        });
+
+
+
+        btnRestart.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (v == btnRestart) {
+
+                    SharedPreferences.Editor editor = sharedPreferences.edit();
+                    editor.putInt("numberSelectTimeOfBreak" , 0);
+                    editor.putInt("numberHourlyWage" , 0);
+                    editor.putInt("selectedNumber" , 0);
+                    editor.putBoolean("SalaryOnBreak" , false);
+                    editor.commit();
+
+                    btnSelectAge.setText("גיל");
+                    tvHourlyWage.setText("*** לשעה");
+                    btnSelectTimeOfBreak.setText("משך זמן ההפסקה (בדקות)");
+                    cbSalaryOnBreak.setChecked(false);
+
+                }
+            }
         });
 
 

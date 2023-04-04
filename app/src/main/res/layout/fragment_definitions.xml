@@ -81,11 +81,27 @@
             android:text=" מקבל שכר עבור ההפסקה?"
             android:textSize="30sp"/>
 
-
-
-
-
     </LinearLayout>
 
 
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/customborder"
+        android:orientation="vertical"
+        android:layout_marginTop="5dp">
+
+        <Button
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/btnRestart"
+            android:text="לאפס את כל הנתונים"
+            android:textSize="20sp"
+            android:layout_gravity="center"
+            android:backgroundTint="#000000"
+            android:gravity="center"
+            android:textColor="#FFEB3B"
+            android:layout_margin="20dp"/>
+
+    </LinearLayout>
 </LinearLayout>
