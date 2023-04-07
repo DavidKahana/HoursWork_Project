@@ -1,6 +1,7 @@
 package com.example.hourswork_project;
 
 import android.app.Dialog;
+import android.content.DialogInterface;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -12,6 +13,7 @@ import android.widget.EditText;
 import android.widget.NumberPicker;
 import android.widget.TextView;
 
+import androidx.appcompat.app.AlertDialog;
 import androidx.fragment.app.Fragment;
 
 /**
@@ -224,17 +226,39 @@ public class Definitions extends Fragment {
             public void onClick(View v) {
                 if (v == btnRestart) {
 
-                    SharedPreferences.Editor editor = sharedPreferences.edit();
-                    editor.putInt("numberSelectTimeOfBreak" , 0);
-                    editor.putInt("numberHourlyWage" , 0);
-                    editor.putInt("selectedNumber" , 0);
-                    editor.putBoolean("SalaryOnBreak" , false);
-                    editor.commit();
 
-                    btnSelectAge.setText("גיל");
-                    tvHourlyWage.setText("*** לשעה");
-                    btnSelectTimeOfBreak.setText("משך זמן ההפסקה (בדקות)");
-                    cbSalaryOnBreak.setChecked(false);
+                    // Create an AlertDialog builder
+                    AlertDialog.Builder builder = new AlertDialog.Builder(view.getContext());
+
+// Set the alert message and title
+                    builder.setMessage("אתה בטוח שאתה רוצה לאפס את הנתונים שהוזנו?")
+                            .setTitle("Confirmation");
+
+// Set the positive button and its click listener
+                    builder.setPositiveButton("כן", new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int id) {
+
+                            SharedPreferences.Editor editor = sharedPreferences.edit();
+                            editor.putInt("numberSelectTimeOfBreak" , 0);
+                            editor.putInt("numberHourlyWage" , 0);
+                            editor.putInt("selectedNumber" , 0);
+                            editor.putBoolean("SalaryOnBreak" , false);
+                            editor.commit();
+
+                            btnSelectAge.setText("גיל");
+                            tvHourlyWage.setText("*** לשעה");
+                            btnSelectTimeOfBreak.setText("משך זמן ההפסקה (בדקות)");
+                            cbSalaryOnBreak.setChecked(false);
+                        }
+                    });
+                    builder.setNegativeButton("לא", new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int id) {
+                            // User cancelled the dialog
+                        }
+                    });
+                    AlertDialog dialog = builder.create();
+                    dialog.show();
+
 
                 }
             }
