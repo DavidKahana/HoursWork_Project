@@ -1,11 +1,19 @@
 package com.example.hourswork_project;
 
+import android.content.Context;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ArrayAdapter;
+import android.widget.TextView;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+
+import java.util.Date;
+import java.util.List;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -60,4 +68,8 @@ public class HoursReport extends Fragment {
         // Inflate the layout for this fragment
         return inflater.inflate(R.layout.fragment_hours_report, container, false);
     }
+
+
+
+
 }

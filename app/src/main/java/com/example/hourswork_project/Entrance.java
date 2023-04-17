@@ -14,6 +14,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
+import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.TimePicker;
 import android.widget.Toast;
@@ -26,8 +27,10 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.List;
 import java.util.Locale;
 import java.util.concurrent.TimeUnit;
 import java.util.logging.Handler;
@@ -150,6 +153,8 @@ public class Entrance extends Fragment {
 
                         btnDateAndTime.setText("select date and time!");
                         btnStartStop.setText("start");
+
+
                     }
                 }
             }
@@ -226,6 +231,7 @@ public class Entrance extends Fragment {
 
         return result;
     }
+
 
 
 
