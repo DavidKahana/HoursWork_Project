@@ -72,7 +72,7 @@ public class WorksDataBase extends SQLiteOpenHelper {
                     long startDate = cursor.getLong(startDateIndex);
                     long endDate = cursor.getLong(endDateIndex);
 
-                    Work work = new Work(endDate, startDate,id );
+                    Work work = new Work(id , endDate, startDate);
                     works.add(work);
                 }
             } while (cursor.moveToNext());

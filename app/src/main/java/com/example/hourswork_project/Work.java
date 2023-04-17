@@ -2,11 +2,12 @@ package com.example.hourswork_project;
 
 public class Work {
 
+    Integer id;
     Long startDate;
     Long endDate;
-    Integer id;
 
-    public Work(Long startDate, Long endDate, Integer id) {
+
+    public Work(Integer id , Long startDate, Long endDate) {
         this.startDate = startDate;
         this.endDate = endDate;
         this.id = id;
