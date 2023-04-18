@@ -51,7 +51,7 @@ public class WorksDataBase extends SQLiteOpenHelper {
     public void deleteWork(int id) {
         SQLiteDatabase db = this.getWritableDatabase();
 
-        db.delete(TABLE_NAME, COLUMN_ID + "=?", new String[] { String.valueOf(id) });
+        db.delete(TABLE_NAME, COLUMN_ID + "=?", new String[]{String.valueOf(id)});
         db.close();
     }
 
@@ -73,7 +73,7 @@ public class WorksDataBase extends SQLiteOpenHelper {
                     long startDate = cursor.getLong(startDateIndex);
                     long endDate = cursor.getLong(endDateIndex);
 
-                    Work work = new Work(id , endDate, startDate);
+                    Work work = new Work(id, endDate, startDate);
                     works.add(work);
                 }
             } while (cursor.moveToNext());
@@ -87,15 +87,15 @@ public class WorksDataBase extends SQLiteOpenHelper {
 
     public Work getWorkById(int id) {
         SQLiteDatabase db = this.getReadableDatabase();
-        Cursor cursor = db.rawQuery("select * from "+TABLE_NAME+" WHERE id='"+id+ "'", null);
-         Work work = null;
+        Cursor cursor = db.rawQuery("select * from " + TABLE_NAME + " WHERE id='" + id + "'", null);
+        Work work = null;
         if (cursor != null && cursor.moveToFirst()) {
-         do{
-             long start = cursor.getLong(1);
-             long end = cursor.getLong(2);
-             work = new Work(id , start, end);
-         }
-         while (cursor.moveToNext());
+            do {
+                long start = cursor.getLong(1);
+                long end = cursor.getLong(2);
+                work = new Work(id, start, end);
+            }
+            while (cursor.moveToNext());
         }
         return work;
     }
@@ -108,7 +108,34 @@ public class WorksDataBase extends SQLiteOpenHelper {
         values.put(COLUMN_START_DATE, work.getStartDate());
         values.put(COLUMN_END_DATE, work.getEndDate());
 
-        db.update(TABLE_NAME, values, COLUMN_ID + "=?", new String[] { String.valueOf(work.getId()) });
+        db.update(TABLE_NAME, values, COLUMN_ID + "=?", new String[]{String.valueOf(work.getId())});
         db.close();
     }
+
+    public void resetIds() {
+        SQLiteDatabase db = this.getWritableDatabase();
+        String tableName = "your_table";
+        String columnName = "id";
+
+        // Create temporary table with the same schema as original table
+        String tempTableName = tableName + "_temp";
+        String createTempTableQuery = "CREATE TEMPORARY TABLE " + tempTableName +
+                " AS SELECT * FROM " + tableName + " ORDER BY " + columnName;
+        db.execSQL(createTempTableQuery);
+
+        // Delete all rows from original table
+        String deleteRowsQuery = "DELETE FROM " + tableName;
+        db.execSQL(deleteRowsQuery);
+
+        // Insert rows from temporary table back into original table with new IDs
+        String insertRowsQuery = "INSERT INTO " + tableName + " SELECT null, * FROM " + tempTableName;
+        db.execSQL(insertRowsQuery);
+
+        // Drop temporary table
+        String dropTempTableQuery = "DROP TABLE " + tempTableName;
+        db.execSQL(dropTempTableQuery);
+    }
+
+
+
 }

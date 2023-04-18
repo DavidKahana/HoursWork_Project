@@ -39,7 +39,7 @@ public class ActionToItem extends AppCompatActivity {
 
         Intent intent=getIntent();
 
-        id = intent.getIntExtra("id",0) ;
+        id = intent.getIntExtra("id",0) + 1;
         Log.d("david", "id: "+ id);
         worksDataBase = new WorksDataBase(this);
 
@@ -59,6 +59,9 @@ public class ActionToItem extends AppCompatActivity {
             public void onClick(View v) {
 
                 worksDataBase.deleteWork(id);
+                worksDataBase.resetIds();
+
+
             }
         });
 
