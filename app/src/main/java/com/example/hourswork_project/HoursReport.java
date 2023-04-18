@@ -87,6 +87,7 @@ public class HoursReport extends Fragment {
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
 
                 Intent intent = new Intent(getContext() , ActionToItem.class);
+                intent.putExtra("id" , i);
                 startActivity(intent);
 
             }

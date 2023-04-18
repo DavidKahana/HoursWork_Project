@@ -84,6 +84,23 @@ public class WorksDataBase extends SQLiteOpenHelper {
         return works;
     }
 
+    public Work getWorkById(int id) {
+        SQLiteDatabase db = this.getReadableDatabase();
+        Cursor cursor = db.rawQuery("select * from "+TABLE_NAME+" WHERE id='"+id+ "'", null);
+         Work work = null;
+        if (cursor != null && cursor.moveToFirst()) {
+         do{
+             long start = cursor.getLong(1);
+             long end = cursor.getLong(2);
+             work = new Work(id, start, end);
+         }
+         while (cursor.moveToNext());
+        }
+        return work;
+    }
+
+
+
 
 
     public void updateWork(Work work) {
