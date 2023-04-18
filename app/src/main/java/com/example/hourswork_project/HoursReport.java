@@ -1,13 +1,20 @@
 package com.example.hourswork_project;
 
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
+import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -75,11 +82,23 @@ public class HoursReport extends Fragment {
         WorksAdapter worksAdapter = new WorksAdapter(getContext(), worksDataBase.getAllWorks());
         worksLV.setAdapter(worksAdapter);
 
+        worksLV.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+
+                Intent intent = new Intent(getContext() , ActionToItem.class);
+                startActivity(intent);
+
+            }
+        });
+
 
 
 
         return view;
     }
+
+
 
 
 
