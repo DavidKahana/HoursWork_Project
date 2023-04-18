@@ -49,6 +49,7 @@ public class Entrance extends Fragment {
     SimpleDateFormat dateFormat;
     String date;
     long duration;
+    WorksDataBase worksDataBase;
 
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -103,6 +104,8 @@ public class Entrance extends Fragment {
         tvTimeStop = view.findViewById(R.id.tvTimeStop);
         tvDuration = view.findViewById(R.id.tvDuration);
 
+        worksDataBase = new WorksDataBase(getContext());
+
         btnDateAndTime = view.findViewById(R.id.btnDate);
         btnDateAndTime.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -153,6 +156,10 @@ public class Entrance extends Fragment {
 
                         btnDateAndTime.setText("select date and time!");
                         btnStartStop.setText("start");
+
+                        Work work = new Work(dateStart.getTime(),dateStop.getTime());
+                        worksDataBase.addWork(work);
+
 
 
                     }

@@ -6,7 +6,9 @@
     android:background="#F4F0CD"
     tools:context=".HoursReport">
 
-    <!-- TODO: Update blank fragment layout -->
-
+    <ListView
+        android:id="@+id/list_view_works"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
 
 </FrameLayout>
