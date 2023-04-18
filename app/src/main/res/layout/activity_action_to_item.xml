@@ -60,5 +60,13 @@
         android:textSize="30sp"
         android:text="הסכום שהרווחת סך הכל: "
         android:layout_margin="10dp"/>
+        <Button
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/btnItemDelete"
+            android:textSize="30sp"
+            android:layout_margin="20dp"
+            android:textColor="#FFEB3B"
+            android:text="delete"/>
     </LinearLayout>
 </ScrollView>

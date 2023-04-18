@@ -18,6 +18,7 @@ public class WorksDataBase extends SQLiteOpenHelper {
     private static final String COLUMN_START_DATE = "start_date";
     private static final String COLUMN_END_DATE = "end_date";
 
+
     public WorksDataBase(Context context) {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
     }
@@ -92,15 +93,12 @@ public class WorksDataBase extends SQLiteOpenHelper {
          do{
              long start = cursor.getLong(1);
              long end = cursor.getLong(2);
-             work = new Work(id, start, end);
+             work = new Work(id , start, end);
          }
          while (cursor.moveToNext());
         }
         return work;
     }
-
-
-
 
 
     public void updateWork(Work work) {
