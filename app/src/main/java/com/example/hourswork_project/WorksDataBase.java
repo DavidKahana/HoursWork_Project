@@ -26,8 +26,8 @@ public class WorksDataBase extends SQLiteOpenHelper {
     public void onCreate(SQLiteDatabase db) {
         String createTableSql = "CREATE TABLE " + TABLE_NAME + " (" +
                 COLUMN_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
-                COLUMN_START_DATE + " INTEGER NOT NULL, " +
-                COLUMN_END_DATE + " INTEGER NOT NULL);";
+                COLUMN_START_DATE + " BIGINT NOT NULL, " +
+                COLUMN_END_DATE + " BIGINT NOT NULL);";
         db.execSQL(createTableSql);
     }
 
