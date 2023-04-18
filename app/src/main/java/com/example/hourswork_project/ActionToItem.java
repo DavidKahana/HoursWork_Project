@@ -12,12 +12,14 @@ import android.widget.TextView;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.List;
 
 public class ActionToItem extends AppCompatActivity {
 
     Button btnItemDelete;
     TextView tvItemStart , tvItemStop , tvItemDate , tvItemDurationWorking , tvItemMoreHours125 , tvItemMoreHours150 , tvItemSalary;
     WorksDataBase worksDataBase;
+    private List<Work> workList;
     Work work;
     int id , count = 0;
     SimpleDateFormat hoursAndMin = new SimpleDateFormat("HH:mm");
@@ -59,7 +61,10 @@ public class ActionToItem extends AppCompatActivity {
             public void onClick(View v) {
 
                 worksDataBase.deleteWork(id);
-                worksDataBase.resetIds();
+                workList = worksDataBase.getAllWorks();
+
+
+
 
 
             }

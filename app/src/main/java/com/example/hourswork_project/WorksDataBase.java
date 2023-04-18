@@ -112,29 +112,6 @@ public class WorksDataBase extends SQLiteOpenHelper {
         db.close();
     }
 
-    public void resetIds() {
-        SQLiteDatabase db = this.getWritableDatabase();
-        String tableName = "your_table";
-        String columnName = "id";
-
-        // Create temporary table with the same schema as original table
-        String tempTableName = tableName + "_temp";
-        String createTempTableQuery = "CREATE TEMPORARY TABLE " + tempTableName +
-                " AS SELECT * FROM " + tableName + " ORDER BY " + columnName;
-        db.execSQL(createTempTableQuery);
-
-        // Delete all rows from original table
-        String deleteRowsQuery = "DELETE FROM " + tableName;
-        db.execSQL(deleteRowsQuery);
-
-        // Insert rows from temporary table back into original table with new IDs
-        String insertRowsQuery = "INSERT INTO " + tableName + " SELECT null, * FROM " + tempTableName;
-        db.execSQL(insertRowsQuery);
-
-        // Drop temporary table
-        String dropTempTableQuery = "DROP TABLE " + tempTableName;
-        db.execSQL(dropTempTableQuery);
-    }
 
 
 
