@@ -19,9 +19,8 @@ public class ActionToItem extends AppCompatActivity {
     Button btnItemDelete;
     TextView tvItemStart , tvItemStop , tvItemDate , tvItemDurationWorking , tvItemMoreHours125 , tvItemMoreHours150 , tvItemSalary;
     WorksDataBase worksDataBase;
-    private List<Work> workList;
     Work work;
-    int id , count = 0;
+    int id ;
     SimpleDateFormat hoursAndMin = new SimpleDateFormat("HH:mm");
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -61,7 +60,6 @@ public class ActionToItem extends AppCompatActivity {
             public void onClick(View v) {
 
                 worksDataBase.deleteWork(id);
-                workList = worksDataBase.getAllWorks();
 
 
 

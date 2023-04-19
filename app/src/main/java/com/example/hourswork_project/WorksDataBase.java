@@ -19,6 +19,7 @@ public class WorksDataBase extends SQLiteOpenHelper {
     private static final String COLUMN_END_DATE = "end_date";
 
 
+
     public WorksDataBase(Context context) {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
     }
@@ -109,6 +110,30 @@ public class WorksDataBase extends SQLiteOpenHelper {
         values.put(COLUMN_END_DATE, work.getEndDate());
 
         db.update(TABLE_NAME, values, COLUMN_ID + "=?", new String[]{String.valueOf(work.getId())});
+        db.close();
+    }
+
+    public void reassignIds() {
+        SQLiteDatabase db = this.getWritableDatabase();
+
+        // Select all records and order them by ID
+        Cursor cursor = db.query(TABLE_NAME, null, null, null, null, null, COLUMN_ID);
+        int count = cursor.getCount();
+
+        // Update the IDs to be sequential with no gaps
+        for (int i = 0; i < count; i++) {
+            cursor.moveToPosition(i);
+            int idIndex = cursor.getColumnIndex(COLUMN_ID);
+            int oldId = cursor.getInt(idIndex);
+            int newId = i + 1;
+            if (oldId != newId) {
+                ContentValues values = new ContentValues();
+                values.put(COLUMN_ID, newId);
+                db.update(TABLE_NAME, values, COLUMN_ID + " = ?", new String[]{String.valueOf(oldId)});
+            }
+        }
+
+        cursor.close();
         db.close();
     }
 
