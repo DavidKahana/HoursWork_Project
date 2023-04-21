@@ -35,7 +35,8 @@ public class WorksDataBase extends SQLiteOpenHelper {
 
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
-        // TODO: Implement upgrade strategy
+        db.execSQL("DROP TABLE IF EXISTS " + TABLE_NAME);
+        onCreate(db);
     }
 
     public void addWork(Work work) {
@@ -52,9 +53,19 @@ public class WorksDataBase extends SQLiteOpenHelper {
     public void deleteWork(int id) {
         SQLiteDatabase db = this.getWritableDatabase();
 
+        // Delete the work with the given id
         db.delete(TABLE_NAME, COLUMN_ID + "=?", new String[]{String.valueOf(id)});
+
+        // Update the ids of all works with an id greater than the deleted work's id
+        ContentValues values = new ContentValues();
+        String whereClause = COLUMN_ID + ">?";
+        String[] whereArgs = new String[]{String.valueOf(id)};
+        values.put(COLUMN_ID, COLUMN_ID + "-1");
+        db.update(TABLE_NAME, values, whereClause, whereArgs);
+
         db.close();
     }
+
 
     public List<Work> getAllWorks() {
         List<Work> works = new ArrayList<>();
@@ -116,26 +127,26 @@ public class WorksDataBase extends SQLiteOpenHelper {
     public void reassignIds() {
         SQLiteDatabase db = this.getWritableDatabase();
 
-        // Select all records and order them by ID
-        Cursor cursor = db.query(TABLE_NAME, null, null, null, null, null, COLUMN_ID);
-        int count = cursor.getCount();
+        // Get all work objects in the database
+        List<Work> works = getAllWorks();
 
-        // Update the IDs to be sequential with no gaps
-        for (int i = 0; i < count; i++) {
-            cursor.moveToPosition(i);
-            int idIndex = cursor.getColumnIndex(COLUMN_ID);
-            int oldId = cursor.getInt(idIndex);
-            int newId = i + 1;
+        // Reassign IDs consecutively without gaps
+        int newId = 1;
+        for (Work work : works) {
+            int oldId = work.getId();
             if (oldId != newId) {
                 ContentValues values = new ContentValues();
                 values.put(COLUMN_ID, newId);
                 db.update(TABLE_NAME, values, COLUMN_ID + " = ?", new String[]{String.valueOf(oldId)});
             }
+            newId++;
         }
 
-        cursor.close();
         db.close();
     }
+
+
+
 
 
 
