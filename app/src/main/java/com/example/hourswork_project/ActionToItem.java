@@ -1,6 +1,9 @@
 package com.example.hourswork_project;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentTransaction;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -60,6 +63,7 @@ public class ActionToItem extends AppCompatActivity {
             public void onClick(View v) {
 
                 worksDataBase.deleteWork(id);
+
 
 
 

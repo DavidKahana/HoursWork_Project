@@ -20,6 +20,7 @@ public class WorksDataBase extends SQLiteOpenHelper {
 
 
 
+
     public WorksDataBase(Context context) {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
     }
@@ -57,13 +58,24 @@ public class WorksDataBase extends SQLiteOpenHelper {
         db.delete(TABLE_NAME, COLUMN_ID + "=?", new String[]{String.valueOf(id)});
 
         // Update the ids of all works with an id greater than the deleted work's id
-        ContentValues values = new ContentValues();
-        String whereClause = COLUMN_ID + ">?";
-        String[] whereArgs = new String[]{String.valueOf(id)};
-        values.put(COLUMN_ID, COLUMN_ID + "-1");
-        db.update(TABLE_NAME, values, whereClause, whereArgs);
+        // Step 1: Add a new column to the table
+        db.execSQL("ALTER TABLE " + TABLE_NAME + " ADD COLUMN new_id INTEGER");
+
+// Step 2: Update the new column with new ID values
+        db.execSQL("UPDATE " + TABLE_NAME + " SET new_id = " + COLUMN_ID + " - 1");
+
+// Step 3: Drop the original ID column
+        db.execSQL("ALTER TABLE " + TABLE_NAME + " DROP COLUMN " + COLUMN_ID);
+
+// Step 4: Rename the "new_id" column to "id"
+        db.execSQL("ALTER TABLE " + TABLE_NAME + " RENAME COLUMN new_id TO " + COLUMN_ID);
+
 
         db.close();
+
+
+
+
     }
 
 
