@@ -1,6 +1,7 @@
 package com.example.hourswork_project;
 
 import android.content.Context;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -57,10 +58,19 @@ public class WorksAdapter extends BaseAdapter {
         String startDate = dateFormat.format(work.getStartDate());
         String endDate = dateFormat.format(work.getEndDate());
 
+
+
         holder.startDateTextView.setText(startDate);
         holder.endDateTextView.setText(endDate);
 
         return convertView;
+    }
+
+    public int getworkID(int pos){
+        Work w =  workList.get(pos);
+        Log.d("david", "wrokid: "+ w.getId());
+
+        return w.getId();
     }
 
     static class ViewHolder {

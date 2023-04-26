@@ -1,5 +1,6 @@
 package com.example.hourswork_project;
 
+import android.app.Activity;
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
@@ -49,34 +50,10 @@ public class WorksDataBase extends SQLiteOpenHelper {
 
         db.insert(TABLE_NAME, null, values);
         db.close();
-    }
-
-    public void deleteWork(int id) {
-        SQLiteDatabase db = this.getWritableDatabase();
-
-        // Delete the work with the given id
-        db.delete(TABLE_NAME, COLUMN_ID + "=?", new String[]{String.valueOf(id)});
-
-        // Update the ids of all works with an id greater than the deleted work's id
-        // Step 1: Add a new column to the table
-        db.execSQL("ALTER TABLE " + TABLE_NAME + " ADD COLUMN new_id INTEGER");
-
-// Step 2: Update the new column with new ID values
-        db.execSQL("UPDATE " + TABLE_NAME + " SET new_id = " + COLUMN_ID + " - 1");
-
-// Step 3: Drop the original ID column
-        db.execSQL("ALTER TABLE " + TABLE_NAME + " DROP COLUMN " + COLUMN_ID);
-
-// Step 4: Rename the "new_id" column to "id"
-        db.execSQL("ALTER TABLE " + TABLE_NAME + " RENAME COLUMN new_id TO " + COLUMN_ID);
-
-
-        db.close();
-
-
 
 
     }
+
 
 
     public List<Work> getAllWorks() {
@@ -136,26 +113,17 @@ public class WorksDataBase extends SQLiteOpenHelper {
         db.close();
     }
 
-    public void reassignIds() {
+
+
+
+    public void deleteWork(int id) {
         SQLiteDatabase db = this.getWritableDatabase();
-
-        // Get all work objects in the database
-        List<Work> works = getAllWorks();
-
-        // Reassign IDs consecutively without gaps
-        int newId = 1;
-        for (Work work : works) {
-            int oldId = work.getId();
-            if (oldId != newId) {
-                ContentValues values = new ContentValues();
-                values.put(COLUMN_ID, newId);
-                db.update(TABLE_NAME, values, COLUMN_ID + " = ?", new String[]{String.valueOf(oldId)});
-            }
-            newId++;
-        }
+        db.delete(TABLE_NAME, COLUMN_ID + "=?", new String[] { String.valueOf(id) });
 
         db.close();
     }
+
+
 
 
 

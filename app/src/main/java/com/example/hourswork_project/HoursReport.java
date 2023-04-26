@@ -87,13 +87,15 @@ public class HoursReport extends Fragment {
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
 
                 Intent intent = new Intent(getContext() , ActionToItem.class);
-                intent.putExtra("id" , i);
+
+
+
+                intent.putExtra("id" , worksAdapter.getworkID(i));
+                Log.d("david", "i: "+ i);
                 startActivity(intent);
 
             }
         });
-
-
 
 
         return view;

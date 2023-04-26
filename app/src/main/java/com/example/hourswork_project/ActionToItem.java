@@ -25,6 +25,7 @@ public class ActionToItem extends AppCompatActivity {
     Work work;
     int id ;
     SimpleDateFormat hoursAndMin = new SimpleDateFormat("HH:mm");
+    SimpleDateFormat date = new SimpleDateFormat("dd/MM/yyyy");
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -43,7 +44,8 @@ public class ActionToItem extends AppCompatActivity {
 
         Intent intent=getIntent();
 
-        id = intent.getIntExtra("id",0) + 1;
+        id = intent.getIntExtra("id",0);
+
         Log.d("david", "id: "+ id);
         worksDataBase = new WorksDataBase(this);
 
@@ -57,16 +59,21 @@ public class ActionToItem extends AppCompatActivity {
         tvItemStart.setText("כניסה: " + hoursAndMin.format(start));
         tvItemStop.setText("יציאה: " + hoursAndMin.format(stop));
 
+        if (date.format(start).equals(date.format(stop))){
+            tvItemDate.setText(  "תאריך: " + date.format(start));
+        }
+        else{
+            tvItemDate.setText(  "תאריך: " + date.format(start) + " - " + date.format(stop));
+        }
+
 
         btnItemDelete.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
 
                 worksDataBase.deleteWork(id);
-
-
-
-
+                HoursReport hoursReport = new HoursReport();
+                getSupportFragmentManager().beginTransaction().replace(R.id.container , hoursReport).commit();
 
             }
         });
