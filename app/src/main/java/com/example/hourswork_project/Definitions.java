@@ -4,6 +4,7 @@ import android.app.Dialog;
 import android.content.DialogInterface;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -24,12 +25,12 @@ import androidx.fragment.app.Fragment;
 public class Definitions extends Fragment {
 
     NumberPicker numberPicker;
-    Button btnSelectAge , btnSelectTimeOfBreak , btnRestart;
-    int selectedNumber , numberSelectTimeOfBreak , numberHourlyWage;
+    Button btnSelectAge , btnSelectTimeOfBreak , btnRestart , btnNumOfDaysWorking;
+    int selectedNumber , numberSelectTimeOfBreak , numberHourlyWage , numOfDaysWorking = 0;
     CheckBox cbMinSalary , cbSalaryOnBreak;
     EditText etAnother;
     TextView tvHourlyWage;
-    boolean SalaryOnBreak;
+    boolean SalaryOnBreak ;
     SharedPreferences sharedPreferences;
 
     // TODO: Rename parameter arguments, choose names that match
@@ -84,6 +85,7 @@ public class Definitions extends Fragment {
         btnSelectAge = view.findViewById(R.id.btnSelectAge);
         btnSelectTimeOfBreak = view.findViewById(R.id.btnSelectTimeOfBreak);
         btnRestart = view.findViewById(R.id.btnRestart);
+        btnNumOfDaysWorking = view.findViewById(R.id.btnNumOfDaysWorking);
 
         sharedPreferences = getContext().getSharedPreferences("Definitions", 0);
 
@@ -97,6 +99,14 @@ public class Definitions extends Fragment {
             btnSelectTimeOfBreak.setText("אורך ההפסקה בדקות הוא: "+ sharedPreferences.getInt("numberSelectTimeOfBreak", 0));
         }
         cbSalaryOnBreak.setChecked(sharedPreferences.getBoolean("SalaryOnBreak" , false));
+
+        if (sharedPreferences.getInt("NumOfDaysWorking" , 0) == 5){
+            btnNumOfDaysWorking.setText("מספר ימי העבודה בשבוע: " + 5);
+        }
+        if (sharedPreferences.getInt("NumOfDaysWorking" , 0) == 6){
+            btnNumOfDaysWorking.setText("מספר ימי העבודה בשבוע: " + 6);
+        }
+
 
 
 
@@ -221,6 +231,53 @@ public class Definitions extends Fragment {
 
 
 
+
+        btnNumOfDaysWorking.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (v == btnNumOfDaysWorking) {
+
+
+                    // Create an AlertDialog builder
+                    AlertDialog.Builder builder = new AlertDialog.Builder(view.getContext());
+
+// Set the alert message and title
+                    builder.setMessage("כמה הימים אתה עובד בשבוע?")
+                            .setTitle("Confirmation");
+
+// Set the positive button and its click listener
+                    builder.setPositiveButton("5 ימים", new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int id) {
+
+                            numOfDaysWorking = 5;
+                            SharedPreferences.Editor editor = sharedPreferences.edit();
+                            editor.putInt("NumOfDaysWorking" , numOfDaysWorking);
+                            editor.commit();
+                            btnNumOfDaysWorking.setText("מספר ימי העבודה בשבוע: " + 5);
+                        }
+                    });
+                    builder.setNegativeButton("6 ימים", new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int id) {
+
+                            numOfDaysWorking = 6;
+                            SharedPreferences.Editor editor = sharedPreferences.edit();
+                            editor.putInt("NumOfDaysWorking" , numOfDaysWorking);
+                            editor.commit();
+                            btnNumOfDaysWorking.setText("מספר ימי העבודה בשבוע: " + 6);
+                        }
+                    });
+                    AlertDialog dialog = builder.create();
+                    dialog.show();
+
+
+                }
+            }
+        });
+
+
+
+
+
         btnRestart.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -243,12 +300,14 @@ public class Definitions extends Fragment {
                             editor.putInt("numberHourlyWage" , 0);
                             editor.putInt("selectedNumber" , 0);
                             editor.putBoolean("SalaryOnBreak" , false);
+                            editor.putInt("NumOfDaysWorking" , 0);
                             editor.commit();
 
                             btnSelectAge.setText("גיל");
                             tvHourlyWage.setText("*** לשעה");
                             btnSelectTimeOfBreak.setText("משך זמן ההפסקה (בדקות)");
                             cbSalaryOnBreak.setChecked(false);
+                            btnNumOfDaysWorking.setText("מספר ימי העבודה בשבוע");
                         }
                     });
                     builder.setNegativeButton("לא", new DialogInterface.OnClickListener() {

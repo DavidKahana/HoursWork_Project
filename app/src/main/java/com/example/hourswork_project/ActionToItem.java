@@ -24,6 +24,7 @@ public class ActionToItem extends AppCompatActivity {
     WorksDataBase worksDataBase;
     Work work;
     int id ;
+    long duration;
     SimpleDateFormat hoursAndMin = new SimpleDateFormat("HH:mm");
     SimpleDateFormat date = new SimpleDateFormat("dd/MM/yyyy");
     @Override
@@ -66,6 +67,9 @@ public class ActionToItem extends AppCompatActivity {
             tvItemDate.setText(  "תאריך: " + date.format(start) + " - " + date.format(stop));
         }
 
+        duration = getDurationMillis(start ,stop );
+        tvItemDurationWorking.setText( "משך העבודה: " + formatDuration(duration));
+
 
         btnItemDelete.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -78,5 +82,32 @@ public class ActionToItem extends AppCompatActivity {
             }
         });
 
+    }
+
+    public static long getDurationMillis(Date startDate, Date endDate) {
+        return endDate.getTime() - startDate.getTime();
+    }
+
+    public static String formatDuration(long duration) {
+        long seconds = duration / 1000;
+        long minutes = seconds / 60;
+        long hours = minutes / 60;
+        long days = hours / 24;
+
+        String result = "";
+        if (days > 0) {
+            result += days + " ימים ";
+        }
+        if (hours%24 > 0) {
+            result += hours % 24 + " שעות ";
+        }
+        if (minutes%60 > 0) {
+            result += minutes % 60 + " דקות ";
+        }
+        if (result.equals("")) {
+            result = "0 דקות";
+        }
+
+        return result;
     }
 }
