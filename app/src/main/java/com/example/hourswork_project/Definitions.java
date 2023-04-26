@@ -113,7 +113,7 @@ public class Definitions extends Fragment {
 
 
 
-            btnSelectAge.setOnClickListener(new View.OnClickListener() {
+        btnSelectAge.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 if (v == btnSelectAge) {
@@ -236,7 +236,6 @@ public class Definitions extends Fragment {
             @Override
             public void onClick(View v) {
                 if (v == btnNumOfDaysWorking) {
-
 
                     // Create an AlertDialog builder
                     AlertDialog.Builder builder = new AlertDialog.Builder(view.getContext());
