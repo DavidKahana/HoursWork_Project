@@ -43,7 +43,7 @@ import java.util.logging.Handler;
 public class Entrance extends Fragment {
 
     Button btnStartStop, btnDateAndTime;
-    TextView tvTimeEnter , tvSelected , tvTimeStop , tvDuration;
+    TextView tvTimeEnter , tvTimeStop , tvDuration;
     Date dateAndTime , dateStart , dateStop;
     SharedPreferences sharedPreferences;
     SimpleDateFormat dateFormat;
@@ -100,7 +100,6 @@ public class Entrance extends Fragment {
         btnStartStop = view.findViewById(R.id.btnStartStop);
         tvTimeEnter = view.findViewById(R.id.tvTimeEnter);
         sharedPreferences = getContext().getSharedPreferences("Dates", 0);
-        tvSelected = view.findViewById(R.id.tvSelected);
         tvTimeStop = view.findViewById(R.id.tvTimeStop);
         tvDuration = view.findViewById(R.id.tvDuration);
 
@@ -134,6 +133,8 @@ public class Entrance extends Fragment {
                         dateFormat = new SimpleDateFormat("MM-dd-yyyy HH:mm" );
                         date = dateFormat.format(dateAndTime);
                         tvTimeEnter.setText( "שעת כניסה:" + '\n' + date);
+                        tvTimeStop.setText("");
+                        tvDuration.setText("");
 
                         dateStart = dateAndTime;
 

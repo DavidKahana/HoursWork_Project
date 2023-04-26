@@ -8,7 +8,10 @@ import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.TextView;
 
+import java.text.DateFormatSymbols;
 import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 
@@ -48,6 +51,7 @@ public class WorksAdapter extends BaseAdapter {
             holder = new ViewHolder();
             holder.startDateTextView = convertView.findViewById(R.id.text_view_start_date);
             holder.endDateTextView = convertView.findViewById(R.id.text_view_end_date);
+            holder.tvDayOfWeek = convertView.findViewById(R.id.tvDayOfWeek);
             convertView.setTag(holder);
         } else {
             holder = (ViewHolder) convertView.getTag();
@@ -57,11 +61,12 @@ public class WorksAdapter extends BaseAdapter {
 
         String startDate = dateFormat.format(work.getStartDate());
         String endDate = dateFormat.format(work.getEndDate());
-
+        String dayOfWeek = hebrewDay(work.getStartDate());
 
 
         holder.startDateTextView.setText(startDate);
         holder.endDateTextView.setText(endDate);
+        holder.tvDayOfWeek.setText(dayOfWeek);
 
         return convertView;
     }
@@ -76,5 +81,26 @@ public class WorksAdapter extends BaseAdapter {
     static class ViewHolder {
         TextView startDateTextView;
         TextView endDateTextView;
+        TextView tvDayOfWeek;
+    }
+
+    public String hebrewDay (long l){
+        Locale locale = new Locale("he", "IL");
+
+        Date date = new Date(l);
+// create a Calendar instance and set the date to be checked
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTime(date);
+
+// get the day of the week (1 = Sunday, 2 = Monday, ..., 7 = Saturday)
+        int dayOfWeek = calendar.get(Calendar.DAY_OF_WEEK);
+
+// get the array of day of the week names in Hebrew
+        DateFormatSymbols dfs = new DateFormatSymbols(locale);
+        String[] weekdays = dfs.getWeekdays();
+
+// get the day of the week name in Hebrew
+        String dayOfWeekName = weekdays[dayOfWeek];
+        return dayOfWeekName;
     }
 }

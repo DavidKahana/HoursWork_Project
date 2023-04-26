@@ -20,16 +20,7 @@
             android:textSize="30sp"
             android:layout_margin="30dp"
             android:text="select date and time!"/>
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:id="@+id/tvSelected"
-            android:textSize="30sp"
-            android:textColor="#F61D0D"
-            android:layout_gravity="center"
-            android:gravity="center"
-            android:layout_margin="30dp"
-            android:text=""/>
+
         <Button
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -58,7 +49,7 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center"
             android:gravity="center"
-            android:textColor="#000000"
+            android:textColor="#F44336"
             android:id="@+id/tvDuration"
             android:textSize="40sp"/>
 

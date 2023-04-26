@@ -2,19 +2,45 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:orientation="vertical"
+    android:orientation="horizontal"
     android:padding="16dp">
 
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
     <TextView
         android:id="@+id/text_view_start_date"
-        android:layout_width="match_parent"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:hint="date 1"
+        android:layout_marginRight="10dp"
         android:textAppearance="?android:textAppearanceMedium" />
 
     <TextView
         android:id="@+id/text_view_end_date"
-        android:layout_width="match_parent"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:hint="date 2"
+        android:layout_marginRight="10dp"
         android:textAppearance="?android:textAppearanceMedium" />
+
+    </LinearLayout>
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:hint="day of week"
+            android:layout_marginRight="25dp"
+            android:textAppearance="?android:textAppearanceMedium"
+            android:id="@+id/tvDayOfWeek"/>
+
+
+
+    </LinearLayout>
 
 </LinearLayout>
