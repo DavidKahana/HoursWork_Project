@@ -78,6 +78,13 @@ public class ActionToItem extends AppCompatActivity {
         tvItemMoreHours125.setText( "שעות נוספות 125%: " + formatDuration(calculateTime125p(duration , numOfDaysWeek)));
         tvItemMoreHours150.setText( "שעות נוספות 150%: " + formatDuration(calculateTime150p(duration , numOfDaysWeek)));
 
+        double numberHourlyWage = sharedPreferences.getInt("numberHourlyWage" , 0);
+        double salaryDaily = salaryDay(numberHourlyWage , duration , numOfDaysWeek);
+        tvItemSalary.setText("הסכום שהרווחת סך הכל: " + "\n" + salaryDaily + " שקלים חדשים ");
+
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+        editor.putFloat("salaryDaily" , (float) salaryDaily);
+        editor.commit();
 
         btnItemDelete.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -173,4 +180,38 @@ public class ActionToItem extends AppCompatActivity {
         }
 
     }
+
+    public static double salaryDay(double numberHourlyWage , long duration , int num){
+        double salary = 0 ;
+
+        long time150p = calculateTime150p(duration , num);
+
+        long secondsTime150p = time150p / 1000;
+        long minutesTime150p = secondsTime150p / 60;
+        long hoursTime150p = minutesTime150p / 60;
+
+        long time125p = calculateTime125p(duration , num);
+
+        long secondsTime125p = time125p / 1000;
+        long minutesTime125p = secondsTime125p / 60;
+        long hoursTime125p = minutesTime125p / 60;
+
+        long basic = duration - time150p - time125p;
+
+        long secondsBasic = basic / 1000;
+        long minutesBasic= secondsBasic/ 60;
+        long hoursBasic = minutesBasic / 60;
+
+
+        salary += ((numberHourlyWage * 1.5 * (minutesTime150p%60)) / 60.0 );
+        salary += (numberHourlyWage * 1.5 * hoursTime150p );
+        salary += ((numberHourlyWage * 1.25 * (minutesTime125p%60)) / 60.0 );
+        salary += (numberHourlyWage * 1.25 * hoursTime125p);
+        salary += ((numberHourlyWage * (minutesBasic%60)) / 60.0 );
+        salary += (numberHourlyWage * hoursBasic);
+
+
+
+        return salary;
     }
+}
