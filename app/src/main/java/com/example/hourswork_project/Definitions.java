@@ -331,13 +331,13 @@ public class Definitions extends Fragment {
         double minSalary = 0;
 
         if (age < 16)
-            minSalary = 21.45;
+            minSalary = 22.54;
         else if (age < 17 && age >=  16)
-            minSalary = 22.98;
+            minSalary = 24.15;
         else if (age < 18 && age >= 17)
-            minSalary = 25.43;
+            minSalary = 26.73;
         else if (age >= 18)
-            minSalary = 28.49;
+            minSalary = 29.96;
 
         return minSalary;
 

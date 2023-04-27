@@ -101,6 +101,13 @@ public class Information extends Fragment {
 
         tvOvertime.setText(strOverTime);
 
+        String strMinSalary = "עד גיל 16 : 22.54\n" +
+                "מגיל 16 עד 17 : 24.15\n" +
+                "מגיל 17 עד 18 : 26.73\n" +
+                "מגיל 18 ומעלה : 29.96\n";
+
+        tvMinSalary.setText(strMinSalary);
+
 
 
         if (btnMinSalary != null) {
