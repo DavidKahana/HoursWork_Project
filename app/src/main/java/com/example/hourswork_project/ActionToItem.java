@@ -6,6 +6,7 @@ import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -25,6 +26,7 @@ public class ActionToItem extends AppCompatActivity {
     Work work;
     int id ;
     long duration;
+    SharedPreferences sharedPreferences;
     SimpleDateFormat hoursAndMin = new SimpleDateFormat("HH:mm");
     SimpleDateFormat date = new SimpleDateFormat("dd/MM/yyyy");
     @Override
@@ -70,6 +72,12 @@ public class ActionToItem extends AppCompatActivity {
         duration = getDurationMillis(start ,stop );
         tvItemDurationWorking.setText( "משך העבודה: " + formatDuration(duration));
 
+        sharedPreferences = getSharedPreferences("Definitions", 0);
+        int numOfDaysWeek = sharedPreferences.getInt("NumOfDaysWorking" , 0) ;
+        Log.d("mmm", "m: "+ numOfDaysWeek);
+        tvItemMoreHours125.setText( "שעות נוספות 125%: " + formatDuration(calculateTime125p(duration , numOfDaysWeek)));
+        tvItemMoreHours150.setText( "שעות נוספות 150%: " + formatDuration(calculateTime150p(duration , numOfDaysWeek)));
+
 
         btnItemDelete.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -110,4 +118,59 @@ public class ActionToItem extends AppCompatActivity {
 
         return result;
     }
-}
+
+    public static long calculateTime125p(long time, int num) {
+        long eightHoursThirtySixMins = 8 * 60 * 60 * 1000 + 36 * 60 * 1000;
+        long tenHoursThirtySixMins = 10 * 60 * 60 * 1000 + 36 * 60 * 1000;
+        long twoHours = 2 * 60 * 60 * 1000;
+
+        if (num == 5) {
+            if (time < eightHoursThirtySixMins) {
+                return 0;
+            } else if (time < tenHoursThirtySixMins) {
+                return time - eightHoursThirtySixMins;
+            } else {
+                return twoHours;
+            }
+        } else if (num == 6) {
+            if (time < 8 * 60 * 60 * 1000) {
+                return 0;
+            } else if (time < 10 * 60 * 60 * 1000) {
+                return time - 8 * 60 * 60 * 1000;
+            } else {
+                return twoHours;
+            }
+        } else {
+            // handle invalid num value
+            return -1;
+        }
+
+        }
+
+    public static long calculateTime150p(long time, int num) {
+        long eightHoursThirtySixMins = 8 * 60 * 60 * 1000 + 36 * 60 * 1000;
+        long tenHoursThirtySixMins = 10 * 60 * 60 * 1000 + 36 * 60 * 1000;
+        long twoHours = 2 * 60 * 60 * 1000;
+
+        if (num == 5) {
+            if (time < tenHoursThirtySixMins) {
+                return 0;
+            }
+        else {
+                return time - eightHoursThirtySixMins;
+        }
+        }
+        else if (num == 6) {
+             if (time < 10 * 60 * 60 * 1000) {
+                return 0;
+            }
+             else {
+                return time - 10 * 60 * 60 * 1000 ;
+            }
+        } else {
+            // handle invalid num value
+            return -1;
+        }
+
+    }
+    }

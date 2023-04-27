@@ -1,4 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
+
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
@@ -7,6 +8,9 @@
     tools:context=".Information">
 
     <!-- TODO: Update blank fragment layout -->
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -26,7 +30,8 @@
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:textSize="30sp"
+            android:textSize="20sp"
+            android:padding="15dp"
             android:background="@drawable/rounded_button"
             android:textColor="@color/black"
             android:visibility="gone"
@@ -44,7 +49,8 @@
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:textSize="30sp"
+            android:textSize="20sp"
+            android:padding="15dp"
             android:background="@drawable/rounded_button"
             android:textColor="@color/black"
             android:visibility="gone"
@@ -62,7 +68,8 @@
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:textSize="30sp"
+            android:textSize="20sp"
+            android:padding="15dp"
             android:background="@drawable/rounded_button"
             android:textColor="@color/black"
             android:visibility="gone"
@@ -71,5 +78,5 @@
 
 
     </LinearLayout>
-
+    </ScrollView>
 </FrameLayout>

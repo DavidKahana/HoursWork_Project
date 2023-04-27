@@ -82,6 +82,27 @@ public class Information extends Fragment {
         btnTravelExpenses = view.findViewById(R.id.btnTravelExpenses);
         btnOvertime = view.findViewById(R.id.btnOvertime);
 
+        String strOverTime = "אם קבעת בהגדרות כי העסק שלך\n" +
+                "\n" +
+                "פועל חמישה ימים בשבוע, אז השעות הנוספות תחושבנה כך: \n" +
+                "* שעות נוספות של 125% מהשכר הרגיל תחושבנה על כל שעה שמעבר לשמונה שעות ו- 36 דקות.\n" +
+                "\n" +
+                " * שעות נוספות של 150% מהשכר הרגיל תחושבנה על כל שעה שמעבר לעשר שעות ו- 36 דקות.\n" +
+                "\n" +
+                "אם קבעת בהגדרות כי העסק שלך פועל שישה ימים בשבוע, אז השעות הנוספות\n" +
+                "תחושבנה כך:\n" +
+                "* שעות נוספות של 125% מהשכר\n" +
+                "הרגיל תחושבנה על כל שעה שמעבר\n" +
+                "לשמונה שעות.\n" +
+                "\n" +
+                "* שעות נוספות של 150% מהשכר\n" +
+                "הרגיל תחושבנה על כל שעה שמעבר\n" +
+                "לעשר שעות.";
+
+        tvOvertime.setText(strOverTime);
+
+
+
         if (btnMinSalary != null) {
             btnMinSalary.setOnClickListener(new View.OnClickListener() {
                 @Override
