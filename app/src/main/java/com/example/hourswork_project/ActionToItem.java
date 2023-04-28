@@ -7,7 +7,11 @@ import androidx.fragment.app.FragmentTransaction;
 
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.graphics.Color;
 import android.os.Bundle;
+import android.text.Spannable;
+import android.text.SpannableStringBuilder;
+import android.text.style.ForegroundColorSpan;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
@@ -80,7 +84,17 @@ public class ActionToItem extends AppCompatActivity {
 
         double numberHourlyWage = sharedPreferences.getInt("numberHourlyWage" , 0);
         double salaryDaily = salaryDay(numberHourlyWage , duration , numOfDaysWeek);
-        tvItemSalary.setText("הסכום שהרווחת סך הכל: " + "\n" + salaryDaily + " שקלים חדשים ");
+        String strSalaryDaily = "הסכום שהרווחת סך הכל: " + "\n" + salaryDaily + " שקלים חדשים ";
+
+        SpannableStringBuilder spannableStringBuilder = new SpannableStringBuilder(strSalaryDaily);
+
+        int startIndex = strSalaryDaily.indexOf("\n");
+        int endIndex = strSalaryDaily.indexOf("חדשים") + "חדשים".length();
+
+        spannableStringBuilder.setSpan(new ForegroundColorSpan(Color.RED), startIndex, endIndex, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+
+        tvItemSalary.setText(spannableStringBuilder);
+     //   tvItemSalary.setText("הסכום שהרווחת סך הכל: " + "\n" + salaryDaily + " שקלים חדשים ");
 
         SharedPreferences.Editor editor = sharedPreferences.edit();
         editor.putFloat("salaryDaily" , (float) salaryDaily);
