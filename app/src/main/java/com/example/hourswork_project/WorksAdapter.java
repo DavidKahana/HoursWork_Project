@@ -1,6 +1,7 @@
 package com.example.hourswork_project;
 
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -52,6 +53,7 @@ public class WorksAdapter extends BaseAdapter {
             holder.startDateTextView = convertView.findViewById(R.id.text_view_start_date);
             holder.endDateTextView = convertView.findViewById(R.id.text_view_end_date);
             holder.tvDayOfWeek = convertView.findViewById(R.id.tvDayOfWeek);
+            holder.tvSalaryDay = convertView.findViewById(R.id.tvSalaryDay);
             convertView.setTag(holder);
         } else {
             holder = (ViewHolder) convertView.getTag();
@@ -59,9 +61,14 @@ public class WorksAdapter extends BaseAdapter {
 
         Work work = workList.get(position);
 
+
+
+
+
         String startDate = dateFormat.format(work.getStartDate());
         String endDate = dateFormat.format(work.getEndDate());
         String dayOfWeek = hebrewDay(work.getStartDate());
+        String salaryDay ;
 
 
         holder.startDateTextView.setText(startDate);
@@ -82,6 +89,7 @@ public class WorksAdapter extends BaseAdapter {
         TextView startDateTextView;
         TextView endDateTextView;
         TextView tvDayOfWeek;
+        TextView tvSalaryDay;
     }
 
     public String hebrewDay (long l){
@@ -103,4 +111,5 @@ public class WorksAdapter extends BaseAdapter {
         String dayOfWeekName = weekdays[dayOfWeek];
         return dayOfWeekName;
     }
+
 }

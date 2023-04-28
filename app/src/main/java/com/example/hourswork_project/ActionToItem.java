@@ -94,7 +94,6 @@ public class ActionToItem extends AppCompatActivity {
         spannableStringBuilder.setSpan(new ForegroundColorSpan(Color.RED), startIndex, endIndex, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
 
         tvItemSalary.setText(spannableStringBuilder);
-     //   tvItemSalary.setText("הסכום שהרווחת סך הכל: " + "\n" + salaryDaily + " שקלים חדשים ");
 
         SharedPreferences.Editor editor = sharedPreferences.edit();
         editor.putFloat("salaryDaily" , (float) salaryDaily);

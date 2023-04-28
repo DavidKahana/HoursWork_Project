@@ -43,4 +43,22 @@
 
     </LinearLayout>
 
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:hint=""
+            android:layout_marginRight="25dp"
+            android:textColor="#F44336"
+            android:textAppearance="?android:textAppearanceMedium"
+            android:id="@+id/tvSalaryDay"/>
+
+
+
+    </LinearLayout>
+
 </LinearLayout>
