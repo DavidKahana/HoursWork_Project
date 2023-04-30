@@ -331,6 +331,8 @@ public class Definitions extends Fragment {
                             editor.putInt("selectedNumber" , 0);
                             editor.putBoolean("SalaryOnBreak" , false);
                             editor.putInt("NumOfDaysWorking" , 0);
+                            editor.putString("phoneNumber" , "");
+                            editor.putBoolean("sendSms" , false);
                             editor.commit();
 
                             btnSelectAge.setText("גיל");
@@ -338,6 +340,8 @@ public class Definitions extends Fragment {
                             btnSelectTimeOfBreak.setText("משך זמן ההפסקה (בדקות)");
                             cbSalaryOnBreak.setChecked(false);
                             btnNumOfDaysWorking.setText("מספר ימי העבודה בשבוע");
+                            phoneNumberEditText.setText("");
+                            sendCheckbox.setChecked(false);
                         }
                     });
                     builder.setNegativeButton("לא", new DialogInterface.OnClickListener() {
