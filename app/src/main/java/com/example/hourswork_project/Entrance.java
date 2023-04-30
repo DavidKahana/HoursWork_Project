@@ -204,6 +204,8 @@ public class Entrance extends Fragment {
                     public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
                         calendar.set(Calendar.HOUR_OF_DAY, hourOfDay);
                         calendar.set(Calendar.MINUTE, minute);
+                        calendar.set(calendar.SECOND ,0);
+                        calendar.set(calendar.MILLISECOND , 0);
 
 
                         SharedPreferences.Editor editor = sharedPreferences.edit();
