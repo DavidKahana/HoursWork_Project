@@ -25,7 +25,7 @@ import java.util.List;
 public class ActionToItem extends AppCompatActivity {
 
     Button btnItemDelete;
-    TextView tvItemStart , tvItemStop , tvItemDate , tvItemDurationWorking , tvItemMoreHours125 , tvItemMoreHours150 , tvItemSalary;
+    TextView tvItemStart , tvItemStop , tvItemDate , tvItemDurationWorking , tvItemDurationWorkingIncludingBreaking , tvItemMoreHours125 , tvItemMoreHours150 , tvItemSalary ;
     WorksDataBase worksDataBase;
     Work work;
     int id ;
@@ -43,11 +43,14 @@ public class ActionToItem extends AppCompatActivity {
         tvItemStop = findViewById(R.id.tvItemStop);
         tvItemDate = findViewById(R.id.tvItemDate);
         tvItemDurationWorking = findViewById(R.id.tvItemDurationWorking);
+        tvItemDurationWorkingIncludingBreaking = findViewById(R.id.tvItemDurationWorkingIncludingBreaking);
         tvItemMoreHours125 = findViewById(R.id.tvItemMoreHours125);
         tvItemMoreHours150 = findViewById(R.id.tvItemMoreHours150);
         tvItemSalary = findViewById(R.id.tvItemSalary);
 
         btnItemDelete = findViewById(R.id.btnItemDelete);
+
+        sharedPreferences = getSharedPreferences("Definitions", 0);
 
         Intent intent=getIntent();
 
@@ -74,9 +77,19 @@ public class ActionToItem extends AppCompatActivity {
         }
 
         duration = getDurationMillis(start ,stop );
+
         tvItemDurationWorking.setText( "משך העבודה: " + formatDuration(duration));
 
-        sharedPreferences = getSharedPreferences("Definitions", 0);
+        Boolean salaryOnBreaking = sharedPreferences.getBoolean("SalaryOnBreak" , false);
+        int numOfBreaking = sharedPreferences.getInt("numberSelectTimeOfBreak" , 0);
+        if (salaryOnBreaking == false){
+            if (duration > 6 * 60 * 60 * 1000){
+                duration = breaking(duration , numOfBreaking);
+                tvItemDurationWorkingIncludingBreaking.setText("משך עבודה עבורו קיבלתי שכר (כלומר ללא זמן ההפסקה): " + formatDuration(duration));
+                tvItemDurationWorkingIncludingBreaking.setVisibility(View.VISIBLE);
+            }
+        }
+
         int numOfDaysWeek = sharedPreferences.getInt("NumOfDaysWorking" , 0) ;
         Log.d("mmm", "m: "+ numOfDaysWeek);
         tvItemMoreHours125.setText( "שעות נוספות 125%: " + formatDuration(calculateTime125p(duration , numOfDaysWeek)));
@@ -114,6 +127,20 @@ public class ActionToItem extends AppCompatActivity {
 
     public static long getDurationMillis(Date startDate, Date endDate) {
         return endDate.getTime() - startDate.getTime();
+    }
+
+    public static long breaking (long duration , int minutes){
+        long sixHours = 6 * 60 * 60 * 1000;
+        long sixHoursAndTimeBreak = 2 * 60 * 60 * 1000 + minutes * 60 * 1000;
+        if (duration < sixHours){
+            return duration;
+        }
+        else if (duration < sixHoursAndTimeBreak){
+            return sixHours;
+        }
+        else{
+            return duration - minutes * 60 * 1000;
+        }
     }
 
     public static String formatDuration(long duration) {

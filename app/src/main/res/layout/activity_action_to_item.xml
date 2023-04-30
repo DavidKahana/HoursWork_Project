@@ -39,6 +39,13 @@
         android:textSize="30sp"
         android:text="משך העבודה: "
         android:layout_margin="10dp"/>
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/tvItemDurationWorkingIncludingBreaking"
+            android:textSize="30sp"
+            android:visibility="gone"
+            android:layout_margin="10dp"/>
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
