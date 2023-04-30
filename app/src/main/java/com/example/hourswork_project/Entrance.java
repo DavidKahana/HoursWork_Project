@@ -7,6 +7,7 @@ import android.content.DialogInterface;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.CountDownTimer;
+import android.telephony.SmsManager;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -45,7 +46,7 @@ public class Entrance extends Fragment {
     Button btnStartStop, btnDateAndTime;
     TextView tvTimeEnter , tvTimeStop , tvDuration;
     Date dateAndTime , dateStart , dateStop;
-    SharedPreferences sharedPreferences;
+    SharedPreferences sharedPreferences , sp;
     SimpleDateFormat dateFormat;
     String date;
     long duration;
@@ -161,7 +162,10 @@ public class Entrance extends Fragment {
                         Work work = new Work(dateStart.getTime(),dateStop.getTime());
                         worksDataBase.addWork(work);
 
-
+//                        sp = getContext().getSharedPreferences("Definitions", 0);
+//                        String phoneNumber = sp.getString("phoneNumber" , null) ;
+//                        boolean sendSms = sp.getBoolean("sendSms" , false);
+//                        sendSmsToEmployer(phoneNumber , sendSms);
 
                     }
                 }
@@ -239,6 +243,39 @@ public class Entrance extends Fragment {
 
         return result;
     }
+
+//    public void sendSmsToEmployer (String phoneNumberEmployer , boolean iFSendSms){
+//        String phoneNumber = phoneNumberEmployer ;
+//        boolean sendSms = iFSendSms;
+//
+//        if (!isValidPhoneNumber(phoneNumber)) {
+//            Toast.makeText(getContext(), "Invalid phone number", Toast.LENGTH_SHORT).show();
+//            return;
+//        }
+
+//        if (sendSms) {
+//            // Create the SMS message
+//            Log.d("sms", "num: "+ phoneNumber);
+//            try {
+//                SmsManager smsManager = SmsManager.getDefault();
+//                smsManager.sendTextMessage(phoneNumber, null, "hello", null, null);
+//                Toast.makeText(getContext(), "Message sent to " + phoneNumber, Toast.LENGTH_SHORT).show();
+//                // Show a toast to indicate that the message was sent
+//                Toast.makeText(getContext(), "Message sent to " + phoneNumber, Toast.LENGTH_SHORT).show();
+//            } catch (Exception e) {
+//                Toast.makeText(getContext(), "Failed to send message. Error: " + e.getMessage(), Toast.LENGTH_SHORT).show();
+//                Toast.makeText(getContext(), "Message not sent", Toast.LENGTH_SHORT).show();
+//            }
+//        }
+//
+//    }
+//    private boolean isValidPhoneNumber(String phoneNumber) {
+//        // Remove any non-digit characters from the phone number
+//        phoneNumber = phoneNumber.replaceAll("[^\\d]", "");
+//
+//        // Check if the phone number has 10 digits (assuming a US phone number)
+//        return phoneNumber.length() == 10;
+//    }
 
 
 

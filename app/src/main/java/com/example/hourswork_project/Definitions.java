@@ -27,11 +27,12 @@ public class Definitions extends Fragment {
     NumberPicker numberPicker;
     Button btnSelectAge , btnSelectTimeOfBreak , btnRestart , btnNumOfDaysWorking;
     int selectedNumber , numberSelectTimeOfBreak , numberHourlyWage , numOfDaysWorking = 0;
-    CheckBox cbMinSalary , cbSalaryOnBreak;
-    EditText etAnother;
+    CheckBox cbMinSalary , cbSalaryOnBreak , sendCheckbox;
+    EditText etAnother , phoneNumberEditText;
     TextView tvHourlyWage;
-    boolean SalaryOnBreak ;
+    boolean SalaryOnBreak , sendSms;
     SharedPreferences sharedPreferences;
+    String phoneNumber;
 
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -86,6 +87,8 @@ public class Definitions extends Fragment {
         btnSelectTimeOfBreak = view.findViewById(R.id.btnSelectTimeOfBreak);
         btnRestart = view.findViewById(R.id.btnRestart);
         btnNumOfDaysWorking = view.findViewById(R.id.btnNumOfDaysWorking);
+        phoneNumberEditText = view.findViewById(R.id.phone_number);
+        sendCheckbox = view.findViewById(R.id.send_checkbox);
 
         sharedPreferences = getContext().getSharedPreferences("Definitions", 0);
 
@@ -106,6 +109,11 @@ public class Definitions extends Fragment {
         if (sharedPreferences.getInt("NumOfDaysWorking" , 0) == 6){
             btnNumOfDaysWorking.setText("מספר ימי העבודה בשבוע: " + 6);
         }
+        if (sharedPreferences.getString("phoneNumber" , null) != null ){
+            phoneNumberEditText.setText(sharedPreferences.getString("phoneNumber" , null));
+        }
+        sendCheckbox.setChecked(sharedPreferences.getBoolean("sendSms" , false));
+
 
 
 
@@ -189,7 +197,7 @@ public class Definitions extends Fragment {
                     dialog.setContentView(R.layout.number_picker_dialog);
                     numberPicker = dialog.findViewById(R.id.number_picker);
                     numberPicker.setMinValue(1);
-                    numberPicker.setMaxValue(200);
+                    numberPicker.setMaxValue(180);
                     Button okButton = dialog.findViewById(R.id.btnOk_number_picker);
                     okButton.setOnClickListener(new View.OnClickListener() {
                         @Override
@@ -271,6 +279,29 @@ public class Definitions extends Fragment {
 
                 }
             }
+        });
+
+
+
+        sendCheckbox.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (sendCheckbox.isChecked()) {
+                    sendSms = true;
+                    phoneNumber = phoneNumberEditText.getText().toString();
+                    SharedPreferences.Editor editor = sharedPreferences.edit();
+                    editor.putBoolean("sendSms" , sendSms);
+                    editor.putString("phoneNumber"  , phoneNumber);
+                    editor.commit();
+                }
+                else {
+                    sendSms = false;
+                    SharedPreferences.Editor editor = sharedPreferences.edit();
+                    editor.putBoolean("sendSms" , sendSms);
+                    editor.commit();
+                }
+            }
+
         });
 
 
