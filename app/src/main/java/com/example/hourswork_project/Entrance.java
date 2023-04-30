@@ -1,10 +1,13 @@
 package com.example.hourswork_project;
 
+import android.Manifest;
 import android.app.DatePickerDialog;
+import android.app.PendingIntent;
 import android.app.TimePickerDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.SharedPreferences;
+import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.os.CountDownTimer;
 import android.telephony.SmsManager;
@@ -20,6 +23,8 @@ import android.widget.TextView;
 import android.widget.TimePicker;
 import android.widget.Toast;
 
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 
 import java.sql.Time;
@@ -48,9 +53,11 @@ public class Entrance extends Fragment {
     Date dateAndTime , dateStart , dateStop;
     SharedPreferences sharedPreferences , sp;
     SimpleDateFormat dateFormat;
-    String date;
+    String date , phoneNumber , strMessage;
     long duration;
+    Boolean sendSms;
     WorksDataBase worksDataBase;
+    private static final int MY_PERMISSIONS_REQUEST_SEND_SMS =0 ;
 
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -137,6 +144,7 @@ public class Entrance extends Fragment {
                         tvTimeStop.setText("");
                         tvDuration.setText("");
 
+                        strMessage =  "שעת כניסה:" + '\n' + date;
                         dateStart = dateAndTime;
 
                         btnDateAndTime.setText("select date and time!");
@@ -152,9 +160,11 @@ public class Entrance extends Fragment {
                         date = dateFormat.format(dateAndTime);
                         tvTimeStop.setText( "שעת יציאה:" + '\n' + date);
 
+                        strMessage+= '\n' +"שעת יציאה:" + '\n' + date;
                         dateStop = dateAndTime;
                         duration = getDurationMillis(dateStart ,dateStop );
                         tvDuration.setText(formatDuration(duration));
+                        strMessage += '\n' + formatDuration(duration);
 
                         btnDateAndTime.setText("select date and time!");
                         btnStartStop.setText("start");
@@ -162,10 +172,13 @@ public class Entrance extends Fragment {
                         Work work = new Work(dateStart.getTime(),dateStop.getTime());
                         worksDataBase.addWork(work);
 
-//                        sp = getContext().getSharedPreferences("Definitions", 0);
-//                        String phoneNumber = sp.getString("phoneNumber" , null) ;
-//                        boolean sendSms = sp.getBoolean("sendSms" , false);
-//                        sendSmsToEmployer(phoneNumber , sendSms);
+                        sp = getContext().getSharedPreferences("Definitions", 0);
+                        phoneNumber = sp.getString("phoneNumber" , null) ;
+                        sendSms = sp.getBoolean("sendSms" , false);
+
+                        if (sendSms) {
+                            sendSMS(phoneNumber, strMessage);
+                        }
 
                     }
                 }
@@ -244,38 +257,59 @@ public class Entrance extends Fragment {
         return result;
     }
 
-//    public void sendSmsToEmployer (String phoneNumberEmployer , boolean iFSendSms){
-//        String phoneNumber = phoneNumberEmployer ;
-//        boolean sendSms = iFSendSms;
-//
-//        if (!isValidPhoneNumber(phoneNumber)) {
-//            Toast.makeText(getContext(), "Invalid phone number", Toast.LENGTH_SHORT).show();
-//            return;
-//        }
+    private void sendSMS(String phoneNo, String message) {
+        if (ContextCompat.checkSelfPermission(getContext(), Manifest.permission.SEND_SMS)
+                != PackageManager.PERMISSION_GRANTED) {
+            ActivityCompat.requestPermissions(getActivity(),
+                    new String[]{Manifest.permission.SEND_SMS},
+                    MY_PERMISSIONS_REQUEST_SEND_SMS);
+        } else {
+            try {
+                SmsManager smsManager = SmsManager.getDefault();
 
-//        if (sendSms) {
-//            // Create the SMS message
-//            Log.d("sms", "num: "+ phoneNumber);
-//            try {
-//                SmsManager smsManager = SmsManager.getDefault();
-//                smsManager.sendTextMessage(phoneNumber, null, "hello", null, null);
-//                Toast.makeText(getContext(), "Message sent to " + phoneNumber, Toast.LENGTH_SHORT).show();
-//                // Show a toast to indicate that the message was sent
-//                Toast.makeText(getContext(), "Message sent to " + phoneNumber, Toast.LENGTH_SHORT).show();
-//            } catch (Exception e) {
-//                Toast.makeText(getContext(), "Failed to send message. Error: " + e.getMessage(), Toast.LENGTH_SHORT).show();
-//                Toast.makeText(getContext(), "Message not sent", Toast.LENGTH_SHORT).show();
-//            }
-//        }
-//
-//    }
-//    private boolean isValidPhoneNumber(String phoneNumber) {
-//        // Remove any non-digit characters from the phone number
-//        phoneNumber = phoneNumber.replaceAll("[^\\d]", "");
-//
-//        // Check if the phone number has 10 digits (assuming a US phone number)
-//        return phoneNumber.length() == 10;
-//    }
+                // Divide the message into parts if it's too long
+                ArrayList<String> messageParts = smsManager.divideMessage(message);
+
+                // Send the message as multiple parts if necessary
+                if (messageParts.size() > 1) {
+                    ArrayList<PendingIntent> sentIntents = new ArrayList<>();
+                    ArrayList<PendingIntent> deliveredIntents = new ArrayList<>();
+
+                    for (int i = 0; i < messageParts.size(); i++) {
+                        sentIntents.add(null);
+                        deliveredIntents.add(null);
+                    }
+
+                    smsManager.sendMultipartTextMessage(phoneNo, null, messageParts, sentIntents, deliveredIntents);
+                } else {
+                    smsManager.sendTextMessage(phoneNo, null, message, null, null);
+                }
+
+                Toast.makeText(getContext(), "SMS sent successfully.", Toast.LENGTH_LONG).show();
+            } catch (Exception e) {
+                Toast.makeText(getContext(), "SMS failed to send.", Toast.LENGTH_LONG).show();
+                e.printStackTrace();
+            }
+        }
+    }
+
+
+    // Handle the result of the permission request
+    @Override
+    public void onRequestPermissionsResult(int requestCode, String permissions[], int[] grantResults) {
+        switch (requestCode) {
+            case MY_PERMISSIONS_REQUEST_SEND_SMS: {
+                if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                    sendSMS(phoneNumber, strMessage);
+                } else {
+                    Toast.makeText(getContext(),
+                            "SMS permission denied.", Toast.LENGTH_LONG).show();
+                }
+                return;
+            }
+        }
+    }
+
 
 
 
