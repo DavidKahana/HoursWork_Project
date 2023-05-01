@@ -118,7 +118,11 @@ public class ActionToItem extends AppCompatActivity {
 
                 worksDataBase.deleteWork(id);
                 HoursReport hoursReport = new HoursReport();
-                getSupportFragmentManager().beginTransaction().replace(R.id.container , hoursReport).commit();
+
+                FragmentManager fragmentManager = getSupportFragmentManager();
+                FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+
+                fragmentTransaction.replace(R.id.container , hoursReport).commit();
 
             }
         });
