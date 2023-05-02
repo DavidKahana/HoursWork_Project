@@ -36,7 +36,7 @@ public class ActionToItem extends AppCompatActivity {
     Work work;
     int id ;
     long duration;
-    Date start , stop , dateAndTime;
+    Date startUpdate , stopUpdate , dateAndTime , start , stop;
     SharedPreferences sharedPreferences;
     SimpleDateFormat hoursAndMin = new SimpleDateFormat("HH:mm");
     SimpleDateFormat date = new SimpleDateFormat("MM-dd-yyyy HH:mm" );
@@ -70,9 +70,9 @@ public class ActionToItem extends AppCompatActivity {
         work = worksDataBase.getWorkById(id);
 
         Log.d("david", "onCreate: "+ work.toString());
-        Date start = Calendar.getInstance().getTime();
+        start = Calendar.getInstance().getTime();
         start.setTime(work.getStartDate());
-        Date stop = Calendar.getInstance().getTime();
+        stop = Calendar.getInstance().getTime();
         stop.setTime(work.getEndDate());
         tvItemStart.setText( date.format(start));
         tvItemStop.setText( date.format(stop));
@@ -115,9 +115,30 @@ public class ActionToItem extends AppCompatActivity {
 
                 showDateTimeDialogStart();
 
+                long l = sharedPreferences.getLong("updateStart" , 0);
+                startUpdate = new Date(l);
+
+                Work work = new Work(id , startUpdate.getTime(),stop.getTime() );
+                worksDataBase.updateWork(work);
 
             }
         });
+
+        tvItemStop.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                showDateTimeDialogStop();
+
+                long l = sharedPreferences.getLong("updateStop" , 0);
+                stopUpdate = new Date(l);
+
+                Work work = new Work(id , start.getTime(),stopUpdate.getTime() );
+                worksDataBase.updateWork(work);
+
+            }
+        });
+
 
         btnItemDelete.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -287,10 +308,10 @@ public class ActionToItem extends AppCompatActivity {
 
 
                         SharedPreferences.Editor editor = sharedPreferences.edit();
-                        editor.putLong("update" , calendar.getTime().getTime());
+                        editor.putLong("updateStart" , calendar.getTime().getTime());
                         editor.commit();
 
-                        long l = sharedPreferences.getLong("update" , 0);
+                        long l = sharedPreferences.getLong("updateStart" , 0);
                         dateAndTime = new Date(l);
 
 
@@ -298,6 +319,50 @@ public class ActionToItem extends AppCompatActivity {
                         String str = "You selected :" + strDate;
                         Toast.makeText(view.getContext(),str,Toast.LENGTH_LONG).show();
                         tvItemStart.setText(strDate);
+                    }
+                };
+
+                new TimePickerDialog(view.getContext(), timeSetListener, calendar.get(Calendar.HOUR_OF_DAY), calendar.get(Calendar.MINUTE), false).show();
+            }
+        };
+
+        new DatePickerDialog(this, dateSetListener, calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH), calendar.get(Calendar.DAY_OF_MONTH)).show();
+
+    }
+
+    private void showDateTimeDialogStop() {
+        final Calendar calendar = Calendar.getInstance();
+
+        DatePickerDialog.OnDateSetListener dateSetListener = new DatePickerDialog.OnDateSetListener() {
+            @Override
+            public void onDateSet(DatePicker view, int year, int monthOfYear, int dayOfMonth) {
+                calendar.set(Calendar.YEAR, year);
+                calendar.set(Calendar.MONTH, monthOfYear);
+                calendar.set(Calendar.DAY_OF_MONTH, dayOfMonth);
+
+
+
+                TimePickerDialog.OnTimeSetListener timeSetListener = new TimePickerDialog.OnTimeSetListener() {
+                    @Override
+                    public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
+                        calendar.set(Calendar.HOUR_OF_DAY, hourOfDay);
+                        calendar.set(Calendar.MINUTE, minute);
+                        calendar.set(calendar.SECOND ,0);
+                        calendar.set(calendar.MILLISECOND , 0);
+
+
+                        SharedPreferences.Editor editor = sharedPreferences.edit();
+                        editor.putLong("updateStop" , calendar.getTime().getTime());
+                        editor.commit();
+
+                        long l = sharedPreferences.getLong("updateStop" , 0);
+                        dateAndTime = new Date(l);
+
+
+                        String strDate = date.format(dateAndTime);
+                        String str = "You selected :" + strDate;
+                        Toast.makeText(view.getContext(),str,Toast.LENGTH_LONG).show();
+                        tvItemStop.setText(strDate);
                     }
                 };
 
