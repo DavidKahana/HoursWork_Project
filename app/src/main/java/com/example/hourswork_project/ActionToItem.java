@@ -5,6 +5,8 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 
+import android.app.DatePickerDialog;
+import android.app.TimePickerDialog;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Color;
@@ -15,8 +17,12 @@ import android.text.style.ForegroundColorSpan;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.DatePicker;
 import android.widget.TextView;
+import android.widget.TimePicker;
+import android.widget.Toast;
 
+import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
@@ -25,14 +31,16 @@ import java.util.List;
 public class ActionToItem extends AppCompatActivity {
 
     Button btnItemDelete;
-    TextView tvItemStart , tvItemStop , tvItemDate , tvItemDurationWorking , tvItemDurationWorkingIncludingBreaking , tvItemMoreHours125 , tvItemMoreHours150 , tvItemSalary ;
+    TextView tvItemStart , tvItemStop , tvTitleItemDurationWorkingIncludingBreaking , tvItemDurationWorking , tvItemDurationWorkingIncludingBreaking , tvItemMoreHours125 , tvItemMoreHours150 , tvItemSalary ;
     WorksDataBase worksDataBase;
     Work work;
     int id ;
     long duration;
+    Date start , stop , dateAndTime;
     SharedPreferences sharedPreferences;
     SimpleDateFormat hoursAndMin = new SimpleDateFormat("HH:mm");
-    SimpleDateFormat date = new SimpleDateFormat("dd/MM/yyyy");
+    SimpleDateFormat date = new SimpleDateFormat("MM-dd-yyyy HH:mm" );
+    DecimalFormat decimalFormat = new DecimalFormat("#.##");
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -41,12 +49,12 @@ public class ActionToItem extends AppCompatActivity {
 
         tvItemStart = findViewById(R.id.tvItemStart);
         tvItemStop = findViewById(R.id.tvItemStop);
-        tvItemDate = findViewById(R.id.tvItemDate);
         tvItemDurationWorking = findViewById(R.id.tvItemDurationWorking);
         tvItemDurationWorkingIncludingBreaking = findViewById(R.id.tvItemDurationWorkingIncludingBreaking);
         tvItemMoreHours125 = findViewById(R.id.tvItemMoreHours125);
         tvItemMoreHours150 = findViewById(R.id.tvItemMoreHours150);
         tvItemSalary = findViewById(R.id.tvItemSalary);
+        tvTitleItemDurationWorkingIncludingBreaking = findViewById(R.id.tvTitleItemDurationWorkingIncludingBreaking);
 
         btnItemDelete = findViewById(R.id.btnItemDelete);
 
@@ -66,51 +74,50 @@ public class ActionToItem extends AppCompatActivity {
         start.setTime(work.getStartDate());
         Date stop = Calendar.getInstance().getTime();
         stop.setTime(work.getEndDate());
-        tvItemStart.setText("כניסה: " + hoursAndMin.format(start));
-        tvItemStop.setText("יציאה: " + hoursAndMin.format(stop));
+        tvItemStart.setText( date.format(start));
+        tvItemStop.setText( date.format(stop));
 
-        if (date.format(start).equals(date.format(stop))){
-            tvItemDate.setText(  "תאריך: " + date.format(start));
-        }
-        else{
-            tvItemDate.setText(  "תאריך: " + date.format(start) + " - " + date.format(stop));
-        }
 
         duration = getDurationMillis(start ,stop );
 
-        tvItemDurationWorking.setText( "משך העבודה: " + formatDuration(duration));
+        tvItemDurationWorking.setText( formatDuration(duration));
 
         Boolean salaryOnBreaking = sharedPreferences.getBoolean("SalaryOnBreak" , false);
         int numOfBreaking = sharedPreferences.getInt("numberSelectTimeOfBreak" , 0);
         if (salaryOnBreaking == false){
             if (duration > 6 * 60 * 60 * 1000){
                 duration = breaking(duration , numOfBreaking);
-                tvItemDurationWorkingIncludingBreaking.setText("משך עבודה עבורו קיבלתי שכר (כלומר ללא זמן ההפסקה): " + formatDuration(duration));
+                tvTitleItemDurationWorkingIncludingBreaking.setText("משך עבודה עבורו קיבלתי שכר (כלומר ללא זמן ההפסקה): " );
+                tvTitleItemDurationWorkingIncludingBreaking.setVisibility(View.VISIBLE);
+                tvItemDurationWorkingIncludingBreaking.setText(formatDuration(duration));
                 tvItemDurationWorkingIncludingBreaking.setVisibility(View.VISIBLE);
             }
         }
 
         int numOfDaysWeek = sharedPreferences.getInt("NumOfDaysWorking" , 0) ;
         Log.d("mmm", "m: "+ numOfDaysWeek);
-        tvItemMoreHours125.setText( "שעות נוספות 125%: " + formatDuration(calculateTime125p(duration , numOfDaysWeek)));
-        tvItemMoreHours150.setText( "שעות נוספות 150%: " + formatDuration(calculateTime150p(duration , numOfDaysWeek)));
+        tvItemMoreHours125.setText( formatDuration(calculateTime125p(duration , numOfDaysWeek)));
+        tvItemMoreHours150.setText( formatDuration(calculateTime150p(duration , numOfDaysWeek)));
 
         double numberHourlyWage = sharedPreferences.getInt("numberHourlyWage" , 0);
         double salaryDaily = salaryDay(numberHourlyWage , duration , numOfDaysWeek);
-        String strSalaryDaily = "הסכום שהרווחת סך הכל: " + "\n" + salaryDaily + " שקלים חדשים ";
 
-        SpannableStringBuilder spannableStringBuilder = new SpannableStringBuilder(strSalaryDaily);
-
-        int startIndex = strSalaryDaily.indexOf("\n");
-        int endIndex = strSalaryDaily.indexOf("חדשים") + "חדשים".length();
-
-        spannableStringBuilder.setSpan(new ForegroundColorSpan(Color.RED), startIndex, endIndex, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
-
-        tvItemSalary.setText(spannableStringBuilder);
+        tvItemSalary.setText(decimalFormat.format(salaryDaily) + " שקלים חדשים ");
 
         SharedPreferences.Editor editor = sharedPreferences.edit();
         editor.putFloat("salaryDaily" , (float) salaryDaily);
         editor.commit();
+
+
+        tvItemStart.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                showDateTimeDialogStart();
+
+
+            }
+        });
 
         btnItemDelete.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -258,4 +265,48 @@ public class ActionToItem extends AppCompatActivity {
 
         return salary;
     }
+    private void showDateTimeDialogStart() {
+        final Calendar calendar = Calendar.getInstance();
+
+        DatePickerDialog.OnDateSetListener dateSetListener = new DatePickerDialog.OnDateSetListener() {
+            @Override
+            public void onDateSet(DatePicker view, int year, int monthOfYear, int dayOfMonth) {
+                calendar.set(Calendar.YEAR, year);
+                calendar.set(Calendar.MONTH, monthOfYear);
+                calendar.set(Calendar.DAY_OF_MONTH, dayOfMonth);
+
+
+
+                TimePickerDialog.OnTimeSetListener timeSetListener = new TimePickerDialog.OnTimeSetListener() {
+                    @Override
+                    public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
+                        calendar.set(Calendar.HOUR_OF_DAY, hourOfDay);
+                        calendar.set(Calendar.MINUTE, minute);
+                        calendar.set(calendar.SECOND ,0);
+                        calendar.set(calendar.MILLISECOND , 0);
+
+
+                        SharedPreferences.Editor editor = sharedPreferences.edit();
+                        editor.putLong("update" , calendar.getTime().getTime());
+                        editor.commit();
+
+                        long l = sharedPreferences.getLong("update" , 0);
+                        dateAndTime = new Date(l);
+
+
+                        String strDate = date.format(dateAndTime);
+                        String str = "You selected :" + strDate;
+                        Toast.makeText(view.getContext(),str,Toast.LENGTH_LONG).show();
+                        tvItemStart.setText(strDate);
+                    }
+                };
+
+                new TimePickerDialog(view.getContext(), timeSetListener, calendar.get(Calendar.HOUR_OF_DAY), calendar.get(Calendar.MINUTE), false).show();
+            }
+        };
+
+        new DatePickerDialog(this, dateSetListener, calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH), calendar.get(Calendar.DAY_OF_MONTH)).show();
+
+    }
+
 }

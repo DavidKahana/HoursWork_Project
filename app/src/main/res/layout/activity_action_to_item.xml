@@ -11,62 +11,152 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical">
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/tvTitleItemStart"
+            android:textSize="15sp"
+            android:layout_marginTop="10dp"
+            android:layout_marginRight="10dp"
+            android:text="כניסה: " />
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:id="@+id/tvItemStart"
         android:textSize="30sp"
         android:text="כניסה: "
-        android:layout_margin="10dp"/>
+        android:layout_marginRight="10dp"
+        android:layout_marginBottom="10dp"/>
+    </LinearLayout>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/tvTitleItemStop"
+            android:textSize="15sp"
+            android:text="יציאה: "
+            android:layout_marginRight="10dp"/>
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:id="@+id/tvItemStop"
         android:textSize="30sp"
         android:text="יציאה: "
-        android:layout_margin="10dp"/>
-    <TextView
+        android:layout_marginRight="10dp"
+        android:layout_marginBottom="10dp"/>
+    </LinearLayout>
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:id="@+id/tvItemDate"
-        android:textSize="30sp"
-        android:text="תאריך: "
-        android:layout_margin="10dp"/>
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/tvTitleItemDurationWorking"
+            android:textSize="15sp"
+            android:text="משך העבודה: "
+            android:layout_marginRight="10dp" />
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:id="@+id/tvItemDurationWorking"
         android:textSize="30sp"
         android:text="משך העבודה: "
-        android:layout_margin="10dp"/>
+        android:layout_marginRight="10dp"
+        android:layout_marginBottom="10dp"/>
+    </LinearLayout>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/tvTitleItemDurationWorkingIncludingBreaking"
+            android:textSize="15sp"
+            android:visibility="gone"
+            android:layout_marginRight="10dp" />
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:id="@+id/tvItemDurationWorkingIncludingBreaking"
             android:textSize="30sp"
             android:visibility="gone"
-            android:layout_margin="10dp"/>
+            android:layout_marginRight="10dp"
+            android:layout_marginBottom="10dp"/>
+    </LinearLayout>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/tvTitleItemMoreHours125"
+            android:textSize="15sp"
+            android:text="שעות נוספות 125%: "
+            android:layout_marginRight="10dp" />
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:id="@+id/tvItemMoreHours125"
         android:textSize="30sp"
         android:text="שעות נוספות 125%: "
-        android:layout_margin="10dp"/>
+        android:layout_marginRight="10dp"
+        android:layout_marginBottom="10dp"/>
+    </LinearLayout>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/tvTitleItemMoreHours150"
+            android:textSize="15sp"
+            android:text="שעות נוספות 150%: "
+            android:layout_marginRight="10dp" />
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:id="@+id/tvItemMoreHours150"
         android:textSize="30sp"
         android:text="שעות נוספות 150%: "
-        android:layout_margin="10dp"/>
+        android:layout_marginRight="10dp"
+        android:layout_marginBottom="10dp"/>
+    </LinearLayout>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/tvTitleItemSalary"
+            android:textSize="15sp"
+            android:text="הסכום שהרווחת סך הכל: "
+            android:layout_marginRight="10dp" />
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:id="@+id/tvItemSalary"
         android:textSize="30sp"
         android:text="הסכום שהרווחת סך הכל: "
-        android:layout_margin="10dp"/>
+        android:textColor="#F31808"
+        android:layout_marginRight="10dp"
+        android:layout_marginBottom="10dp"/>
+    </LinearLayout>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
         <Button
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -76,4 +166,5 @@
             android:textColor="#FFEB3B"
             android:text="delete"/>
     </LinearLayout>
+</LinearLayout>
 </ScrollView>
