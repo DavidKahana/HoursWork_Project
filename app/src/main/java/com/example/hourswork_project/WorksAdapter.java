@@ -10,6 +10,7 @@ import android.widget.BaseAdapter;
 import android.widget.TextView;
 
 import java.text.DateFormatSymbols;
+import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Collections;
@@ -23,11 +24,14 @@ public class WorksAdapter extends BaseAdapter {
     private List<Work> workList;
     private LayoutInflater inflater;
     private SimpleDateFormat dateFormat;
+    private SharedPreferences sharedPreferences;
+    private double salaryDaily;
 
     public WorksAdapter(Context context, List<Work> workList) {
         this.workList = workList;
         this.inflater = LayoutInflater.from(context);
         this.dateFormat = new SimpleDateFormat("dd/MM/yyyy HH:mm", Locale.getDefault());
+        this.sharedPreferences = context.getSharedPreferences("Definitions", 0);
     }
 
     @Override
@@ -64,18 +68,36 @@ public class WorksAdapter extends BaseAdapter {
         Work work = workList.get(position);
 
 
+        int numOfDaysWeek = sharedPreferences.getInt("NumOfDaysWorking" , 0) ;
+        double numberHourlyWage = sharedPreferences.getInt("numberHourlyWage" , 0);
+        long duration = workList.get(position).startDate - workList.get(position).endDate;
 
+        Boolean salaryOnBreaking = sharedPreferences.getBoolean("SalaryOnBreak" , false);
+        int numOfBreaking = sharedPreferences.getInt("numberSelectTimeOfBreak" , 0);
+        if (salaryOnBreaking == false) {
+            if (duration > 6 * 60 * 60 * 1000) {
+                duration = breaking(duration, numOfBreaking);
+
+            }
+        }
+
+        Log.d("ww", "num: "+ numOfDaysWeek);
+        Log.d("ww", "number: "+ numberHourlyWage);
+        Log.d("ww", "du: "+ duration);
+        DecimalFormat decimalFormat = new DecimalFormat("#.##");
+        salaryDaily = salaryDay(numberHourlyWage , duration , numOfDaysWeek);
 
 
         String startDate = dateFormat.format(work.getStartDate());
         String endDate = dateFormat.format(work.getEndDate());
         String dayOfWeek = hebrewDay(work.getStartDate());
-        String salaryDay ;
+        String salaryDay = decimalFormat.format(salaryDaily) + " ש''ח " ;
 
 
         holder.startDateTextView.setText(startDate);
         holder.endDateTextView.setText(endDate);
         holder.tvDayOfWeek.setText(dayOfWeek);
+        holder.tvSalaryDay.setText(salaryDay);
 
         return convertView;
     }
@@ -128,6 +150,105 @@ public class WorksAdapter extends BaseAdapter {
         // Set the sorted list as the new data set and notify the adapter
         workList = worksList;
         notifyDataSetChanged();
+    }
+
+    public static double salaryDay(double numberHourlyWage , long duration , int num){
+        double salary = 0 ;
+
+        long time150p = calculateTime150p(duration , num);
+
+        long secondsTime150p = time150p / 1000;
+        long minutesTime150p = secondsTime150p / 60;
+        long hoursTime150p = minutesTime150p / 60;
+
+        long time125p = calculateTime125p(duration , num);
+
+        long secondsTime125p = time125p / 1000;
+        long minutesTime125p = secondsTime125p / 60;
+        long hoursTime125p = minutesTime125p / 60;
+
+        long basic = duration - time150p - time125p;
+
+        long secondsBasic = basic / 1000;
+        long minutesBasic= secondsBasic/ 60;
+        long hoursBasic = minutesBasic / 60;
+
+
+        salary += ((numberHourlyWage * 1.5 * (minutesTime150p%60)) / 60.0 );
+        salary += (numberHourlyWage * 1.5 * hoursTime150p );
+        salary += ((numberHourlyWage * 1.25 * (minutesTime125p%60)) / 60.0 );
+        salary += (numberHourlyWage * 1.25 * hoursTime125p);
+        salary += ((numberHourlyWage * (minutesBasic%60)) / 60.0 );
+        salary += (numberHourlyWage * hoursBasic);
+
+
+
+        return salary;
+    }
+    public static long calculateTime125p(long time, int num) {
+        long eightHoursThirtySixMins = 8 * 60 * 60 * 1000 + 36 * 60 * 1000;
+        long tenHoursThirtySixMins = 10 * 60 * 60 * 1000 + 36 * 60 * 1000;
+        long twoHours = 2 * 60 * 60 * 1000;
+
+        if (num == 5) {
+            if (time < eightHoursThirtySixMins) {
+                return 0;
+            } else if (time < tenHoursThirtySixMins) {
+                return time - eightHoursThirtySixMins;
+            } else {
+                return twoHours;
+            }
+        } else if (num == 6) {
+            if (time < 8 * 60 * 60 * 1000) {
+                return 0;
+            } else if (time < 10 * 60 * 60 * 1000) {
+                return time - 8 * 60 * 60 * 1000;
+            } else {
+                return twoHours;
+            }
+        } else {
+            // handle invalid num value
+            return -1;
+        }
+
+    }
+
+    public static long calculateTime150p(long time, int num) {
+        long eightHoursThirtySixMins = 8 * 60 * 60 * 1000 + 36 * 60 * 1000;
+        long tenHoursThirtySixMins = 10 * 60 * 60 * 1000 + 36 * 60 * 1000;
+
+        if (num == 5) {
+            if (time < tenHoursThirtySixMins) {
+                return 0;
+            }
+            else {
+                return time - eightHoursThirtySixMins;
+            }
+        }
+        else if (num == 6) {
+            if (time < 10 * 60 * 60 * 1000) {
+                return 0;
+            }
+            else {
+                return time - 10 * 60 * 60 * 1000 ;
+            }
+        } else {
+            // handle invalid num value
+            return -1;
+        }
+
+    }
+
+    public static long breaking (long duration , int minutes){
+        long sixHours = 6 * 60 * 60 * 1000;
+        long sixHoursAndTimeBreak =6 * 60 * 60 * 1000 + minutes * 60 * 1000;
+
+        if (duration <= sixHoursAndTimeBreak && duration > sixHours){
+            return sixHours;
+        }
+        else{
+            return duration - minutes * 60 * 1000;
+        }
     }
 
 

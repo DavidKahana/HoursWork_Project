@@ -130,57 +130,8 @@ public class Entrance extends Fragment {
 
                 if(v==btnStartStop)
                 {
+                    startStopDate();
 
-
-                    if (btnStartStop.getText().equals("start") ){
-
-                        long l = sharedPreferences.getLong("date" , 0);
-                        dateAndTime = new Date(l);
-
-
-                        dateFormat = new SimpleDateFormat("MM-dd-yyyy HH:mm" );
-                        date = dateFormat.format(dateAndTime);
-                        tvTimeEnter.setText( "שעת כניסה:" + '\n' + date);
-                        tvTimeStop.setText("");
-                        tvDuration.setText("");
-
-                        strMessage =  "שעת כניסה:" + '\n' + date;
-                        dateStart = dateAndTime;
-
-                        btnDateAndTime.setText("select date and time!");
-                        btnStartStop.setText("stop");
-                    }
-                    else if (btnStartStop.getText().equals("stop") && dateAndTime  != null){
-
-                        long l = sharedPreferences.getLong("date" , 0);
-                        dateAndTime = new Date(l);
-
-
-                        dateFormat = new SimpleDateFormat("MM-dd-yyyy HH:mm" );
-                        date = dateFormat.format(dateAndTime);
-                        tvTimeStop.setText( "שעת יציאה:" + '\n' + date);
-
-                        strMessage+= '\n' +"שעת יציאה:" + '\n' + date;
-                        dateStop = dateAndTime;
-                        duration = getDurationMillis(dateStart ,dateStop );
-                        tvDuration.setText(formatDuration(duration));
-                        strMessage += '\n' + formatDuration(duration);
-
-                        btnDateAndTime.setText("select date and time!");
-                        btnStartStop.setText("start");
-
-                        Work work = new Work(dateStart.getTime(),dateStop.getTime());
-                        worksDataBase.addWork(work);
-
-                        sp = getContext().getSharedPreferences("Definitions", 0);
-                        phoneNumber = sp.getString("phoneNumber" , null) ;
-                        sendSms = sp.getBoolean("sendSms" , false);
-
-                        if (sendSms) {
-                            sendSMS(phoneNumber, strMessage);
-                        }
-
-                    }
                 }
             }
         });
@@ -310,6 +261,65 @@ public class Entrance extends Fragment {
                 return;
             }
         }
+    }
+
+    public void startStopDate (){
+
+
+
+        if (btnStartStop.getText().equals("start") ){
+
+            long l = sharedPreferences.getLong("date" , 0);
+            dateAndTime = new Date(l);
+
+
+            dateFormat = new SimpleDateFormat("MM-dd-yyyy HH:mm" );
+            date = dateFormat.format(dateAndTime);
+            tvTimeEnter.setText( "שעת כניסה:" + '\n' + date);
+            tvTimeStop.setText("");
+            tvDuration.setText("");
+
+            strMessage =  "שעת כניסה:" + '\n' + date;
+            dateStart = dateAndTime;
+
+            btnDateAndTime.setText("select date and time!");
+            btnStartStop.setText("stop");
+        }
+        else if (btnStartStop.getText().equals("stop") && dateAndTime  != null ){
+
+            long l = sharedPreferences.getLong("date" , 0);
+            dateAndTime = new Date(l);
+
+            if (dateStart.getTime()>= dateAndTime.getTime()){
+                Toast.makeText(getContext(), "היציאה חייבת להיות אחרי הכניסה", Toast.LENGTH_LONG).show();
+            }
+            else {
+                dateFormat = new SimpleDateFormat("MM-dd-yyyy HH:mm");
+                date = dateFormat.format(dateAndTime);
+                tvTimeStop.setText("שעת יציאה:" + '\n' + date);
+
+                strMessage += '\n' + "שעת יציאה:" + '\n' + date;
+                dateStop = dateAndTime;
+                duration = getDurationMillis(dateStart, dateStop);
+                tvDuration.setText(formatDuration(duration));
+                strMessage += '\n' + formatDuration(duration);
+
+                btnDateAndTime.setText("select date and time!");
+                btnStartStop.setText("start");
+
+                Work work = new Work(dateStart.getTime(), dateStop.getTime());
+                worksDataBase.addWork(work);
+
+                sp = getContext().getSharedPreferences("Definitions", 0);
+                phoneNumber = sp.getString("phoneNumber", null);
+                sendSms = sp.getBoolean("sendSms", false);
+
+                if (sendSms) {
+                    sendSMS(phoneNumber, strMessage);
+                }
+            }
+        }
+
     }
 
 

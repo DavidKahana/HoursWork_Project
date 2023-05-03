@@ -89,15 +89,6 @@ public class ActionToItem extends AppCompatActivity {
 
                     showDateTimeDialogStart();
 
-
-//                    long l = sharedPreferences.getLong("updateStart", 0);
-//                    startUpdate = new Date(l);
-//
-//                    Work work = new Work(id, startUpdate.getTime(), stop.getTime());
-//                    worksDataBase.updateWork(work);
-//                    start = startUpdate;
-
-
             }
         });
 
@@ -106,16 +97,6 @@ public class ActionToItem extends AppCompatActivity {
             public void onClick(View v) {
 
                 showDateTimeDialogStop();
-
-//                    long l2 = sharedPreferences.getLong("updateStop", 0);
-//                    stopUpdate = new Date(l2);
-//
-//                    Work w = new Work(id, start.getTime(), stopUpdate.getTime());
-//                    worksDataBase.updateWork(w);
-//                    stop = stopUpdate;
-//                    showResult();
-
-
 
             }
         });
@@ -308,19 +289,24 @@ public class ActionToItem extends AppCompatActivity {
                         long l = sharedPreferences.getLong("updateStart" , 0);
                         dateAndTime = new Date(l);
 
+                        if (dateAndTime.getTime()>= stop.getTime()){
+                            Toast.makeText(view.getContext(), "היציאה חייבת להיות אחרי הכניסה", Toast.LENGTH_LONG).show();
+                        }
+                        else {
 
-                        String strDate = date.format(dateAndTime);
-                        String str = "You selected :" + strDate;
-                        Toast.makeText(view.getContext(),str,Toast.LENGTH_LONG).show();
-                        tvItemStart.setText(strDate);
+                            String strDate = date.format(dateAndTime);
+                            String str = "You selected :" + strDate;
+                            Toast.makeText(view.getContext(), str, Toast.LENGTH_LONG).show();
+                            tvItemStart.setText(strDate);
 
-                        long l2 = sharedPreferences.getLong("updateStart", 0);
-                        startUpdate = new Date(l2);
+                            long l2 = sharedPreferences.getLong("updateStart", 0);
+                            startUpdate = new Date(l2);
 
-                        Work work = new Work(id, startUpdate.getTime(), stop.getTime());
-                        worksDataBase.updateWork(work);
-                        start = startUpdate;
-                        showResult();
+                            Work work = new Work(id, startUpdate.getTime(), stop.getTime());
+                            worksDataBase.updateWork(work);
+                            start = startUpdate;
+                            showResult();
+                        }
                     }
                 };
 
@@ -360,7 +346,10 @@ public class ActionToItem extends AppCompatActivity {
                         long l = sharedPreferences.getLong("updateStop" , 0);
                         dateAndTime = new Date(l);
 
-
+                        if (start.getTime()>= dateAndTime.getTime()){
+                            Toast.makeText(view.getContext(), "היציאה חייבת להיות אחרי הכניסה", Toast.LENGTH_LONG).show();
+                        }
+                        else {
                         String strDate = date.format(dateAndTime);
                         String str = "You selected :" + strDate;
                         Toast.makeText(view.getContext(),str,Toast.LENGTH_LONG).show();
@@ -373,6 +362,7 @@ public class ActionToItem extends AppCompatActivity {
                         worksDataBase.updateWork(w);
                         stop = stopUpdate;
                         showResult();
+                        }
                     }
                 };
 
