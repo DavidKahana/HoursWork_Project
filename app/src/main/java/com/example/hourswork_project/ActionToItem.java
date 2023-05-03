@@ -30,7 +30,7 @@ import java.util.List;
 
 public class ActionToItem extends AppCompatActivity {
 
-    Button btnItemDelete;
+    Button btnItemDelete , btnItemToMoveHoutsReport;
     TextView tvItemStart , tvItemStop , tvTitleItemDurationWorkingIncludingBreaking , tvItemDurationWorking , tvItemDurationWorkingIncludingBreaking , tvItemMoreHours125 , tvItemMoreHours150 , tvItemSalary ;
     WorksDataBase worksDataBase;
     Work work;
@@ -57,6 +57,7 @@ public class ActionToItem extends AppCompatActivity {
         tvTitleItemDurationWorkingIncludingBreaking = findViewById(R.id.tvTitleItemDurationWorkingIncludingBreaking);
 
         btnItemDelete = findViewById(R.id.btnItemDelete);
+        btnItemToMoveHoutsReport = findViewById(R.id.btnItemToMoveHoutsReport);
 
         sharedPreferences = getSharedPreferences("Definitions", 0);
 
@@ -78,48 +79,24 @@ public class ActionToItem extends AppCompatActivity {
         tvItemStop.setText( date.format(stop));
 
 
-        duration = getDurationMillis(start ,stop );
-
-        tvItemDurationWorking.setText( formatDuration(duration));
-
-        Boolean salaryOnBreaking = sharedPreferences.getBoolean("SalaryOnBreak" , false);
-        int numOfBreaking = sharedPreferences.getInt("numberSelectTimeOfBreak" , 0);
-        if (salaryOnBreaking == false){
-            if (duration > 6 * 60 * 60 * 1000){
-                duration = breaking(duration , numOfBreaking);
-                tvTitleItemDurationWorkingIncludingBreaking.setText("משך עבודה עבורו קיבלתי שכר (כלומר ללא זמן ההפסקה): " );
-                tvTitleItemDurationWorkingIncludingBreaking.setVisibility(View.VISIBLE);
-                tvItemDurationWorkingIncludingBreaking.setText(formatDuration(duration));
-                tvItemDurationWorkingIncludingBreaking.setVisibility(View.VISIBLE);
-            }
-        }
-
-        int numOfDaysWeek = sharedPreferences.getInt("NumOfDaysWorking" , 0) ;
-        Log.d("mmm", "m: "+ numOfDaysWeek);
-        tvItemMoreHours125.setText( formatDuration(calculateTime125p(duration , numOfDaysWeek)));
-        tvItemMoreHours150.setText( formatDuration(calculateTime150p(duration , numOfDaysWeek)));
-
-        double numberHourlyWage = sharedPreferences.getInt("numberHourlyWage" , 0);
-        double salaryDaily = salaryDay(numberHourlyWage , duration , numOfDaysWeek);
-
-        tvItemSalary.setText(decimalFormat.format(salaryDaily) + " שקלים חדשים ");
-
-        SharedPreferences.Editor editor = sharedPreferences.edit();
-        editor.putFloat("salaryDaily" , (float) salaryDaily);
-        editor.commit();
+        showResult();
 
 
         tvItemStart.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
 
-                showDateTimeDialogStart();
 
-                long l = sharedPreferences.getLong("updateStart" , 0);
-                startUpdate = new Date(l);
+                    showDateTimeDialogStart();
 
-                Work work = new Work(id , startUpdate.getTime(),stop.getTime() );
-                worksDataBase.updateWork(work);
+
+//                    long l = sharedPreferences.getLong("updateStart", 0);
+//                    startUpdate = new Date(l);
+//
+//                    Work work = new Work(id, startUpdate.getTime(), stop.getTime());
+//                    worksDataBase.updateWork(work);
+//                    start = startUpdate;
+
 
             }
         });
@@ -130,11 +107,15 @@ public class ActionToItem extends AppCompatActivity {
 
                 showDateTimeDialogStop();
 
-                long l = sharedPreferences.getLong("updateStop" , 0);
-                stopUpdate = new Date(l);
+//                    long l2 = sharedPreferences.getLong("updateStop", 0);
+//                    stopUpdate = new Date(l2);
+//
+//                    Work w = new Work(id, start.getTime(), stopUpdate.getTime());
+//                    worksDataBase.updateWork(w);
+//                    stop = stopUpdate;
+//                    showResult();
 
-                Work work = new Work(id , start.getTime(),stopUpdate.getTime() );
-                worksDataBase.updateWork(work);
+
 
             }
         });
@@ -155,6 +136,21 @@ public class ActionToItem extends AppCompatActivity {
             }
         });
 
+
+        btnItemToMoveHoutsReport.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                HoursReport hoursReport = new HoursReport();
+
+                FragmentManager fragmentManager = getSupportFragmentManager();
+                FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+
+                fragmentTransaction.replace(R.id.container , hoursReport).commit();
+
+            }
+        });
+
     }
 
     public static long getDurationMillis(Date startDate, Date endDate) {
@@ -163,11 +159,9 @@ public class ActionToItem extends AppCompatActivity {
 
     public static long breaking (long duration , int minutes){
         long sixHours = 6 * 60 * 60 * 1000;
-        long sixHoursAndTimeBreak = 2 * 60 * 60 * 1000 + minutes * 60 * 1000;
-        if (duration < sixHours){
-            return duration;
-        }
-        else if (duration < sixHoursAndTimeBreak){
+        long sixHoursAndTimeBreak =6 * 60 * 60 * 1000 + minutes * 60 * 1000;
+
+        if (duration <= sixHoursAndTimeBreak && duration > sixHours){
             return sixHours;
         }
         else{
@@ -319,6 +313,14 @@ public class ActionToItem extends AppCompatActivity {
                         String str = "You selected :" + strDate;
                         Toast.makeText(view.getContext(),str,Toast.LENGTH_LONG).show();
                         tvItemStart.setText(strDate);
+
+                        long l2 = sharedPreferences.getLong("updateStart", 0);
+                        startUpdate = new Date(l2);
+
+                        Work work = new Work(id, startUpdate.getTime(), stop.getTime());
+                        worksDataBase.updateWork(work);
+                        start = startUpdate;
+                        showResult();
                     }
                 };
 
@@ -363,6 +365,14 @@ public class ActionToItem extends AppCompatActivity {
                         String str = "You selected :" + strDate;
                         Toast.makeText(view.getContext(),str,Toast.LENGTH_LONG).show();
                         tvItemStop.setText(strDate);
+
+                        long l2 = sharedPreferences.getLong("updateStop", 0);
+                        stopUpdate = new Date(l2);
+
+                        Work w = new Work(id, start.getTime(), stopUpdate.getTime());
+                        worksDataBase.updateWork(w);
+                        stop = stopUpdate;
+                        showResult();
                     }
                 };
 
@@ -372,6 +382,42 @@ public class ActionToItem extends AppCompatActivity {
 
         new DatePickerDialog(this, dateSetListener, calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH), calendar.get(Calendar.DAY_OF_MONTH)).show();
 
+    }
+
+    public void showResult (){
+        duration = getDurationMillis(start ,stop );
+
+        tvItemDurationWorking.setText( formatDuration(duration));
+
+        Boolean salaryOnBreaking = sharedPreferences.getBoolean("SalaryOnBreak" , false);
+        int numOfBreaking = sharedPreferences.getInt("numberSelectTimeOfBreak" , 0);
+        if (salaryOnBreaking == false){
+            if (duration > 6 * 60 * 60 * 1000){
+                duration = breaking(duration , numOfBreaking);
+                tvTitleItemDurationWorkingIncludingBreaking.setText("משך עבודה עבורו קיבלתי שכר (כלומר ללא זמן ההפסקה): " );
+                tvTitleItemDurationWorkingIncludingBreaking.setVisibility(View.VISIBLE);
+                tvItemDurationWorkingIncludingBreaking.setText(formatDuration(duration));
+                tvItemDurationWorkingIncludingBreaking.setVisibility(View.VISIBLE);
+            }
+            else{
+                tvTitleItemDurationWorkingIncludingBreaking.setVisibility(View.GONE);
+                tvItemDurationWorkingIncludingBreaking.setVisibility(View.GONE);
+            }
+        }
+
+        int numOfDaysWeek = sharedPreferences.getInt("NumOfDaysWorking" , 0) ;
+        Log.d("mmm", "m: "+ numOfDaysWeek);
+        tvItemMoreHours125.setText( formatDuration(calculateTime125p(duration , numOfDaysWeek)));
+        tvItemMoreHours150.setText( formatDuration(calculateTime150p(duration , numOfDaysWeek)));
+
+        double numberHourlyWage = sharedPreferences.getInt("numberHourlyWage" , 0);
+        double salaryDaily = salaryDay(numberHourlyWage , duration , numOfDaysWeek);
+
+        tvItemSalary.setText(decimalFormat.format(salaryDaily) + " שקלים חדשים ");
+
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+        editor.putFloat("salaryDaily" , (float) salaryDaily);
+        editor.commit();
     }
 
 }
