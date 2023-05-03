@@ -12,6 +12,8 @@ import android.widget.TextView;
 import java.text.DateFormatSymbols;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
@@ -111,5 +113,25 @@ public class WorksAdapter extends BaseAdapter {
         String dayOfWeekName = weekdays[dayOfWeek];
         return dayOfWeekName;
     }
+
+
+
+    public void setWorksList(List<Work> worksList) {
+        // Sort the list by start date in descending order
+        Collections.sort(worksList, new Comparator<Work>() {
+            @Override
+            public int compare(Work w1, Work w2) {
+                return Long.compare(w2.getStartDate(), w1.getStartDate());
+            }
+        });
+
+        // Set the sorted list as the new data set and notify the adapter
+        workList = worksList;
+        notifyDataSetChanged();
+    }
+
+
+
+
 
 }

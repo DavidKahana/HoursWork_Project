@@ -78,8 +78,8 @@ public class HoursReport extends Fragment {
         View view = inflater.inflate(R.layout.fragment_hours_report, container, false);
         worksLV = view.findViewById(R.id.list_view_works);
         worksDataBase = new WorksDataBase(getContext());
-
         WorksAdapter worksAdapter = new WorksAdapter(getContext(), worksDataBase.getAllWorks());
+        worksAdapter.setWorksList(worksDataBase.getAllWorks());
         worksLV.setAdapter(worksAdapter);
 
         worksLV.setOnItemClickListener(new AdapterView.OnItemClickListener() {
