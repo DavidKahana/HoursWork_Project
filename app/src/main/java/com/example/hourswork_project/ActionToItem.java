@@ -400,7 +400,13 @@ public class ActionToItem extends AppCompatActivity {
         tvItemMoreHours125.setText( formatDuration(calculateTime125p(duration , numOfDaysWeek)));
         tvItemMoreHours150.setText( formatDuration(calculateTime150p(duration , numOfDaysWeek)));
 
-        double numberHourlyWage = sharedPreferences.getInt("numberHourlyWage" , 0);
+        double numberHourlyWage;
+        if (sharedPreferences.getBoolean("MinSalary" , false)){
+            numberHourlyWage = sharedPreferences.getFloat("numberHourlyWageMinSalary" , 0);
+        }
+        else{
+            numberHourlyWage = sharedPreferences.getInt("numberHourlyWage" , 0);
+        }
         double salaryDaily = salaryDay(numberHourlyWage , duration , numOfDaysWeek);
 
         tvItemSalary.setText(decimalFormat.format(salaryDaily) + " שקלים חדשים ");

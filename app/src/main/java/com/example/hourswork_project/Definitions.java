@@ -95,8 +95,14 @@ public class Definitions extends Fragment {
         if (sharedPreferences.getInt("selectedNumber" , 0) > 0){
             btnSelectAge.setText("הגיל שלך הוא: "+ sharedPreferences.getInt("selectedNumber" , 0));
         }
-        if (sharedPreferences.getInt("numberHourlyWage" , 0) > 0){
-            tvHourlyWage.setText(sharedPreferences.getInt("numberHourlyWage" , 0) + " לשעה");
+        if (sharedPreferences.getBoolean("MinSalary" , false)){
+            tvHourlyWage.setText(sharedPreferences.getFloat("numberHourlyWageMinSalary" , 0) + " לשעה");
+        }
+        else {
+            if (sharedPreferences.getInt("numberHourlyWage", 0) > 0) {
+                tvHourlyWage.setText(sharedPreferences.getInt("numberHourlyWage", 0) + " לשעה");
+                cbMinSalary.setChecked(false);
+            }
         }
         if (sharedPreferences.getInt("numberSelectTimeOfBreak" , 0) > 0) {
             btnSelectTimeOfBreak.setText("אורך ההפסקה בדקות הוא: "+ sharedPreferences.getInt("numberSelectTimeOfBreak", 0));
@@ -156,6 +162,10 @@ public class Definitions extends Fragment {
                 if (cbMinSalary.isChecked()) {
 
                     tvHourlyWage.setText(minSalary(selectedNumber) + " לשעה");
+                    SharedPreferences.Editor editor = sharedPreferences.edit();
+                    editor.putFloat("numberHourlyWageMinSalary" , (float) minSalary(selectedNumber));
+                    editor.putBoolean("MinSalary" , true);
+                    editor.commit();
 
                 }
                 else {
@@ -174,6 +184,7 @@ public class Definitions extends Fragment {
                                     tvHourlyWage.setText(strNumber + " לשעה");
                                     SharedPreferences.Editor editor = sharedPreferences.edit();
                                     editor.putInt("numberHourlyWage" , numberHourlyWage);
+                                    editor.putBoolean("MinSalary" , false);
                                     editor.commit();
                                     dialog.dismiss();
                                 }
@@ -328,6 +339,7 @@ public class Definitions extends Fragment {
                             SharedPreferences.Editor editor = sharedPreferences.edit();
                             editor.putInt("numberSelectTimeOfBreak" , 0);
                             editor.putInt("numberHourlyWage" , 0);
+                            editor.putBoolean("MinSalary" , false);
                             editor.putInt("selectedNumber" , 0);
                             editor.putBoolean("SalaryOnBreak" , false);
                             editor.putInt("NumOfDaysWorking" , 0);
@@ -337,6 +349,7 @@ public class Definitions extends Fragment {
 
                             btnSelectAge.setText("גיל");
                             tvHourlyWage.setText("*** לשעה");
+                            cbMinSalary.setChecked(false);
                             btnSelectTimeOfBreak.setText("משך זמן ההפסקה (בדקות)");
                             cbSalaryOnBreak.setChecked(false);
                             btnNumOfDaysWorking.setText("מספר ימי העבודה בשבוע");

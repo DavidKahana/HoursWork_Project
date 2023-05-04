@@ -69,7 +69,13 @@ public class WorksAdapter extends BaseAdapter {
 
 
         int numOfDaysWeek = sharedPreferences.getInt("NumOfDaysWorking" , 0) ;
-        double numberHourlyWage = sharedPreferences.getInt("numberHourlyWage" , 0);
+        double numberHourlyWage;
+        if (sharedPreferences.getBoolean("MinSalary" , false)){
+            numberHourlyWage = sharedPreferences.getFloat("numberHourlyWageMinSalary" , 0);
+        }
+        else{
+            numberHourlyWage = sharedPreferences.getInt("numberHourlyWage" , 0);
+        }
         long duration = workList.get(position).startDate - workList.get(position).endDate;
 
         Boolean salaryOnBreaking = sharedPreferences.getBoolean("SalaryOnBreak" , false);
