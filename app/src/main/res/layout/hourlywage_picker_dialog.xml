@@ -12,7 +12,7 @@
         android:layout_height="wrap_content"
         android:id="@+id/etAnother"
         android:visibility="visible"
-        android:inputType="number"
+        android:inputType="numberDecimal"
         android:layout_margin="30dp"
         android:layout_gravity="center"
         android:gravity="center"

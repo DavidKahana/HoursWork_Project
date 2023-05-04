@@ -405,7 +405,7 @@ public class ActionToItem extends AppCompatActivity {
             numberHourlyWage = sharedPreferences.getFloat("numberHourlyWageMinSalary" , 0);
         }
         else{
-            numberHourlyWage = sharedPreferences.getInt("numberHourlyWage" , 0);
+            numberHourlyWage = sharedPreferences.getFloat("numberHourlyWageFloat", 0);
         }
         double salaryDaily = salaryDay(numberHourlyWage , duration , numOfDaysWeek);
 

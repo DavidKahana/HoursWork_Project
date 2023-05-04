@@ -26,8 +26,9 @@ public class Definitions extends Fragment {
 
     NumberPicker numberPicker;
     Button btnSelectAge , btnSelectTimeOfBreak , btnRestart , btnNumOfDaysWorking;
-    int selectedNumber , numberSelectTimeOfBreak , numberHourlyWage , numOfDaysWorking = 0;
+    int selectedNumber , numberSelectTimeOfBreak  , numOfDaysWorking = 0;
     CheckBox cbMinSalary , cbSalaryOnBreak , sendCheckbox;
+    float numberHourlyWage;
     EditText etAnother , phoneNumberEditText;
     TextView tvHourlyWage;
     boolean SalaryOnBreak , sendSms;
@@ -99,8 +100,8 @@ public class Definitions extends Fragment {
             tvHourlyWage.setText(sharedPreferences.getFloat("numberHourlyWageMinSalary" , 0) + " לשעה");
         }
         else {
-            if (sharedPreferences.getInt("numberHourlyWage", 0) > 0) {
-                tvHourlyWage.setText(sharedPreferences.getInt("numberHourlyWage", 0) + " לשעה");
+            if (sharedPreferences.getFloat("numberHourlyWageFloat" , 0) > 0) {
+                tvHourlyWage.setText(sharedPreferences.getFloat("numberHourlyWageFloat", 0) + " לשעה");
                 cbMinSalary.setChecked(false);
             }
         }
@@ -180,10 +181,10 @@ public class Definitions extends Fragment {
                                 String strNumber = etAnother.getText().toString();
 
                                 if (!strNumber.isEmpty()) {
-                                    numberHourlyWage = Integer.parseInt(strNumber);
+                                    numberHourlyWage = Float.parseFloat(strNumber);
                                     tvHourlyWage.setText(strNumber + " לשעה");
                                     SharedPreferences.Editor editor = sharedPreferences.edit();
-                                    editor.putInt("numberHourlyWage" , numberHourlyWage);
+                                    editor.putFloat("numberHourlyWageFloat" , numberHourlyWage);
                                     editor.putBoolean("MinSalary" , false);
                                     editor.commit();
                                     dialog.dismiss();
@@ -338,7 +339,7 @@ public class Definitions extends Fragment {
 
                             SharedPreferences.Editor editor = sharedPreferences.edit();
                             editor.putInt("numberSelectTimeOfBreak" , 0);
-                            editor.putInt("numberHourlyWage" , 0);
+                            editor.putFloat("numberHourlyWageFloat", 0);
                             editor.putBoolean("MinSalary" , false);
                             editor.putInt("selectedNumber" , 0);
                             editor.putBoolean("SalaryOnBreak" , false);

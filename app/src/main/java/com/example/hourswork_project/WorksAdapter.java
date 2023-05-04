@@ -74,7 +74,7 @@ public class WorksAdapter extends BaseAdapter {
             numberHourlyWage = sharedPreferences.getFloat("numberHourlyWageMinSalary" , 0);
         }
         else{
-            numberHourlyWage = sharedPreferences.getInt("numberHourlyWage" , 0);
+            numberHourlyWage = sharedPreferences.getFloat("numberHourlyWageFloat" , 0);
         }
         long duration = workList.get(position).startDate - workList.get(position).endDate;
 
