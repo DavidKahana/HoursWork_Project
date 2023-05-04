@@ -25,10 +25,10 @@ import androidx.fragment.app.Fragment;
 public class Definitions extends Fragment {
 
     NumberPicker numberPicker;
-    Button btnSelectAge , btnSelectTimeOfBreak , btnRestart , btnNumOfDaysWorking;
+    Button btnSelectAge , btnSelectTimeOfBreak , btnRestart , btnNumOfDaysWorking , btnNumTravelExpenses;
     int selectedNumber , numberSelectTimeOfBreak  , numOfDaysWorking = 0;
     CheckBox cbMinSalary , cbSalaryOnBreak , sendCheckbox;
-    float numberHourlyWage;
+    float numberHourlyWage , numberTravelExpenses;
     EditText etAnother , phoneNumberEditText;
     TextView tvHourlyWage;
     boolean SalaryOnBreak , sendSms;
@@ -90,6 +90,7 @@ public class Definitions extends Fragment {
         btnNumOfDaysWorking = view.findViewById(R.id.btnNumOfDaysWorking);
         phoneNumberEditText = view.findViewById(R.id.phone_number);
         sendCheckbox = view.findViewById(R.id.send_checkbox);
+        btnNumTravelExpenses = view.findViewById(R.id.btnNumTravelExpenses);
 
         sharedPreferences = getContext().getSharedPreferences("Definitions", 0);
 
@@ -115,6 +116,9 @@ public class Definitions extends Fragment {
         }
         if (sharedPreferences.getInt("NumOfDaysWorking" , 0) == 6){
             btnNumOfDaysWorking.setText("מספר ימי העבודה בשבוע: " + 6);
+        }
+        if (sharedPreferences.getFloat("numberTravelExpenses" , 0 ) > 0){
+            btnNumTravelExpenses.setText("דמי נסיעות יומי: " + sharedPreferences.getFloat("numberTravelExpenses" , 0 ));
         }
         if (sharedPreferences.getString("phoneNumber" , null) != null ){
             phoneNumberEditText.setText(sharedPreferences.getString("phoneNumber" , null));
@@ -293,6 +297,36 @@ public class Definitions extends Fragment {
             }
         });
 
+        btnNumTravelExpenses.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                    Dialog dialog = new Dialog(view.getContext());
+                    dialog.setContentView(R.layout.travel_expenses_picker_dialog);
+                    etAnother = dialog.findViewById(R.id.etTravelExpenses);
+                    Button okButton = dialog.findViewById(R.id.btnOk_etTravelExpenses);
+                    okButton.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            if (v == okButton) {
+                                String strNumberTravelExpenses = etAnother.getText().toString();
+
+                                if (!strNumberTravelExpenses.isEmpty()) {
+                                    numberTravelExpenses = Float.parseFloat(strNumberTravelExpenses);
+                                    btnNumTravelExpenses.setText("דמי נסיעות יומי: " + numberTravelExpenses);
+                                    SharedPreferences.Editor editor = sharedPreferences.edit();
+                                    editor.putFloat("numberTravelExpenses" , numberTravelExpenses);
+                                    editor.commit();
+                                    dialog.dismiss();
+                                }
+                                else{
+
+                                }
+                            }
+                        }
+                    });
+                    dialog.show();
+                }
+        });
 
 
         sendCheckbox.setOnClickListener(new View.OnClickListener() {
@@ -344,6 +378,7 @@ public class Definitions extends Fragment {
                             editor.putInt("selectedNumber" , 0);
                             editor.putBoolean("SalaryOnBreak" , false);
                             editor.putInt("NumOfDaysWorking" , 0);
+                            editor.putFloat("numberTravelExpenses" , 0);
                             editor.putString("phoneNumber" , "");
                             editor.putBoolean("sendSms" , false);
                             editor.commit();
@@ -354,6 +389,7 @@ public class Definitions extends Fragment {
                             btnSelectTimeOfBreak.setText("משך זמן ההפסקה (בדקות)");
                             cbSalaryOnBreak.setChecked(false);
                             btnNumOfDaysWorking.setText("מספר ימי העבודה בשבוע");
+                            btnNumTravelExpenses.setText("דמי נסיעות יומי");
                             phoneNumberEditText.setText("");
                             sendCheckbox.setChecked(false);
                         }
