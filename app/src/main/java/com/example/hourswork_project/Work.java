@@ -1,5 +1,8 @@
 package com.example.hourswork_project;
 
+
+import android.widget.TextView;
+
 public class Work {
 
     Integer id;
@@ -16,6 +19,8 @@ public class Work {
         this.startDate = startDate;
         this.endDate = endDate;
     }
+
+
 
     public Long getStartDate() {
         return startDate;

@@ -12,6 +12,7 @@ import android.widget.TextView;
 import java.text.DateFormatSymbols;
 import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collections;
 import java.util.Comparator;
@@ -26,6 +27,8 @@ public class WorksAdapter extends BaseAdapter {
     private SimpleDateFormat dateFormat;
     private SharedPreferences sharedPreferences;
     private double salaryDaily;
+
+
 
     public WorksAdapter(Context context, List<Work> workList) {
         this.workList = workList;
@@ -76,6 +79,8 @@ public class WorksAdapter extends BaseAdapter {
         else{
             numberHourlyWage = sharedPreferences.getFloat("numberHourlyWageFloat" , 0);
         }
+
+
         long duration = workList.get(position).startDate - workList.get(position).endDate;
 
         Boolean salaryOnBreaking = sharedPreferences.getBoolean("SalaryOnBreak" , false);
@@ -157,6 +162,9 @@ public class WorksAdapter extends BaseAdapter {
         workList = worksList;
         notifyDataSetChanged();
     }
+
+
+
 
     public static double salaryDay(double numberHourlyWage , long duration , int num){
         double salary = 0 ;
@@ -255,6 +263,14 @@ public class WorksAdapter extends BaseAdapter {
         else{
             return duration - minutes * 60 * 1000;
         }
+    }
+
+    public static int getMonthFromTimestamp(long timestamp) {
+        Date date = new Date(timestamp);
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTime(date);
+        int month = calendar.get(Calendar.MONTH) + 1; // Months are 0-indexed in Calendar, so add 1
+        return month;
     }
 
 

@@ -4,6 +4,7 @@ import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.database.Cursor;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -78,6 +79,7 @@ public class HoursReport extends Fragment {
         View view = inflater.inflate(R.layout.fragment_hours_report, container, false);
         worksLV = view.findViewById(R.id.list_view_works);
         worksDataBase = new WorksDataBase(getContext());
+
         WorksAdapter worksAdapter = new WorksAdapter(getContext(), worksDataBase.getAllWorks());
         worksAdapter.setWorksList(worksDataBase.getAllWorks());
         worksLV.setAdapter(worksAdapter);
