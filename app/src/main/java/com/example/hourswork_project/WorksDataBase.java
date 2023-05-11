@@ -125,6 +125,115 @@ public class WorksDataBase extends SQLiteOpenHelper {
         db.close();
     }
 
+    public List<Work> getWorksByMonth(int month) {
+        List<Work> works = new ArrayList<>();
+
+        // Get the start and end timestamps for the specified month
+        Calendar calendar = Calendar.getInstance();
+        calendar.set(Calendar.MONTH, month - 1);
+        calendar.set(Calendar.DAY_OF_MONTH, 1);
+        calendar.set(Calendar.HOUR_OF_DAY, 0);
+        calendar.set(Calendar.MINUTE, 0);
+        calendar.set(Calendar.SECOND, 0);
+        long startOfMonth = calendar.getTimeInMillis();
+
+        calendar.add(Calendar.MONTH, 1);
+        calendar.add(Calendar.MILLISECOND, -1);
+        long endOfMonth = calendar.getTimeInMillis();
+
+        String selectQuery = "SELECT * FROM " + TABLE_NAME + " WHERE " + COLUMN_START_DATE + " >= " + startOfMonth + " AND " + COLUMN_START_DATE + " <= " + endOfMonth;
+
+        SQLiteDatabase db = this.getWritableDatabase();
+        Cursor cursor = db.rawQuery(selectQuery, null);
+
+        if (cursor.moveToFirst()) {
+            do {
+                int idIndex = cursor.getColumnIndex(COLUMN_ID);
+                int startDateIndex = cursor.getColumnIndex(COLUMN_START_DATE);
+                int endDateIndex = cursor.getColumnIndex(COLUMN_END_DATE);
+
+                if (idIndex >= 0 && startDateIndex >= 0 && endDateIndex >= 0) {
+                    int id = cursor.getInt(idIndex);
+                    long startDate = cursor.getLong(startDateIndex);
+                    long endDate = cursor.getLong(endDateIndex);
+
+                    Work work = new Work(id, endDate, startDate);
+                    works.add(work);
+                }
+            } while (cursor.moveToNext());
+        }
+
+        cursor.close();
+        db.close();
+
+        return works;
+    }
+
+    public int[] getDaysInEachMonth() {
+        int[] daysInEachMonth = new int[12]; // Array to hold days in each month (January is at index 0)
+
+        // Get the unique start days for all members
+        List<Long> uniqueStartDays = getUniqueStartDays();
+
+        // Calculate the number of days in each month
+        Calendar calendar = Calendar.getInstance();
+        for (Long startDay : uniqueStartDays) {
+            calendar.setTimeInMillis(startDay);
+
+            int month = calendar.get(Calendar.MONTH);
+            int daysInMonth = calendar.getActualMaximum(Calendar.DAY_OF_MONTH);
+
+            if (daysInEachMonth[month] == 0 || daysInMonth < daysInEachMonth[month]) {
+                daysInEachMonth[month] = daysInMonth;
+            }
+        }
+
+        // If there are multiple members starting on the same day, set their month's days to 1
+        for (int i = 0; i < daysInEachMonth.length; i++) {
+            if (daysInEachMonth[i] > 1) {
+                daysInEachMonth[i] = 1;
+            }
+        }
+
+        return daysInEachMonth;
+    }
+
+    private List<Long> getUniqueStartDays() {
+        List<Long> uniqueStartDays = new ArrayList<>();
+
+        String selectQuery = "SELECT DISTINCT " + COLUMN_START_DATE + " FROM " + TABLE_NAME;
+
+        SQLiteDatabase db = this.getWritableDatabase();
+        Cursor cursor = db.rawQuery(selectQuery, null);
+
+        if (cursor.moveToFirst()) {
+            do {
+                int startDateIndex = cursor.getColumnIndex(COLUMN_START_DATE);
+                if (startDateIndex >= 0) {
+                    long startDate = cursor.getLong(startDateIndex);
+                    uniqueStartDays.add(getStartOfDay(startDate));
+                }
+            } while (cursor.moveToNext());
+        }
+
+        cursor.close();
+        db.close();
+
+        return uniqueStartDays;
+    }
+
+    private long getStartOfDay(long timestamp) {
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTimeInMillis(timestamp);
+        calendar.set(Calendar.HOUR_OF_DAY, 0);
+        calendar.set(Calendar.MINUTE, 0);
+        calendar.set(Calendar.SECOND, 0);
+        calendar.set(Calendar.MILLISECOND, 0);
+        return calendar.getTimeInMillis();
+    }
+
+
+
 
 
 
