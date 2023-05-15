@@ -123,6 +123,8 @@ public class HoursReport extends Fragment {
         worksDataBase = new WorksDataBase(getContext());
         int[] daysInEachMonth = worksDataBase.getDaysInEachMonth();
 
+
+
         for (int i = 1; i < 13; i++) {
 
             if (daysInEachMonth[i - 1] > 0) {
