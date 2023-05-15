@@ -23,6 +23,8 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentTransaction;
 
 import java.text.DateFormatSymbols;
 import java.util.Date;
@@ -43,7 +45,9 @@ public class HoursReport extends Fragment {
     private String mParam1;
     private String mParam2;
     ListView worksLV;
+    int finalI;
     WorksDataBase worksDataBase;
+    LinearLayout container2;
 
     public HoursReport() {
         // Required empty public constructor
@@ -113,42 +117,34 @@ public class HoursReport extends Fragment {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_hours_report, container, false);
 
-        LinearLayout container2 = view.findViewById(R.id.container2);
 
+        container2 = view.findViewById(R.id.container2);
 
         worksDataBase = new WorksDataBase(getContext());
-
         int[] daysInEachMonth = worksDataBase.getDaysInEachMonth();
-
-
-// Iterate over the array to print the results
-        for (int i = 0; i < daysInEachMonth.length; i++) {
-            int month = i + 1; // January is at index 0, so increment by 1 for display
-            int days = daysInEachMonth[i];
-
-        }
-
 
         for (int i = 1; i < 13; i++) {
 
             if (daysInEachMonth[i - 1] > 0) {
 
-
-
                 Button button = new Button(getContext());
                 button.setText(getMonthName(i));
+                button.setTag(i);
+
+                container2.addView(button);
+
+
                 button.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        // Add your button click logic here
+
+                        actButton((Integer) button.getTag());
+
                     }
                 });
 
 
-                container2.addView(button);
-                
                 ListView listView = new ListView(getContext());
-
 
                 WorksAdapter adapter = new WorksAdapter(getContext(), worksDataBase.getWorksByMonth(i));
                 adapter.setWorksList(worksDataBase.getWorksByMonth(i));
@@ -156,7 +152,6 @@ public class HoursReport extends Fragment {
                 listView.setAdapter(adapter);
 
                 container2.addView(listView);
-
 
                 listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                     @Override
@@ -172,13 +167,43 @@ public class HoursReport extends Fragment {
                     }
                 });
 
+
+
             }
 
 
         }
 
-
         return view;
+    }
+
+    public void actButton (final int i){
+
+        Intent intentMonth = new Intent(getContext(), monthlySummary.class);
+
+        intentMonth.putExtra("i", i);
+        Log.d("i", "i: " + i);
+        startActivity(intentMonth);
+    }
+
+    // Create a separate method to get the OnClickListener for each button
+    private View.OnClickListener getButtonClickListener(final int buttonIndex) {
+        return new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                Button retrievedButton = container2.findViewWithTag("button1");
+
+                if (v == retrievedButton) {
+
+                    Intent intentMonth = new Intent(getContext(), monthlySummary.class);
+
+                    intentMonth.putExtra("i", finalI);
+                    Log.d("i", "i: " + finalI);
+                    startActivity(intentMonth);
+                }
+            }
+        };
     }
 
     public String getMonthName(int monthNumber) {

@@ -181,18 +181,8 @@ public class WorksDataBase extends SQLiteOpenHelper {
             calendar.setTimeInMillis(startDay);
 
             int month = calendar.get(Calendar.MONTH);
-            int daysInMonth = calendar.getActualMaximum(Calendar.DAY_OF_MONTH);
 
-            if (daysInEachMonth[month] == 0 || daysInMonth < daysInEachMonth[month]) {
-                daysInEachMonth[month] = daysInMonth;
-            }
-        }
-
-        // If there are multiple members starting on the same day, set their month's days to 1
-        for (int i = 0; i < daysInEachMonth.length; i++) {
-            if (daysInEachMonth[i] > 1) {
-                daysInEachMonth[i] = 1;
-            }
+            daysInEachMonth[month]++;
         }
 
         return daysInEachMonth;
