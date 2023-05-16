@@ -8,6 +8,7 @@ import android.database.Cursor;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
@@ -22,6 +23,7 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.appcompat.widget.LinearLayoutCompat;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
@@ -47,7 +49,7 @@ public class HoursReport extends Fragment {
     ListView worksLV;
     int finalI;
     WorksDataBase worksDataBase;
-    LinearLayout container2;
+    LinearLayoutCompat container2;
 
     public HoursReport() {
         // Required empty public constructor
@@ -129,11 +131,16 @@ public class HoursReport extends Fragment {
 
             if (daysInEachMonth[i - 1] > 0) {
 
+                LinearLayout linearLayout = new LinearLayout(getContext());
+
+                linearLayout.setOrientation(LinearLayout.VERTICAL);
                 Button button = new Button(getContext());
                 button.setText(getMonthName(i));
                 button.setTag(i);
 
                 container2.addView(button);
+
+
 
 
                 button.setOnClickListener(new View.OnClickListener() {
@@ -153,7 +160,9 @@ public class HoursReport extends Fragment {
 
                 listView.setAdapter(adapter);
 
+
                 container2.addView(listView);
+
 
                 listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                     @Override

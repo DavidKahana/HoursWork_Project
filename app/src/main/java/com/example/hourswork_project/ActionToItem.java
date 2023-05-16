@@ -35,7 +35,7 @@ public class ActionToItem extends AppCompatActivity {
     WorksDataBase worksDataBase;
     Work work;
     int id ;
-    long duration;
+    long duration , durationToatal;
     Date startUpdate , stopUpdate , dateAndTime , start , stop;
     SharedPreferences sharedPreferences;
     SimpleDateFormat hoursAndMin = new SimpleDateFormat("HH:mm");
