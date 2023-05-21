@@ -15,6 +15,9 @@ import android.text.Spannable;
 import android.text.SpannableStringBuilder;
 import android.text.style.ForegroundColorSpan;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.DatePicker;
@@ -46,6 +49,7 @@ public class ActionToItem extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_action_to_item);
         setTitle("hello");
+
 
         tvItemStart = findViewById(R.id.tvItemStart);
         tvItemStop = findViewById(R.id.tvItemStop);
@@ -133,6 +137,35 @@ public class ActionToItem extends AppCompatActivity {
         });
 
     }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.activity_menu, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        int itemId = item.getItemId();
+
+        if (itemId == R.id.menu_item) {
+            Date startDate = new Date(work.getStartDate());
+            Calendar calendar = Calendar.getInstance();
+            calendar.setTime(startDate);
+
+            int year = calendar.get(Calendar.YEAR);
+            int month = calendar.get(Calendar.MONTH) + 1;
+
+            Intent intent = new Intent(this , monthlySummary.class);
+            intent.putExtra("year" , year);
+            intent.putExtra("month" , month);
+            startActivity(intent);
+            return true;
+        }
+
+        return super.onOptionsItemSelected(item);
+    }
+
 
     public static long getDurationMillis(Date startDate, Date endDate) {
         return endDate.getTime() - startDate.getTime();

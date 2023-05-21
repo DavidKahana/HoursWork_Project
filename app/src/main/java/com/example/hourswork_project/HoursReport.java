@@ -46,10 +46,10 @@ public class HoursReport extends Fragment {
     // TODO: Rename and change types of parameters
     private String mParam1;
     private String mParam2;
+
     ListView worksLV;
-    int finalI;
+    WorksAdapter worksAdapter;
     WorksDataBase worksDataBase;
-    LinearLayoutCompat container2;
 
     public HoursReport() {
         // Required empty public constructor
@@ -120,58 +120,26 @@ public class HoursReport extends Fragment {
         View view = inflater.inflate(R.layout.fragment_hours_report, container, false);
 
 
-        container2 = view.findViewById(R.id.container2);
 
-        worksDataBase = new WorksDataBase(getContext());
-        int[] daysInEachMonth = worksDataBase.getDaysInEachMonth();
+                worksDataBase = new WorksDataBase(getContext());
 
+                worksLV = view.findViewById(R.id.LV);
 
+                worksAdapter = new WorksAdapter(getContext() , worksDataBase.getAllWorks());
+                worksAdapter.setWorksList(worksDataBase.getAllWorks());
 
-        for (int i = 1; i < 13; i++) {
-
-            if (daysInEachMonth[i - 1] > 0) {
-
-                LinearLayout linearLayout = new LinearLayout(getContext());
-
-                linearLayout.setOrientation(LinearLayout.VERTICAL);
-                Button button = new Button(getContext());
-                button.setText(getMonthName(i));
-                button.setTag(i);
-
-                container2.addView(button);
+                worksLV.setAdapter(worksAdapter);
 
 
 
-
-                button.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-
-                        actButton((Integer) button.getTag());
-
-                    }
-                });
-
-
-                ListView listView = new ListView(getContext());
-
-                WorksAdapter adapter = new WorksAdapter(getContext(), worksDataBase.getWorksByMonth(i));
-                adapter.setWorksList(worksDataBase.getWorksByMonth(i));
-
-                listView.setAdapter(adapter);
-
-
-                container2.addView(listView);
-
-
-                listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                worksLV.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                     @Override
                     public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
 
                         Intent intent = new Intent(getContext(), ActionToItem.class);
 
 
-                        intent.putExtra("id", adapter.getworkID(i));
+                        intent.putExtra("id", worksAdapter.getworkID(i));
                         Log.d("david", "i: " + i);
                         startActivity(intent);
 
@@ -179,55 +147,7 @@ public class HoursReport extends Fragment {
                 });
 
 
-
-            }
-
-
-        }
-
         return view;
-    }
-
-    public void actButton (final int i){
-
-        Intent intentMonth = new Intent(getContext(), monthlySummary.class);
-
-        intentMonth.putExtra("i", i);
-        Log.d("i", "i: " + i);
-        startActivity(intentMonth);
-    }
-
-    // Create a separate method to get the OnClickListener for each button
-    private View.OnClickListener getButtonClickListener(final int buttonIndex) {
-        return new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-
-                Button retrievedButton = container2.findViewWithTag("button1");
-
-                if (v == retrievedButton) {
-
-                    Intent intentMonth = new Intent(getContext(), monthlySummary.class);
-
-                    intentMonth.putExtra("i", finalI);
-                    Log.d("i", "i: " + finalI);
-                    startActivity(intentMonth);
-                }
-            }
-        };
-    }
-
-    public String getMonthName(int monthNumber) {
-        String monthName = "";
-
-        if (monthNumber >= 1 && monthNumber <= 12) {
-            DateFormatSymbols dfs = new DateFormatSymbols();
-            String[] monthNames = dfs.getMonths();
-
-            monthName = monthNames[monthNumber - 1];
-        }
-
-        return monthName;
     }
 
 

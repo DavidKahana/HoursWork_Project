@@ -23,7 +23,7 @@ public class monthlySummary extends AppCompatActivity {
 
     TextView tvMonthNameOfMonth , tvMonthNumOfDays_answer , tvMonthTotalHours_answer ,tvMonthTotalHours100p_answer , tvMonthTotalHours125p_answer , tvMonthTotalHours150p_answer , tvMonthTotalsalary_answer;
     SharedPreferences sharedPreferences;
-    int numMonth;
+    int numMonth , numYear;
     WorksDataBase worksDataBase;
     long duration , durationToatalMonth = 0 , durationToatal125pMonth = 0 , durationToatal150pMonth = 0;
 
@@ -47,7 +47,9 @@ public class monthlySummary extends AppCompatActivity {
 
         Intent intent=getIntent();
 
-        numMonth = intent.getIntExtra("i",0);
+        numYear = intent.getIntExtra("year" , 0);
+        numMonth = intent.getIntExtra("month",0);
+
         worksDataBase = new WorksDataBase(this);
 
         int[] daysInEachMonth = worksDataBase.getDaysInEachMonth();
@@ -56,7 +58,7 @@ public class monthlySummary extends AppCompatActivity {
         tvMonthNameOfMonth.setText( "חודש: " + getMonthName(numMonth));
         tvMonthNumOfDays_answer.setText(daysInEachMonth[numMonth - 1] + " ימים");
 
-        List<Work> works = worksDataBase.getWorksByMonth(numMonth);  // Example: Retrieve works for January
+        List<Work> works = worksDataBase.getWorksByMonthAndYear(numMonth , numYear);  // Example: Retrieve works for January
 
         for (Work work : works) {
 

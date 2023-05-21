@@ -169,6 +169,53 @@ public class WorksDataBase extends SQLiteOpenHelper {
         return works;
     }
 
+    public List<Work> getWorksByMonthAndYear(int month, int year) {
+        List<Work> works = new ArrayList<>();
+
+        // Get the start and end timestamps for the specified month and year
+        Calendar calendar = Calendar.getInstance();
+        calendar.set(Calendar.YEAR, year);
+        calendar.set(Calendar.MONTH, month - 1);
+        calendar.set(Calendar.DAY_OF_MONTH, 1);
+        calendar.set(Calendar.HOUR_OF_DAY, 0);
+        calendar.set(Calendar.MINUTE, 0);
+        calendar.set(Calendar.SECOND, 0);
+        calendar.set(Calendar.MILLISECOND, 0);
+        long startOfMonth = calendar.getTimeInMillis();
+
+        calendar.add(Calendar.MONTH, 1);
+        calendar.add(Calendar.MILLISECOND, -1);
+        long endOfMonth = calendar.getTimeInMillis();
+
+        String selectQuery = "SELECT * FROM " + TABLE_NAME + " WHERE " + COLUMN_START_DATE + " >= " + startOfMonth + " AND " + COLUMN_START_DATE + " <= " + endOfMonth;
+
+        SQLiteDatabase db = this.getWritableDatabase();
+        Cursor cursor = db.rawQuery(selectQuery, null);
+
+        if (cursor.moveToFirst()) {
+            do {
+                int idIndex = cursor.getColumnIndex(COLUMN_ID);
+                int startDateIndex = cursor.getColumnIndex(COLUMN_START_DATE);
+                int endDateIndex = cursor.getColumnIndex(COLUMN_END_DATE);
+
+                if (idIndex >= 0 && startDateIndex >= 0 && endDateIndex >= 0) {
+                    int id = cursor.getInt(idIndex);
+                    long startDate = cursor.getLong(startDateIndex);
+                    long endDate = cursor.getLong(endDateIndex);
+
+                    Work work = new Work(id, endDate, startDate);
+                    works.add(work);
+                }
+            } while (cursor.moveToNext());
+        }
+
+        cursor.close();
+        db.close();
+
+        return works;
+    }
+
+
     public int[] getDaysInEachMonth() {
         int[] daysInEachMonth = new int[12]; // Array to hold days in each month (January is at index 0)
 
