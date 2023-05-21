@@ -55,7 +55,7 @@ public class monthlySummary extends AppCompatActivity {
         int[] daysInEachMonth = worksDataBase.getDaysInEachMonth();
 
 
-        tvMonthNameOfMonth.setText( "חודש: " + getMonthName(numMonth));
+        tvMonthNameOfMonth.setText( "חודש: " + getMonthName(numMonth) + " " + numYear);
         tvMonthNumOfDays_answer.setText(daysInEachMonth[numMonth - 1] + " ימים");
 
         List<Work> works = worksDataBase.getWorksByMonthAndYear(numMonth , numYear);  // Example: Retrieve works for January
