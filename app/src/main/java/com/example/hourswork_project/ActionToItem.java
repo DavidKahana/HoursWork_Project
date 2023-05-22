@@ -33,7 +33,7 @@ import java.util.List;
 
 public class ActionToItem extends AppCompatActivity {
 
-    Button btnItemDelete , btnItemToMoveHoutsReport;
+    Button btnItemDelete;
     TextView tvItemStart , tvItemStop , tvTitleItemDurationWorkingIncludingBreaking , tvItemDurationWorking , tvItemDurationWorkingIncludingBreaking , tvItemMoreHours125 , tvItemMoreHours150 , tvItemSalary ;
     WorksDataBase worksDataBase;
     Work work;
@@ -61,7 +61,6 @@ public class ActionToItem extends AppCompatActivity {
         tvTitleItemDurationWorkingIncludingBreaking = findViewById(R.id.tvTitleItemDurationWorkingIncludingBreaking);
 
         btnItemDelete = findViewById(R.id.btnItemDelete);
-        btnItemToMoveHoutsReport = findViewById(R.id.btnItemToMoveHoutsReport);
 
         sharedPreferences = getSharedPreferences("Definitions", 0);
 
@@ -121,21 +120,6 @@ public class ActionToItem extends AppCompatActivity {
             }
         });
 
-
-        btnItemToMoveHoutsReport.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-
-                HoursReport hoursReport = new HoursReport();
-
-                FragmentManager fragmentManager = getSupportFragmentManager();
-                FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-
-                fragmentTransaction.replace(R.id.container , hoursReport).commit();
-
-            }
-        });
-
     }
 
     @Override
@@ -148,7 +132,7 @@ public class ActionToItem extends AppCompatActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
         int itemId = item.getItemId();
 
-        if (itemId == R.id.menu_item) {
+        if (itemId == R.id.menu_item_monthlySummary) {
             Date startDate = new Date(work.getStartDate());
             Calendar calendar = Calendar.getInstance();
             calendar.setTime(startDate);
@@ -162,7 +146,17 @@ public class ActionToItem extends AppCompatActivity {
             startActivity(intent);
             return true;
         }
+        if (itemId == R.id.menu_item_backToHoursReport) {
 
+            HoursReport hoursReport = new HoursReport();
+
+            FragmentManager fragmentManager = getSupportFragmentManager();
+            FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+
+            fragmentTransaction.replace(R.id.container , hoursReport).commit();
+
+            return true;
+        }
         return super.onOptionsItemSelected(item);
     }
 
