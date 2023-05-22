@@ -15,6 +15,7 @@ import android.widget.TimePicker;
 import android.widget.Toast;
 
 import java.text.DateFormatSymbols;
+import java.text.DecimalFormat;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
@@ -25,7 +26,10 @@ public class monthlySummary extends AppCompatActivity {
     SharedPreferences sharedPreferences;
     int numMonth , numYear;
     WorksDataBase worksDataBase;
+    double salaryTotal , salaryDay;
     long duration , durationToatalMonth = 0 , durationToatal125pMonth = 0 , durationToatal150pMonth = 0;
+    DecimalFormat decimalFormat = new DecimalFormat("#.##");
+
 
 
     @Override
@@ -103,12 +107,23 @@ public class monthlySummary extends AppCompatActivity {
             Log.d("Precent", "p125: "+ durationToatal125pMonth);
             Log.d("Precent", "p150: "+ durationToatal150pMonth);
 
+            double numberHourlyWage;
+            if (sharedPreferences.getBoolean("MinSalary" , false)){
+                numberHourlyWage = sharedPreferences.getFloat("numberHourlyWageMinSalary" , 0);
+            }
+            else{
+                numberHourlyWage = sharedPreferences.getFloat("numberHourlyWageFloat", 0);
+            }
+            salaryDay = salaryDay(numberHourlyWage , timeOfDuration , numOfDaysWeek);
+            salaryTotal = salaryTotal + salaryDay;
+
         }
 
         tvMonthTotalHours125p_answer.setText(formatDuration(durationToatal125pMonth));
         tvMonthTotalHours150p_answer.setText(formatDuration(durationToatal150pMonth));
         tvMonthTotalHours100p_answer.setText(formatDuration(durationToatalMonth - durationToatal150pMonth - durationToatal125pMonth));
 
+        tvMonthTotalsalary_answer.setText(decimalFormat.format(salaryTotal) + " שקלים חדשים ");
 
     }
 
