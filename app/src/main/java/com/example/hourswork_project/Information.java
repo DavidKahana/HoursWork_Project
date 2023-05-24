@@ -82,6 +82,20 @@ public class Information extends Fragment {
         btnTravelExpenses = view.findViewById(R.id.btnTravelExpenses);
         btnOvertime = view.findViewById(R.id.btnOvertime);
 
+
+        String strMinSalary = "עד גיל 16 : 22.54\n" +
+                "מגיל 16 עד 17 : 24.15\n" +
+                "מגיל 17 עד 18 : 26.73\n" +
+                "מגיל 18 ומעלה : 29.96\n" +
+                "\n * מעודכן לאפריל 23"  ;
+
+        tvMinSalary.setText(strMinSalary);
+
+        String strTravelExpenses = "בלחיצה על יום עבודה מסוים בדוח השעות יוצג הסכום שהרווחת באותו היום ללא חישוב דמי נסיעות.\n" +
+                "המערכת תוסיף לשכר החודשי שלך את דמי הנסיעות לפי חישוב יומי (כלומר עבור כל יום עבודה תקבל את הסכום שקבעת בהגדרות).";
+
+        tvTravelExpenses.setText(strTravelExpenses);
+
         String strOverTime = "אם קבעת בהגדרות כי העסק שלך\n" +
                 "\n" +
                 "פועל חמישה ימים בשבוע, אז השעות הנוספות תחושבנה כך: \n" +
@@ -100,16 +114,6 @@ public class Information extends Fragment {
                 "לעשר שעות.";
 
         tvOvertime.setText(strOverTime);
-
-        String strMinSalary = "עד גיל 16 : 22.54\n" +
-                "מגיל 16 עד 17 : 24.15\n" +
-                "מגיל 17 עד 18 : 26.73\n" +
-                "מגיל 18 ומעלה : 29.96\n" +
-                "\n * מעודכן לאפריל 23"  ;
-
-        tvMinSalary.setText(strMinSalary);
-
-
 
         if (btnMinSalary != null) {
             btnMinSalary.setOnClickListener(new View.OnClickListener() {

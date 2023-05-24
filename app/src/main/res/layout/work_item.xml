@@ -1,4 +1,3 @@
-<?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
@@ -9,37 +8,26 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="vertical">
-    <TextView
-        android:id="@+id/text_view_start_date"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:hint="date 1"
-        android:layout_marginRight="10dp"
-        android:textAppearance="?android:textAppearanceMedium" />
-
-    <TextView
-        android:id="@+id/text_view_end_date"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:hint="date 2"
-        android:layout_marginRight="10dp"
-        android:textAppearance="?android:textAppearanceMedium" />
-
-    </LinearLayout>
-    <LinearLayout
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:orientation="vertical">
 
         <TextView
+            android:id="@+id/text_view_start_date"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:hint="day of week"
-            android:layout_marginRight="25dp"
+            android:hint="Date 1"
+            android:layout_marginEnd="30dp"
             android:textAppearance="?android:textAppearanceMedium"
-            android:id="@+id/tvDayOfWeek"/>
+            android:textColor="#333333"
+            android:textStyle="bold" />
 
-
+        <TextView
+            android:id="@+id/text_view_end_date"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:hint="Date 2"
+            android:layout_marginEnd="30dp"
+            android:textAppearance="?android:textAppearanceMedium"
+            android:textColor="#333333"
+            android:textStyle="bold" />
 
     </LinearLayout>
 
@@ -49,15 +37,30 @@
         android:orientation="vertical">
 
         <TextView
+            android:id="@+id/tvDayOfWeek"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:hint="Day of the Week"
+            android:layout_marginEnd="10dp"
+            android:textAppearance="?android:textAppearanceMedium"
+            android:textColor="#000000"
+            android:textStyle="bold" />
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <TextView
+            android:id="@+id/tvSalaryDay"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:hint=""
-            android:layout_marginRight="25dp"
-            android:textColor="#F44336"
             android:textAppearance="?android:textAppearanceMedium"
-            android:id="@+id/tvSalaryDay"/>
-
-
+            android:textColor="#F44336"
+            android:textStyle="bold" />
 
     </LinearLayout>
 
