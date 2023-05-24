@@ -32,6 +32,10 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     FragmentTransaction fragmentTransaction;
     Button btnEntrance , btnHoursReport , btnInformation , btnDefinitions;
     private static final int REQUEST_CODE_RECEIVE_NOTIFICATIONS = 123;
+    Entrance entrance = new Entrance();
+    HoursReport hoursReport = new HoursReport();
+    Information information = new Information();
+    Definitions definitions = new Definitions();
 
 
 
@@ -53,6 +57,27 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         btnInformation.setOnClickListener(this);
         btnDefinitions.setOnClickListener(this);
 
+        Intent intent = getIntent();
+        int state = intent.getIntExtra("state" , 0);
+        Log.d("c1" , "state: " + state);
+
+        if (state == 1){
+            getSupportFragmentManager().beginTransaction().replace(R.id.container , hoursReport).commit();
+
+        }
+        else{
+            getSupportFragmentManager().beginTransaction().replace(R.id.container , entrance).commit();
+
+            new Handler().postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    // call the method to show the notification
+                    showNotification();
+                }
+            }, 10000); // 10 seconds
+
+        }
+
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             NotificationChannel channel = new NotificationChannel("channelId", "Channel Name", NotificationManager.IMPORTANCE_HIGH);
@@ -60,13 +85,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             notificationManager.createNotificationChannel(channel);
         }
 
-        new Handler().postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                // call the method to show the notification
-                showNotification();
-            }
-        }, 10000); // 10 seconds
+
 
     }
     private void showNotification() {
@@ -93,10 +112,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     @Override
     public void onClick(View v) {
 
-        Entrance entrance = new Entrance();
-        HoursReport hoursReport = new HoursReport();
-        Information information = new Information();
-        Definitions definitions = new Definitions();
 
 
         if (v == btnEntrance){

@@ -110,12 +110,10 @@ public class ActionToItem extends AppCompatActivity {
             public void onClick(View v) {
 
                 worksDataBase.deleteWork(id);
-                HoursReport hoursReport = new HoursReport();
 
-                FragmentManager fragmentManager = getSupportFragmentManager();
-                FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-
-                fragmentTransaction.replace(R.id.container , hoursReport).commit();
+                Intent i = new Intent( ActionToItem.this , MainActivity.class);
+                i.putExtra("state" , 1);
+                startActivity(i);
 
             }
         });

@@ -22,11 +22,11 @@ import java.util.List;
 
 public class monthlySummary extends AppCompatActivity {
 
-    TextView tvMonthNameOfMonth , tvMonthNumOfDays_answer , tvMonthTotalHours_answer ,tvMonthTotalHours100p_answer , tvMonthTotalHours125p_answer , tvMonthTotalHours150p_answer , tvMonthTotalsalary_answer;
+    TextView tvMonthNameOfMonth , tvMonthNumOfDays_answer , tvMonthTotalHours_answer ,tvMonthTotalHours100p_answer , tvMonthTotalHours125p_answer , tvMonthTotalHours150p_answer , tvMonthTotalsalary_answer , tvMonthTotalsalaryDetail_answer;
     SharedPreferences sharedPreferences;
     int numMonth , numYear;
     WorksDataBase worksDataBase;
-    double salaryTotal , salaryDay;
+    double salaryTotal , salaryDay , travelsDay , travelsMonth;
     long duration , durationToatalMonth = 0 , durationToatal125pMonth = 0 , durationToatal150pMonth = 0;
     DecimalFormat decimalFormat = new DecimalFormat("#.##");
 
@@ -44,6 +44,7 @@ public class monthlySummary extends AppCompatActivity {
         tvMonthTotalHours125p_answer = findViewById(R.id.tvMonthTotalHours125p_answer);
         tvMonthTotalHours150p_answer = findViewById(R.id.tvMonthTotalHours150p_answer);
         tvMonthTotalsalary_answer = findViewById(R.id.tvMonthTotalsalary_answer);
+        tvMonthTotalsalaryDetail_answer = findViewById(R.id.tvMonthTotalsalaryDetail_answer);
 
 
 
@@ -123,8 +124,15 @@ public class monthlySummary extends AppCompatActivity {
         tvMonthTotalHours150p_answer.setText(formatDuration(durationToatal150pMonth));
         tvMonthTotalHours100p_answer.setText(formatDuration(durationToatalMonth - durationToatal150pMonth - durationToatal125pMonth));
 
-        tvMonthTotalsalary_answer.setText(decimalFormat.format(salaryTotal) + " שקלים חדשים ");
 
+        travelsDay = sharedPreferences.getFloat("numberTravelExpenses", 0);
+        travelsMonth = daysInEachMonth[numMonth - 1] * travelsDay;
+
+        tvMonthTotalsalaryDetail_answer.setText("עבודה: " + decimalFormat.format(salaryTotal) + " שקלים חדשים " + "\n" + "נסיעות: "+  decimalFormat.format(travelsMonth) + " שקלים חדשים ");
+
+        salaryTotal = salaryTotal + travelsMonth;
+
+        tvMonthTotalsalary_answer.setText(decimalFormat.format(salaryTotal) + " שקלים חדשים ");
     }
 
 
