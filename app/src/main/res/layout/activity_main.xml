@@ -5,6 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
+    android:background="#56D1C5"
     tools:context=".MainActivity">
 
     <LinearLayout
@@ -12,7 +13,8 @@
         android:layout_height="wrap_content"
         android:orientation="vertical"
         android:layout_gravity="center"
-        android:gravity="center">
+        android:gravity="center"
+        android:layout_marginBottom="10dp">
 
         <TextView
             android:layout_width="match_parent"
@@ -72,7 +74,7 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:id="@+id/container"
-            android:background="#B2BDFA"
+            android:background="#56D1C5"
             android:orientation="vertical">
 
         </LinearLayout>

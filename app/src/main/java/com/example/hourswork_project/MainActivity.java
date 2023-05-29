@@ -5,6 +5,7 @@ import androidx.core.app.ActivityCompat;
 import androidx.core.app.NotificationCompat;
 import androidx.core.app.NotificationManagerCompat;
 import androidx.core.content.ContextCompat;
+import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 
 import android.Manifest;
@@ -36,6 +37,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     HoursReport hoursReport = new HoursReport();
     Information information = new Information();
     Definitions definitions = new Definitions();
+    int currentFragment = 0;
 
 
 
@@ -63,11 +65,11 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
         if (state == 1){
             getSupportFragmentManager().beginTransaction().replace(R.id.container , hoursReport).commit();
-
+            currentFragment = 1;
         }
         else{
             getSupportFragmentManager().beginTransaction().replace(R.id.container , entrance).commit();
-
+            currentFragment = 0;
             new Handler().postDelayed(new Runnable() {
                 @Override
                 public void run() {
@@ -119,18 +121,39 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
         if (v == btnEntrance){
             getSupportFragmentManager().beginTransaction().replace(R.id.container , entrance).commit();
+            currentFragment = 0;
         }
         else if (v == btnHoursReport){
             getSupportFragmentManager().beginTransaction().replace(R.id.container , hoursReport).commit();
+            currentFragment = 1;
         }
         else if (v == btnInformation){
             getSupportFragmentManager().beginTransaction().replace(R.id.container , information).commit();
+            currentFragment = 2;
         }
         else if (v == btnDefinitions){
             getSupportFragmentManager().beginTransaction().replace(R.id.container , definitions).commit();
+            currentFragment = 3;
         }
 
 
 
     }
+
+    @Override
+    public void onBackPressed() {
+        if (currentFragment == 0) {
+            // If the current fragment is the main fragment, close the application
+            finish();
+        } else {
+            // If the current fragment is not the main fragment, navigate to the main fragment
+            // Replace the fragment with your main fragment using a FragmentTransaction
+            FragmentManager fragmentManager = getSupportFragmentManager();
+            fragmentManager.beginTransaction()
+                    .replace(R.id.container, new Entrance())
+                    .commit();
+            currentFragment = 0; // Update the current fragment variable accordingly
+        }
+    }
+
 }
