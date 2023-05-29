@@ -76,6 +76,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 }
             }, 10000); // 10 seconds
 
+            NotificationHelper.setWeeklyNotification(this);
+
+
         }
 
 
