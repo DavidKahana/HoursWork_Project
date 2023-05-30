@@ -1,12 +1,21 @@
 package com.example.hourswork_project;
 
+import static android.content.Context.MODE_PRIVATE;
+
+import android.app.AlertDialog;
+import android.app.Dialog;
+import android.content.DialogInterface;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
 import java.util.Arrays;
@@ -18,8 +27,11 @@ import java.util.Arrays;
  */
 public class Information extends Fragment {
 
-    Button btnMinSalary , btnTravelExpenses , btnOvertime;
+    Button btnMinSalary , btnTravelExpenses , btnOvertime , btnNotes;
     TextView tvMinSalary , tvTravelExpenses , tvOvertime;
+    private SharedPreferences sharedPreferences;
+    private static final String SHARED_PREFS_KEY = "notes";
+
 
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -73,11 +85,12 @@ public class Information extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_information, container, false);
 
+
         tvMinSalary = view.findViewById(R.id.tvMinSalary);
         tvTravelExpenses = view.findViewById(R.id.tvTravelExpenses);
         tvOvertime = view.findViewById(R.id.tvOvertime);
 
-
+        btnNotes = view.findViewById(R.id.btnNotes);
         btnMinSalary = view.findViewById(R.id.btnMinSalary);
         btnTravelExpenses = view.findViewById(R.id.btnTravelExpenses);
         btnOvertime = view.findViewById(R.id.btnOvertime);
@@ -114,6 +127,20 @@ public class Information extends Fragment {
                 "לעשר שעות.";
 
         tvOvertime.setText(strOverTime);
+
+
+
+
+        btnNotes.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                openNotebookDialog();
+            }
+        });
+
+
+
+        sharedPreferences = getContext().getSharedPreferences(SHARED_PREFS_KEY, MODE_PRIVATE);
 
         if (btnMinSalary != null) {
             btnMinSalary.setOnClickListener(new View.OnClickListener() {
@@ -163,5 +190,40 @@ public class Information extends Fragment {
 
         return view;
     }
+    private void openNotebookDialog() {
+        AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
+        builder.setTitle("פנקס הערות");
+        builder.setMessage("תכתוב בבקשה את הערות שלך פה:");
+
+        final EditText notesEditText = new EditText(getContext());
+        notesEditText.setText(sharedPreferences.getString("notes" , ""));
+        builder.setView(notesEditText);
+
+        builder.setPositiveButton("Save", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                String notes = notesEditText.getText().toString();
+                saveNotes(notes);
+                Toast.makeText(getContext(), "Notes saved!", Toast.LENGTH_SHORT).show();
+            }
+        });
+
+        builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                dialog.dismiss();
+            }
+        });
+
+        AlertDialog dialog = builder.create();
+        dialog.show();
+    }
+
+    private void saveNotes(String notes) {
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+        editor.putString("notes", notes);
+        editor.apply();
+    }
+
 
 }
