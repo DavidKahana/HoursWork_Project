@@ -23,6 +23,7 @@
             android:textSize="30sp"
             android:layout_marginBottom="10dp"
             android:textColor="@color/black"
+            android:textStyle="bold"
             android:text="שעות עבודה" />
         <LinearLayout
             android:layout_width="match_parent"
