@@ -8,5 +8,5 @@
         android:title="לחזור לדוח שעות" />
     <item
         android:id="@+id/menu_item_calendar"
-        android:title="לשתף ללוח שנה" />
+        android:title="לשמור בלוח שנה" />
 </menu>

@@ -172,7 +172,7 @@ public class ActionToItem extends AppCompatActivity {
 
             if (isEventAlreadyAdded(getApplicationContext() , start.getTime() , stop.getTime())) {
                 // Event already exists, no need to add it again
-                Toast.makeText(getApplicationContext(),"תאריך זה כבר שותף עם הלוח שנה",Toast.LENGTH_LONG).show();
+                Toast.makeText(getApplicationContext(),"עבודה זאת כבר נשמרה בלוח שנה בעבר",Toast.LENGTH_LONG).show();
             }
             else {
                 // Check if the required permissions are granted
@@ -208,7 +208,7 @@ public class ActionToItem extends AppCompatActivity {
         // Insert the event into the calendar
         Uri uri = cr.insert(CalendarContract.Events.CONTENT_URI, values);
 
-        Toast.makeText(context.getApplicationContext(), "התאריך שותף ללוח שנה!",Toast.LENGTH_LONG).show();
+        Toast.makeText(context.getApplicationContext(), "העבודה נשמרה בלוח שנה בהצלחה!",Toast.LENGTH_LONG).show();
         // Get the event ID (optional)
         long eventId = Long.parseLong(((Uri) uri).getLastPathSegment());
     }
