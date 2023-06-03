@@ -4,7 +4,6 @@ import android.app.Dialog;
 import android.content.DialogInterface;
 import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -19,10 +18,10 @@ import androidx.fragment.app.Fragment;
 
 /**
  * A simple {@link Fragment} subclass.
- * Use the {@link Definitions#newInstance} factory method to
+ * Use the {@link Settings#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class Definitions extends Fragment {
+public class Settings extends Fragment {
 
     NumberPicker numberPicker;
     Button btnSelectAge , btnSelectTimeOfBreak , btnRestart , btnNumOfDaysWorking , btnNumTravelExpenses;
@@ -44,7 +43,7 @@ public class Definitions extends Fragment {
     private String mParam1;
     private String mParam2;
 
-    public Definitions() {
+    public Settings() {
         // Required empty public constructor
     }
 
@@ -57,8 +56,8 @@ public class Definitions extends Fragment {
      * @return A new instance of fragment Definitions.
      */
     // TODO: Rename and change types and number of parameters
-    public static Definitions newInstance(String param1, String param2) {
-        Definitions fragment = new Definitions();
+    public static Settings newInstance(String param1, String param2) {
+        Settings fragment = new Settings();
         Bundle args = new Bundle();
         args.putString(ARG_PARAM1, param1);
         args.putString(ARG_PARAM2, param2);
@@ -79,7 +78,7 @@ public class Definitions extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        View view = inflater.inflate(R.layout.fragment_definitions, container, false);
+        View view = inflater.inflate(R.layout.fragment_settings, container, false);
 
         cbSalaryOnBreak = view.findViewById(R.id.cbSalaryOnBreak);
         cbMinSalary = view.findViewById(R.id.cbMinSalary);

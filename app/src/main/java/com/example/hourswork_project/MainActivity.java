@@ -1,30 +1,21 @@
 package com.example.hourswork_project;
 
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.app.ActivityCompat;
 import androidx.core.app.NotificationCompat;
 import androidx.core.app.NotificationManagerCompat;
-import androidx.core.content.ContextCompat;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 
-import android.Manifest;
-import android.app.AlarmManager;
-import android.app.Notification;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
-import android.content.Context;
 import android.content.Intent;
-import android.content.pm.PackageManager;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
-
-import java.util.Calendar;
 
 public class MainActivity extends AppCompatActivity implements View.OnClickListener {
 
@@ -36,7 +27,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     Entrance entrance = new Entrance();
     HoursReport hoursReport = new HoursReport();
     Information information = new Information();
-    Definitions definitions = new Definitions();
+    Settings settings = new Settings();
     int currentFragment = 0;
 
 
@@ -132,7 +123,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             currentFragment = 2;
         }
         else if (v == btnDefinitions){
-            getSupportFragmentManager().beginTransaction().replace(R.id.container , definitions).commit();
+            getSupportFragmentManager().beginTransaction().replace(R.id.container , settings).commit();
             currentFragment = 3;
         }
 

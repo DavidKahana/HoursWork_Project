@@ -20,7 +20,7 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
-public class monthlySummary extends AppCompatActivity {
+public class MonthlySummary extends AppCompatActivity {
 
     TextView tvMonthNameOfMonth , tvMonthNumOfDays_answer , tvMonthTotalHours_answer ,tvMonthTotalHours100p_answer , tvMonthTotalHours125p_answer , tvMonthTotalHours150p_answer , tvMonthTotalsalary_answer , tvMonthTotalsalaryDetail_answer;
     SharedPreferences sharedPreferences;
