@@ -1,0 +1,221 @@
+@startuml
+class com.example.hourswork_project.MainActivity {
+~ androidx.fragment.app.FragmentManager fragmentManager
+~ Button btnEntrance
+~ Entrance entrance
+~ HoursReport hoursReport
+~ Information information
+~ Settings settings
+~ int currentFragment
+# void onCreate(Bundle)
+- void showNotification()
++ void onClick(View)
++ void onBackPressed()
+}
+class com.example.hourswork_project.WorksDataBase {
+- {static} String DATABASE_NAME
+- {static} int DATABASE_VERSION
+- {static} String TABLE_NAME
+- {static} String COLUMN_ID
+- {static} String COLUMN_START_DATE
+- {static} String COLUMN_END_DATE
++ <<Create>> WorksDataBase(Context)
++ void onCreate(SQLiteDatabase)
++ void onUpgrade(SQLiteDatabase,int,int)
++ void addWork(Work)
++ List<Work> getAllWorks()
++ Work getWorkById(int)
++ void updateWork(Work)
++ void deleteWork(int)
++ List<Work> getWorksByMonth(int)
++ List<Work> getWorksByMonthAndYear(int,int)
++ int[] getDaysInEachMonth()
+- List<Long> getUniqueStartDays()
+- long getStartOfDay(long)
+}
+class com.example.hourswork_project.MonthlySummary {
+~ TextView tvMonthNameOfMonth
+~ SharedPreferences sharedPreferences
+~ int numMonth
+~ WorksDataBase worksDataBase
+~ double salaryTotal
+~ long duration
+~ DecimalFormat decimalFormat
+# void onCreate(Bundle)
++ String getMonthName(int)
++ {static} long getDurationMillis(Date,Date)
++ {static} long breaking(long,int)
++ {static} String formatDuration(long)
++ {static} long calculateTime125p(long,int)
++ {static} long calculateTime150p(long,int)
++ {static} double salaryDay(double,long,int)
+}
+class com.example.hourswork_project.ActionToItem {
+~ Button btnItemDelete
+~ TextView tvItemStart
+~ WorksDataBase worksDataBase
+~ Work work
+~ int id
+~ long duration
+~ Date startUpdate
+~ SharedPreferences sharedPreferences
+~ SimpleDateFormat hoursAndMin
+~ SimpleDateFormat date
+~ DecimalFormat decimalFormat
+- {static} int PERMISSION_REQUEST_CODE
+# void onCreate(Bundle)
++ boolean onCreateOptionsMenu(Menu)
++ boolean onOptionsItemSelected(MenuItem)
++ {static} long getDurationMillis(Date,Date)
++ {static} void addEventToCalendar(Context,long,long)
++ {static} long breaking(long,int)
++ {static} String formatDuration(long)
++ {static} long calculateTime125p(long,int)
++ {static} long calculateTime150p(long,int)
++ {static} double salaryDay(double,long,int)
+- void showDateTimeDialogStart()
+- void showDateTimeDialogStop()
++ void showResult()
+- boolean hasCalendarPermissions()
+- void requestCalendarPermissions()
++ void onRequestPermissionsResult(int,String[],int[])
+- {static} boolean isEventAlreadyAdded(Context,long,long)
+}
+class com.example.hourswork_project.Information {
+~ Button btnMinSalary
+~ TextView tvMinSalary
+- SharedPreferences sharedPreferences
+- {static} String SHARED_PREFS_KEY
+- {static} String ARG_PARAM1
+- {static} String ARG_PARAM2
+- String mParam1
+- String mParam2
++ <<Create>> Information()
++ {static} Information newInstance(String,String)
++ void onCreate(Bundle)
++ View onCreateView(LayoutInflater,ViewGroup,Bundle)
+- void openNotebookDialog()
+- void saveNotes(String)
+}
+class com.example.hourswork_project.Entrance {
+~ Button btnStartStop
+~ TextView tvTimeEnter
+~ Date dateAndTime
+~ SharedPreferences sharedPreferences
+~ SimpleDateFormat dateFormat
+~ String date
+~ long duration
+~ Boolean sendSms
+~ WorksDataBase worksDataBase
+- {static} int MY_PERMISSIONS_REQUEST_SEND_SMS
+- {static} String ARG_PARAM1
+- {static} String ARG_PARAM2
+- String mParam1
+- String mParam2
++ <<Create>> Entrance()
++ {static} Entrance newInstance(String,String)
++ void onCreate(Bundle)
++ View onCreateView(LayoutInflater,ViewGroup,Bundle)
+- void showDateTimeDialog()
++ {static} long getDurationMillis(Date,Date)
++ {static} String formatDuration(long)
+- void sendSMS(String,String)
++ void onRequestPermissionsResult(int,String[],int[])
++ void startStopDate()
+}
+class com.example.hourswork_project.Settings {
+~ NumberPicker numberPicker
+~ Button btnSelectAge
+~ int selectedNumber
+~ CheckBox cbMinSalary
+~ float numberHourlyWage
+~ EditText etAnother
+~ TextView tvHourlyWage
+~ boolean SalaryOnBreak
+~ SharedPreferences sharedPreferences
+~ String phoneNumber
+- {static} String ARG_PARAM1
+- {static} String ARG_PARAM2
+- String mParam1
+- String mParam2
++ <<Create>> Settings()
++ {static} Settings newInstance(String,String)
++ void onCreate(Bundle)
++ View onCreateView(LayoutInflater,ViewGroup,Bundle)
++ double minSalary(int)
+}
+class com.example.hourswork_project.Work {
+~ Integer id
+~ Long startDate
+~ Long endDate
++ <<Create>> Work(Integer,Long,Long)
++ <<Create>> Work(Long,Long)
++ long getStartDate()
++ void setStartDate(Long)
++ Long getEndDate()
++ void setEndDate(Long)
++ Integer getId()
++ void setId(Integer)
+}
+class com.example.hourswork_project.NotificationHelper {
+- {static} String CHANNEL_ID
+- {static} int NOTIFICATION_ID
++ void onReceive(Context,Intent)
++ {static} void setWeeklyNotification(Context)
+- void showNotification(Context)
+- void createNotificationChannel(Context)
+}
+class com.example.hourswork_project.HoursReport {
+- {static} String ARG_PARAM1
+- {static} String ARG_PARAM2
+- String mParam1
+- String mParam2
+~ ListView worksLV
+~ WorksAdapter worksAdapter
+~ WorksDataBase worksDataBase
++ <<Create>> HoursReport()
++ {static} HoursReport newInstance(String,String)
++ void onCreate(Bundle)
++ View onCreateView(LayoutInflater,ViewGroup,Bundle)
+}
+class com.example.hourswork_project.WorksAdapter {
+- List<Work> workList
+- LayoutInflater inflater
+- SimpleDateFormat dateFormat
+- SharedPreferences sharedPreferences
+- double salaryDaily
++ <<Create>> WorksAdapter(Context,List<Work>)
++ int getCount()
++ Object getItem(int)
++ long getItemId(int)
++ View getView(int,View,ViewGroup)
++ int getworkID(int)
++ String hebrewDay(long)
++ void setWorksList(List<Work>)
++ {static} double salaryDay(double,long,int)
++ {static} long calculateTime125p(long,int)
++ {static} long calculateTime150p(long,int)
++ {static} long breaking(long,int)
++ {static} int getMonthFromTimestamp(long)
+}
+class com.example.hourswork_project.WorksAdapter$ViewHolder {
+~ TextView startDateTextView
+~ TextView endDateTextView
+~ TextView tvDayOfWeek
+~ TextView tvSalaryDay
+}
+
+
+com.example.hourswork_project.OnClickListener <|.. com.example.hourswork_project.MainActivity
+androidx.appcompat.app.AppCompatActivity <|-- com.example.hourswork_project.MainActivity
+android.database.sqlite.SQLiteOpenHelper <|-- com.example.hourswork_project.WorksDataBase
+androidx.appcompat.app.AppCompatActivity <|-- com.example.hourswork_project.MonthlySummary
+androidx.appcompat.app.AppCompatActivity <|-- com.example.hourswork_project.ActionToItem
+androidx.fragment.app.Fragment <|-- com.example.hourswork_project.Information
+androidx.fragment.app.Fragment <|-- com.example.hourswork_project.Entrance
+androidx.fragment.app.Fragment <|-- com.example.hourswork_project.Settings
+android.content.BroadcastReceiver <|-- com.example.hourswork_project.NotificationHelper
+androidx.fragment.app.Fragment <|-- com.example.hourswork_project.HoursReport
+android.widget.BaseAdapter <|-- com.example.hourswork_project.WorksAdapter
+com.example.hourswork_project.WorksAdapter +.. com.example.hourswork_project.WorksAdapter$ViewHolder
+@enduml

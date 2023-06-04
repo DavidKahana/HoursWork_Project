@@ -30,7 +30,6 @@ public class Information extends Fragment {
     Button btnMinSalary , btnTravelExpenses , btnOvertime , btnNotes;
     TextView tvMinSalary , tvTravelExpenses , tvOvertime;
     private SharedPreferences sharedPreferences;
-    private static final String SHARED_PREFS_KEY = "notes";
 
 
     // TODO: Rename parameter arguments, choose names that match
@@ -140,7 +139,7 @@ public class Information extends Fragment {
 
 
 
-        sharedPreferences = getContext().getSharedPreferences(SHARED_PREFS_KEY, MODE_PRIVATE);
+        sharedPreferences = getContext().getSharedPreferences("notes", MODE_PRIVATE);
 
         if (btnMinSalary != null) {
             btnMinSalary.setOnClickListener(new View.OnClickListener() {

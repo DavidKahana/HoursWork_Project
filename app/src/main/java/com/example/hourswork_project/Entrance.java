@@ -51,7 +51,7 @@ public class Entrance extends Fragment {
     Button btnStartStop, btnDateAndTime;
     TextView tvTimeEnter , tvTimeStop , tvDuration;
     Date dateAndTime , dateStart , dateStop;
-    SharedPreferences sharedPreferences , sp;
+    SharedPreferences sharedPreferences1 , sharedPreferences2;
     SimpleDateFormat dateFormat;
     String date , phoneNumber , strMessage;
     long duration;
@@ -107,7 +107,7 @@ public class Entrance extends Fragment {
 
         btnStartStop = view.findViewById(R.id.btnStartStop);
         tvTimeEnter = view.findViewById(R.id.tvTimeEnter);
-        sharedPreferences = getContext().getSharedPreferences("Dates", 0);
+        sharedPreferences1 = getContext().getSharedPreferences("Dates", 0);
         tvTimeStop = view.findViewById(R.id.tvTimeStop);
         tvDuration = view.findViewById(R.id.tvDuration);
 
@@ -159,11 +159,11 @@ public class Entrance extends Fragment {
                         calendar.set(calendar.MILLISECOND , 0);
 
 
-                        SharedPreferences.Editor editor = sharedPreferences.edit();
+                        SharedPreferences.Editor editor = sharedPreferences1.edit();
                         editor.putLong("date" , calendar.getTime().getTime());
                         editor.commit();
 
-                        long l = sharedPreferences.getLong("date" , 0);
+                        long l = sharedPreferences1.getLong("date" , 0);
                         dateAndTime = new Date(l);
 
 
@@ -263,13 +263,11 @@ public class Entrance extends Fragment {
         }
     }
 
-    public void startStopDate (){
+    public void startStopDate(){
 
+        if (btnStartStop.getText().equals("להתחיל") ){
 
-
-        if (btnStartStop.getText().equals("start") ){
-
-            long l = sharedPreferences.getLong("date" , 0);
+            long l = sharedPreferences1.getLong("date" , 0);
             dateAndTime = new Date(l);
 
 
@@ -282,12 +280,12 @@ public class Entrance extends Fragment {
             strMessage =  "שעת כניסה:" + '\n' + date;
             dateStart = dateAndTime;
 
-            btnDateAndTime.setText("select date and time!");
-            btnStartStop.setText("stop");
+            btnDateAndTime.setText("תבחר תאריך ושעה!");
+            btnStartStop.setText("לסיים");
         }
-        else if (btnStartStop.getText().equals("stop") && dateAndTime  != null ){
+        else if (btnStartStop.getText().equals("לסיים") && dateAndTime  != null ){
 
-            long l = sharedPreferences.getLong("date" , 0);
+            long l = sharedPreferences1.getLong("date" , 0);
             dateAndTime = new Date(l);
 
             if (dateStart.getTime()>= dateAndTime.getTime()){
@@ -304,15 +302,15 @@ public class Entrance extends Fragment {
                 tvDuration.setText(formatDuration(duration));
                 strMessage += '\n' + formatDuration(duration);
 
-                btnDateAndTime.setText("select date and time!");
-                btnStartStop.setText("start");
+                btnDateAndTime.setText("תבחר תאריך ושעה!");
+                btnStartStop.setText("להתחיל");
 
                 Work work = new Work(dateStart.getTime(), dateStop.getTime());
                 worksDataBase.addWork(work);
 
-                sp = getContext().getSharedPreferences("Definitions", 0);
-                phoneNumber = sp.getString("phoneNumber", null);
-                sendSms = sp.getBoolean("sendSms", false);
+                sharedPreferences2 = getContext().getSharedPreferences("Definitions", 0);
+                phoneNumber = sharedPreferences2.getString("phoneNumber", null);
+                sendSms = sharedPreferences2.getBoolean("sendSms", false);
 
                 if (sendSms) {
                     sendSMS(phoneNumber, strMessage);
@@ -321,12 +319,6 @@ public class Entrance extends Fragment {
         }
 
     }
-
-
-
-
-
-
 }
 
 

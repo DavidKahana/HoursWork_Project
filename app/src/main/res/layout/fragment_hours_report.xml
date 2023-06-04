@@ -8,9 +8,6 @@
     android:background="#EDE495"
     tools:context=".HoursReport">
 
-
-
-
     <ListView
         android:id="@+id/LV"
         android:layout_width="match_parent"
@@ -19,6 +16,5 @@
 
 
     </ListView>
-
 
 </LinearLayout>

@@ -25,7 +25,7 @@ public class Settings extends Fragment {
 
     NumberPicker numberPicker;
     Button btnSelectAge , btnSelectTimeOfBreak , btnRestart , btnNumOfDaysWorking , btnNumTravelExpenses;
-    int selectedNumber , numberSelectTimeOfBreak  , numOfDaysWorking = 0;
+    int numberAge , numberSelectTimeOfBreak  , numOfDaysWorking = 0;
     CheckBox cbMinSalary , cbSalaryOnBreak , sendCheckbox;
     float numberHourlyWage , numberTravelExpenses;
     EditText etAnother , phoneNumberEditText;
@@ -145,10 +145,10 @@ public class Settings extends Fragment {
                         @Override
                         public void onClick(View v) {
                             if (v == okButton) {
-                                selectedNumber = numberPicker.getValue();
-                                btnSelectAge.setText("הגיל שלך הוא: "+ selectedNumber);
+                                numberAge = numberPicker.getValue();
+                                btnSelectAge.setText("הגיל שלך הוא: "+ numberAge);
                                 SharedPreferences.Editor editor = sharedPreferences.edit();
-                                editor.putInt("selectedNumber" , selectedNumber);
+                                editor.putInt("selectedNumber" , numberAge);
                                 editor.commit();
                                 dialog.dismiss();
                             }
@@ -165,9 +165,9 @@ public class Settings extends Fragment {
             public void onClick(View view) {
                 if (cbMinSalary.isChecked()) {
 
-                    tvHourlyWage.setText(minSalary(selectedNumber) + " לשעה");
+                    tvHourlyWage.setText(minSalary(numberAge) + " לשעה");
                     SharedPreferences.Editor editor = sharedPreferences.edit();
-                    editor.putFloat("numberHourlyWageMinSalary" , (float) minSalary(selectedNumber));
+                    editor.putFloat("numberHourlyWageMinSalary" , (float) minSalary(numberAge));
                     editor.putBoolean("MinSalary" , true);
                     editor.commit();
 

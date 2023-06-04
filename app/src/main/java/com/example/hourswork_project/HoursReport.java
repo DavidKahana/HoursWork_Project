@@ -82,44 +82,11 @@ public class HoursReport extends Fragment {
         }
     }
 
-//    @Override
-//    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-//                             Bundle savedInstanceState) {
-//        // Inflate the layout for this fragment
-//        View view = inflater.inflate(R.layout.fragment_hours_report, container, false);
-//        worksLV = view.findViewById(R.id.list_view_works);
-//        worksDataBase = new WorksDataBase(getContext());
-//
-//        WorksAdapter worksAdapter = new WorksAdapter(getContext(), worksDataBase.getAllWorks());
-//        worksAdapter.setWorksList(worksDataBase.getAllWorks());
-//        worksLV.setAdapter(worksAdapter);
-//
-//        worksLV.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-//            @Override
-//            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-//
-//                Intent intent = new Intent(getContext() , ActionToItem.class);
-//
-//
-//
-//                intent.putExtra("id" , worksAdapter.getworkID(i));
-//                Log.d("david", "i: "+ i);
-//                startActivity(intent);
-//
-//            }
-//        });
-//
-//
-//        return view;
-//    }
-
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_hours_report, container, false);
-
-
 
                 worksDataBase = new WorksDataBase(getContext());
 
@@ -129,8 +96,6 @@ public class HoursReport extends Fragment {
                 worksAdapter.setWorksList(worksDataBase.getAllWorks());
 
                 worksLV.setAdapter(worksAdapter);
-
-
 
                 worksLV.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                     @Override

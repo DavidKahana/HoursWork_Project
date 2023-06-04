@@ -7,7 +7,6 @@
     android:background="#EDE495"
     tools:context=".Entrance">
 
-
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -19,14 +18,14 @@
             android:id="@+id/btnDate"
             android:textSize="30sp"
             android:layout_margin="30dp"
-            android:text="select date and time!"/>
+            android:text="תבחר תאריך ושעה!"/>
 
         <Button
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:id="@+id/btnStartStop"
             android:textSize="30sp"
-            android:text="start"/>
+            android:text="להתחיל"/>
 
         <TextView
             android:layout_width="match_parent"
@@ -52,10 +51,5 @@
             android:textColor="#F44336"
             android:id="@+id/tvDuration"
             android:textSize="40sp"/>
-
-
-
     </LinearLayout>
-
-
 </LinearLayout>

@@ -21,9 +21,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
 
     androidx.fragment.app.FragmentManager fragmentManager;
-    FragmentTransaction fragmentTransaction;
-    Button btnEntrance , btnHoursReport , btnInformation , btnDefinitions;
-    private static final int REQUEST_CODE_RECEIVE_NOTIFICATIONS = 123;
+    Button btnEntrance , btnHoursReport , btnInformation , btnSettings;
     Entrance entrance = new Entrance();
     HoursReport hoursReport = new HoursReport();
     Information information = new Information();
@@ -43,12 +41,12 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         btnEntrance = (Button) findViewById(R.id.btnEntrance);
         btnHoursReport = (Button) findViewById(R.id.btnHoursReport);
         btnInformation = (Button) findViewById(R.id.btnInformation);
-        btnDefinitions = (Button) findViewById(R.id.btnDefinitions);
+        btnSettings = (Button) findViewById(R.id.btnSettings);
 
         btnEntrance.setOnClickListener(this);
         btnHoursReport.setOnClickListener(this);
         btnInformation.setOnClickListener(this);
-        btnDefinitions.setOnClickListener(this);
+        btnSettings.setOnClickListener(this);
 
         Intent intent = getIntent();
         int state = intent.getIntExtra("state" , 0);
@@ -108,8 +106,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     @Override
     public void onClick(View v) {
 
-
-
         if (v == btnEntrance){
             getSupportFragmentManager().beginTransaction().replace(R.id.container , entrance).commit();
             currentFragment = 0;
@@ -122,12 +118,10 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             getSupportFragmentManager().beginTransaction().replace(R.id.container , information).commit();
             currentFragment = 2;
         }
-        else if (v == btnDefinitions){
+        else if (v == btnSettings){
             getSupportFragmentManager().beginTransaction().replace(R.id.container , settings).commit();
             currentFragment = 3;
         }
-
-
 
     }
 

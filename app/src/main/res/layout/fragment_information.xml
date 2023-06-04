@@ -7,7 +7,6 @@
     android:background="#EDE495"
     tools:context=".Information">
 
-    <!-- TODO: Update blank fragment layout -->
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent">
@@ -83,8 +82,6 @@
             android:visibility="gone"
             android:layout_gravity="center"
             android:id="@+id/tvOvertime"/>
-
-
     </LinearLayout>
     </ScrollView>
 </FrameLayout>

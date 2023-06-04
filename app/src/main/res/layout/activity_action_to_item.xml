@@ -166,7 +166,5 @@
             android:textColor="#FFEB3B"
             android:text="למחוק"/>
     </LinearLayout>
-
-
 </LinearLayout>
 </ScrollView>
