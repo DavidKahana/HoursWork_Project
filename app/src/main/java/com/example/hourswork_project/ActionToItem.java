@@ -42,10 +42,9 @@ public class ActionToItem extends AppCompatActivity {
     WorksDataBase worksDataBase;
     Work work;
     int id ;
-    long duration , durationToatal;
+    long duration;
     Date startUpdate , stopUpdate , dateAndTime , start , stop;
     SharedPreferences sharedPreferences;
-    SimpleDateFormat hoursAndMin = new SimpleDateFormat("HH:mm");
     SimpleDateFormat date = new SimpleDateFormat("MM-dd-yyyy HH:mm" );
     DecimalFormat decimalFormat = new DecimalFormat("#.##");
     private static final int PERMISSION_REQUEST_CODE = 1;
@@ -54,7 +53,6 @@ public class ActionToItem extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_action_to_item);
-        setTitle("hello");
 
 
 
@@ -440,7 +438,7 @@ public class ActionToItem extends AppCompatActivity {
 
     }
 
-    public void showResult (){
+    public void showResult(){
         duration = getDurationMillis(start ,stop );
 
         tvItemDurationWorking.setText( formatDuration(duration));

@@ -265,16 +265,4 @@ public class WorksAdapter extends BaseAdapter {
         }
     }
 
-    public static int getMonthFromTimestamp(long timestamp) {
-        Date date = new Date(timestamp);
-        Calendar calendar = Calendar.getInstance();
-        calendar.setTime(date);
-        int month = calendar.get(Calendar.MONTH) + 1; // Months are 0-indexed in Calendar, so add 1
-        return month;
-    }
-
-
-
-
-
 }

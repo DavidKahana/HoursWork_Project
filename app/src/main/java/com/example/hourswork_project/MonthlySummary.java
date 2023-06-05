@@ -27,7 +27,7 @@ public class MonthlySummary extends AppCompatActivity {
     int numMonth , numYear;
     WorksDataBase worksDataBase;
     double salaryTotal , salaryDay , travelsDay , travelsMonth;
-    long duration , durationToatalMonth = 0 , durationToatal125pMonth = 0 , durationToatal150pMonth = 0;
+    long durationToatalMonth = 0 , durationToatal125pMonth = 0 , durationToatal150pMonth = 0;
     DecimalFormat decimalFormat = new DecimalFormat("#.##");
 
 
@@ -57,7 +57,7 @@ public class MonthlySummary extends AppCompatActivity {
 
         worksDataBase = new WorksDataBase(this);
 
-        int[] daysInEachMonth = worksDataBase.getDaysInEachMonth();
+        int[] daysInEachMonth = worksDataBase.getDaysInEachMonth(numYear);
 
 
         tvMonthNameOfMonth.setText( "חודש: " + getMonthName(numMonth) + " " + numYear);

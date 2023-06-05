@@ -107,9 +107,10 @@ public class Entrance extends Fragment {
 
         btnStartStop = view.findViewById(R.id.btnStartStop);
         tvTimeEnter = view.findViewById(R.id.tvTimeEnter);
-        sharedPreferences1 = getContext().getSharedPreferences("Dates", 0);
         tvTimeStop = view.findViewById(R.id.tvTimeStop);
         tvDuration = view.findViewById(R.id.tvDuration);
+
+        sharedPreferences1 = getContext().getSharedPreferences("Dates", 0);
 
         worksDataBase = new WorksDataBase(getContext());
 

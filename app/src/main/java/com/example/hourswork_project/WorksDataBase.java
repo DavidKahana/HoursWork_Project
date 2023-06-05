@@ -216,11 +216,11 @@ public class WorksDataBase extends SQLiteOpenHelper {
     }
 
 
-    public int[] getDaysInEachMonth() {
+    public int[] getDaysInEachMonth(int year) {
         int[] daysInEachMonth = new int[12]; // Array to hold days in each month (January is at index 0)
 
         // Get the unique start days for all members
-        List<Long> uniqueStartDays = getUniqueStartDays();
+        List<Long> uniqueStartDays = getUniqueStartDays(year);
 
         // Calculate the number of days in each month
         Calendar calendar = Calendar.getInstance();
@@ -258,6 +258,32 @@ public class WorksDataBase extends SQLiteOpenHelper {
 
         return uniqueStartDays;
     }
+    private List<Long> getUniqueStartDays(int year) {
+        List<Long> uniqueStartDays = new ArrayList<>();
+
+        // Constructing the query with the WHERE clause to filter by year
+        String selectQuery = "SELECT DISTINCT " + COLUMN_START_DATE + " FROM " + TABLE_NAME +
+                " WHERE strftime('%Y', " + COLUMN_START_DATE + "/1000, 'unixepoch') = ?";
+
+        SQLiteDatabase db = this.getWritableDatabase();
+        Cursor cursor = db.rawQuery(selectQuery, new String[]{String.valueOf(year)});
+
+        if (cursor.moveToFirst()) {
+            do {
+                int startDateIndex = cursor.getColumnIndex(COLUMN_START_DATE);
+                if (startDateIndex >= 0) {
+                    long startDate = cursor.getLong(startDateIndex);
+                    uniqueStartDays.add(getStartOfDay(startDate));
+                }
+            } while (cursor.moveToNext());
+        }
+
+        cursor.close();
+        db.close();
+
+        return uniqueStartDays;
+    }
+
 
     private long getStartOfDay(long timestamp) {
         Calendar calendar = Calendar.getInstance();
@@ -268,17 +294,6 @@ public class WorksDataBase extends SQLiteOpenHelper {
         calendar.set(Calendar.MILLISECOND, 0);
         return calendar.getTimeInMillis();
     }
-
-
-
-
-
-
-
-
-
-
-
 
 
 }
