@@ -49,18 +49,27 @@ import java.util.logging.Handler;
 public class Entrance extends Fragment {
 
     Button btnStartStop, btnDateAndTime;
-    TextView tvTimeEnter , tvTimeStop , tvDuration;
-    Date dateAndTime , dateStart , dateStop;
-    SharedPreferences sharedPreferences1 , sharedPreferences2;
+    TextView tvTimeEnter, tvTimeStop, tvDuration;
+    Date dateAndTime, dateStart, dateStop;
+    SharedPreferences sharedPreferences1, sharedPreferences2;
     SimpleDateFormat dateFormat;
-    String date , phoneNumber , strMessage;
+    String date, phoneNumber, strMessage;
     long duration;
     Boolean sendSms;
     WorksDataBase worksDataBase;
-    private static final int MY_PERMISSIONS_REQUEST_SEND_SMS =0 ;
+    private static final int MY_PERMISSIONS_REQUEST_SEND_SMS = 0;
 
-    // TODO: Rename parameter arguments, choose names that match
-    // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
+// Button variables for starting and stopping the action
+// TextView variables for displaying time enter, time stop, and duration
+// Date variables for storing various dates
+// SharedPreferences variables for storing and retrieving data
+// SimpleDateFormat variable for formatting dates
+// String variables for storing various data such as date, phone number, and message
+// long variable for storing duration
+// Boolean variable for determining whether to send an SMS
+// WorksDataBase variable for database operations
+// Constant for requesting SMS sending permissions
+
     private static final String ARG_PARAM1 = "param1";
     private static final String ARG_PARAM2 = "param2";
 
@@ -80,7 +89,7 @@ public class Entrance extends Fragment {
      * @param param2 Parameter 2.
      * @return A new instance of fragment Entrance.
      */
-    // TODO: Rename and change types and number of parameters
+// TODO: Rename and change types and number of parameters
     public static Entrance newInstance(String param1, String param2) {
         Entrance fragment = new Entrance();
         Bundle args = new Bundle();
@@ -104,44 +113,44 @@ public class Entrance extends Fragment {
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_entrance, container, false);
 
-
+        // Initializing button, TextView, and SharedPreferences variables
         btnStartStop = view.findViewById(R.id.btnStartStop);
         tvTimeEnter = view.findViewById(R.id.tvTimeEnter);
         tvTimeStop = view.findViewById(R.id.tvTimeStop);
         tvDuration = view.findViewById(R.id.tvDuration);
-
         sharedPreferences1 = getContext().getSharedPreferences("Dates", 0);
 
         worksDataBase = new WorksDataBase(getContext());
 
+        // Initializing the button for selecting date and time
         btnDateAndTime = view.findViewById(R.id.btnDate);
         btnDateAndTime.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
                 if (v == btnDateAndTime) {
                     showDateTimeDialog();
                 }
             }
         });
 
+        // Initializing the button for starting and stopping the action
         btnStartStop.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
-                if(v==btnStartStop)
-                {
+                if (v == btnStartStop) {
                     startStopDate();
-
                 }
             }
         });
-        return view;
-}
 
+        return view;
+    }
+
+    // Method for showing the date and time dialog
     private void showDateTimeDialog() {
         final Calendar calendar = Calendar.getInstance();
 
+        // Creating a DatePickerDialog for selecting the date
         DatePickerDialog.OnDateSetListener dateSetListener = new DatePickerDialog.OnDateSetListener() {
             @Override
             public void onDateSet(DatePicker view, int year, int monthOfYear, int dayOfMonth) {
@@ -149,46 +158,45 @@ public class Entrance extends Fragment {
                 calendar.set(Calendar.MONTH, monthOfYear);
                 calendar.set(Calendar.DAY_OF_MONTH, dayOfMonth);
 
-
-
+                // Creating a TimePickerDialog for selecting the time
                 TimePickerDialog.OnTimeSetListener timeSetListener = new TimePickerDialog.OnTimeSetListener() {
                     @Override
                     public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
                         calendar.set(Calendar.HOUR_OF_DAY, hourOfDay);
                         calendar.set(Calendar.MINUTE, minute);
-                        calendar.set(calendar.SECOND ,0);
-                        calendar.set(calendar.MILLISECOND , 0);
+                        calendar.set(Calendar.SECOND, 0);
+                        calendar.set(Calendar.MILLISECOND, 0);
 
-
+                        // Storing the selected date and time in SharedPreferences
                         SharedPreferences.Editor editor = sharedPreferences1.edit();
-                        editor.putLong("date" , calendar.getTime().getTime());
+                        editor.putLong("date", calendar.getTime().getTime());
                         editor.commit();
 
-                        long l = sharedPreferences1.getLong("date" , 0);
+                        long l = sharedPreferences1.getLong("date", 0);
                         dateAndTime = new Date(l);
 
-
-                        dateFormat = new SimpleDateFormat("MM-dd-yyyy HH:mm" );
+                        dateFormat = new SimpleDateFormat("MM-dd-yyyy HH:mm");
                         date = dateFormat.format(dateAndTime);
-                        String str = "You selected :" + date;
-                        Toast.makeText(getContext(),str,Toast.LENGTH_LONG).show();
                         btnDateAndTime.setText(date);
                     }
                 };
 
-                new TimePickerDialog(getContext(), timeSetListener, calendar.get(Calendar.HOUR_OF_DAY), calendar.get(Calendar.MINUTE), false).show();
+                new TimePickerDialog(getContext(), timeSetListener, calendar.get(Calendar.HOUR_OF_DAY),
+                        calendar.get(Calendar.MINUTE), false).show();
             }
         };
 
-        new DatePickerDialog(getContext(), dateSetListener, calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH), calendar.get(Calendar.DAY_OF_MONTH)).show();
-
+        new DatePickerDialog(getContext(), dateSetListener, calendar.get(Calendar.YEAR),
+                calendar.get(Calendar.MONTH), calendar.get(Calendar.DAY_OF_MONTH)).show();
     }
 
     public static long getDurationMillis(Date startDate, Date endDate) {
+        // Calculate the duration in milliseconds between two dates
         return endDate.getTime() - startDate.getTime();
     }
 
     public static String formatDuration(long duration) {
+        // Format the duration into days, hours, and minutes
         long seconds = duration / 1000;
         long minutes = seconds / 60;
         long hours = minutes / 60;
@@ -212,8 +220,10 @@ public class Entrance extends Fragment {
     }
 
     private void sendSMS(String phoneNo, String message) {
+        // Check if SMS sending permission is granted
         if (ContextCompat.checkSelfPermission(getContext(), Manifest.permission.SEND_SMS)
                 != PackageManager.PERMISSION_GRANTED) {
+            // Request SMS sending permission if not granted
             ActivityCompat.requestPermissions(getActivity(),
                     new String[]{Manifest.permission.SEND_SMS},
                     MY_PERMISSIONS_REQUEST_SEND_SMS);
@@ -239,7 +249,7 @@ public class Entrance extends Fragment {
                     smsManager.sendTextMessage(phoneNo, null, message, null, null);
                 }
 
-                Toast.makeText(getContext(), "SMS sent successfully.", Toast.LENGTH_LONG).show();
+                Toast.makeText(getContext(), "ה SMS נשלח בהצלחה!", Toast.LENGTH_LONG).show();
             } catch (Exception e) {
                 Toast.makeText(getContext(), "SMS failed to send.", Toast.LENGTH_LONG).show();
                 e.printStackTrace();
@@ -247,13 +257,13 @@ public class Entrance extends Fragment {
         }
     }
 
-
-    // Handle the result of the permission request
     @Override
     public void onRequestPermissionsResult(int requestCode, String permissions[], int[] grantResults) {
+        // Handle the result of the SMS permission request
         switch (requestCode) {
             case MY_PERMISSIONS_REQUEST_SEND_SMS: {
                 if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                    // If permission granted, send the SMS
                     sendSMS(phoneNumber, strMessage);
                 } else {
                     Toast.makeText(getContext(),
@@ -264,35 +274,31 @@ public class Entrance extends Fragment {
         }
     }
 
-    public void startStopDate(){
-
-        if (btnStartStop.getText().equals("להתחיל") ){
-
-            long l = sharedPreferences1.getLong("date" , 0);
+    public void startStopDate() {
+        if (btnStartStop.getText().equals("להתחיל")) {
+            // Start the action
+            long l = sharedPreferences1.getLong("date", 0);
             dateAndTime = new Date(l);
 
-
-            dateFormat = new SimpleDateFormat("MM-dd-yyyy HH:mm" );
+            dateFormat = new SimpleDateFormat("MM-dd-yyyy HH:mm");
             date = dateFormat.format(dateAndTime);
-            tvTimeEnter.setText( "שעת כניסה:" + '\n' + date);
+            tvTimeEnter.setText("שעת כניסה:" + '\n' + date);
             tvTimeStop.setText("");
             tvDuration.setText("");
 
-            strMessage =  "שעת כניסה:" + '\n' + date;
+            strMessage = "שעת כניסה:" + '\n' + date;
             dateStart = dateAndTime;
 
-            btnDateAndTime.setText("תבחר תאריך ושעה!");
+            btnDateAndTime.setText("בחר תאריך ושעה");
             btnStartStop.setText("לסיים");
-        }
-        else if (btnStartStop.getText().equals("לסיים") && dateAndTime  != null ){
-
-            long l = sharedPreferences1.getLong("date" , 0);
+        } else if (btnStartStop.getText().equals("לסיים") && dateAndTime != null) {
+            // Stop the action
+            long l = sharedPreferences1.getLong("date", 0);
             dateAndTime = new Date(l);
 
-            if (dateStart.getTime()>= dateAndTime.getTime()){
+            if (dateStart.getTime() >= dateAndTime.getTime()) {
                 Toast.makeText(getContext(), "היציאה חייבת להיות אחרי הכניסה", Toast.LENGTH_LONG).show();
-            }
-            else {
+            } else {
                 dateFormat = new SimpleDateFormat("MM-dd-yyyy HH:mm");
                 date = dateFormat.format(dateAndTime);
                 tvTimeStop.setText("שעת יציאה:" + '\n' + date);
@@ -303,7 +309,7 @@ public class Entrance extends Fragment {
                 tvDuration.setText(formatDuration(duration));
                 strMessage += '\n' + formatDuration(duration);
 
-                btnDateAndTime.setText("תבחר תאריך ושעה!");
+                btnDateAndTime.setText("בחר תאריך ושעה");
                 btnStartStop.setText("להתחיל");
 
                 Work work = new Work(dateStart.getTime(), dateStop.getTime());
@@ -318,8 +324,5 @@ public class Entrance extends Fragment {
                 }
             }
         }
-
     }
 }
-
-

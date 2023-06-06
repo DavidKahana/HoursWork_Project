@@ -21,15 +21,13 @@ public class WorksDataBase extends SQLiteOpenHelper {
     private static final String COLUMN_START_DATE = "start_date";
     private static final String COLUMN_END_DATE = "end_date";
 
-
-
-
     public WorksDataBase(Context context) {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
     }
 
     @Override
     public void onCreate(SQLiteDatabase db) {
+        // Create the database table
         String createTableSql = "CREATE TABLE " + TABLE_NAME + " (" +
                 COLUMN_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
                 COLUMN_START_DATE + " BIGINT NOT NULL, " +
@@ -39,6 +37,7 @@ public class WorksDataBase extends SQLiteOpenHelper {
 
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
+        // Drop the existing table and recreate it
         db.execSQL("DROP TABLE IF EXISTS " + TABLE_NAME);
         onCreate(db);
     }
@@ -46,27 +45,27 @@ public class WorksDataBase extends SQLiteOpenHelper {
     public void addWork(Work work) {
         SQLiteDatabase db = this.getWritableDatabase();
 
+        // Prepare the data to be inserted into the database
         ContentValues values = new ContentValues();
         values.put(COLUMN_START_DATE, work.getStartDate());
         values.put(COLUMN_END_DATE, work.getEndDate());
 
+        // Insert the data into the database table
         db.insert(TABLE_NAME, null, values);
         db.close();
-
-
     }
-
-
 
     public List<Work> getAllWorks() {
         List<Work> works = new ArrayList<>();
 
+        // Select all rows from the database table
         String selectQuery = "SELECT * FROM " + TABLE_NAME;
         SQLiteDatabase db = this.getWritableDatabase();
         Cursor cursor = db.rawQuery(selectQuery, null);
 
         if (cursor.moveToFirst()) {
             do {
+                // Retrieve data from the current row
                 int idIndex = cursor.getColumnIndex(COLUMN_ID);
                 int startDateIndex = cursor.getColumnIndex(COLUMN_START_DATE);
                 int endDateIndex = cursor.getColumnIndex(COLUMN_END_DATE);
@@ -76,6 +75,7 @@ public class WorksDataBase extends SQLiteOpenHelper {
                     long startDate = cursor.getLong(startDateIndex);
                     long endDate = cursor.getLong(endDateIndex);
 
+                    // Create a Work object and add it to the list
                     Work work = new Work(id, endDate, startDate);
                     works.add(work);
                 }
@@ -90,38 +90,37 @@ public class WorksDataBase extends SQLiteOpenHelper {
 
     public Work getWorkById(int id) {
         SQLiteDatabase db = this.getReadableDatabase();
-        Cursor cursor = db.rawQuery("select * from " + TABLE_NAME + " WHERE id='" + id + "'", null);
+        // Retrieve a specific row from the database based on the ID
+        Cursor cursor = db.rawQuery("SELECT * FROM " + TABLE_NAME + " WHERE " + COLUMN_ID + "='" + id + "'", null);
         Work work = null;
         if (cursor != null && cursor.moveToFirst()) {
             do {
+                // Retrieve data from the current row
                 long start = cursor.getLong(1);
                 long end = cursor.getLong(2);
                 work = new Work(id, start, end);
-            }
-            while (cursor.moveToNext());
+            } while (cursor.moveToNext());
         }
         return work;
     }
 
-
     public void updateWork(Work work) {
         SQLiteDatabase db = this.getWritableDatabase();
 
+        // Prepare the data to be updated in the database
         ContentValues values = new ContentValues();
         values.put(COLUMN_START_DATE, work.getStartDate());
         values.put(COLUMN_END_DATE, work.getEndDate());
 
+        // Update the row in the database table based on the ID
         db.update(TABLE_NAME, values, COLUMN_ID + "=?", new String[]{String.valueOf(work.getId())});
         db.close();
     }
 
-
-
-
     public void deleteWork(int id) {
         SQLiteDatabase db = this.getWritableDatabase();
-        db.delete(TABLE_NAME, COLUMN_ID + "=?", new String[] { String.valueOf(id) });
-
+        // Delete the row from the database table based on the ID
+        db.delete(TABLE_NAME, COLUMN_ID + "=?", new String[]{String.valueOf(id)});
         db.close();
     }
 
@@ -258,6 +257,7 @@ public class WorksDataBase extends SQLiteOpenHelper {
 
         return uniqueStartDays;
     }
+
     private List<Long> getUniqueStartDays(int year) {
         List<Long> uniqueStartDays = new ArrayList<>();
 
@@ -294,6 +294,4 @@ public class WorksDataBase extends SQLiteOpenHelper {
         calendar.set(Calendar.MILLISECOND, 0);
         return calendar.getTimeInMillis();
     }
-
-
 }

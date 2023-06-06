@@ -39,6 +39,9 @@ import java.util.List;
  */
 public class HoursReport extends Fragment {
 
+    ListView worksLV;
+    WorksAdapter worksAdapter;
+    WorksDataBase worksDataBase;
 
     private static final String ARG_PARAM1 = "param1";
     private static final String ARG_PARAM2 = "param2";
@@ -47,9 +50,6 @@ public class HoursReport extends Fragment {
     private String mParam1;
     private String mParam2;
 
-    ListView worksLV;
-    WorksAdapter worksAdapter;
-    WorksDataBase worksDataBase;
 
     public HoursReport() {
         // Required empty public constructor
@@ -88,32 +88,37 @@ public class HoursReport extends Fragment {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_hours_report, container, false);
 
-                worksDataBase = new WorksDataBase(getContext());
+        // Initialize WorksDataBase
+        worksDataBase = new WorksDataBase(getContext());
 
-                worksLV = view.findViewById(R.id.LV);
+        worksLV = view.findViewById(R.id.LV);
 
-                worksAdapter = new WorksAdapter(getContext() , worksDataBase.getAllWorks());
-                worksAdapter.setWorksList(worksDataBase.getAllWorks());
+        // Initialize WorksAdapter with data from WorksDataBase
+        worksAdapter = new WorksAdapter(getContext(), worksDataBase.getAllWorks());
+        worksAdapter.setWorksList(worksDataBase.getAllWorks());
 
-                worksLV.setAdapter(worksAdapter);
+        // Set the adapter for the ListView
+        worksLV.setAdapter(worksAdapter);
 
-                worksLV.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-                    @Override
-                    public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+        worksLV.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+                // Handle item click
 
-                        Intent intent = new Intent(getContext(), ActionToItem.class);
+                // Create an intent to navigate to ActionToItem activity
+                Intent intent = new Intent(getContext(), ActionToItem.class);
 
+                // Pass the work ID as an extra to the intent
+                intent.putExtra("id", worksAdapter.getworkID(i));
 
-                        intent.putExtra("id", worksAdapter.getworkID(i));
-                        Log.d("david", "i: " + i);
-                        startActivity(intent);
+                // Log the clicked item's position
+                Log.d("david", "i: " + i);
 
-                    }
-                });
-
+                // Start the ActionToItem activity
+                startActivity(intent);
+            }
+        });
 
         return view;
     }
-
-
 }

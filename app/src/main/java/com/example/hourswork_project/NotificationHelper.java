@@ -23,6 +23,7 @@ public class NotificationHelper extends BroadcastReceiver {
 
     @Override
     public void onReceive(Context context, Intent intent) {
+        // Trigger the method to show the notification
         showNotification(context);
     }
 
@@ -45,10 +46,11 @@ public class NotificationHelper extends BroadcastReceiver {
                 AlarmManager.INTERVAL_DAY * 7, pendingIntent);
     }
 
-
     private void showNotification(Context context) {
+        // Create the notification channel
         createNotificationChannel(context);
 
+        // Build the notification
         NotificationCompat.Builder builder = new NotificationCompat.Builder(context, CHANNEL_ID)
                 .setSmallIcon(R.drawable.remind)
                 .setContentTitle("תזכורת")
@@ -56,6 +58,7 @@ public class NotificationHelper extends BroadcastReceiver {
                 .setPriority(NotificationCompat.PRIORITY_DEFAULT)
                 .setAutoCancel(true);
 
+        // Show the notification
         NotificationManagerCompat notificationManager = NotificationManagerCompat.from(context);
         notificationManager.notify(NOTIFICATION_ID, builder.build());
     }
@@ -66,11 +69,13 @@ public class NotificationHelper extends BroadcastReceiver {
             String channelDescription = "Recurring notification every Thursday at 8 PM";
             int importance = NotificationManager.IMPORTANCE_DEFAULT;
 
+            // Create the notification channel
             NotificationChannel channel = new NotificationChannel(CHANNEL_ID, channelName, importance);
             channel.setDescription(channelDescription);
             channel.enableLights(true);
             channel.setLightColor(Color.GREEN);
 
+            // Register the channel with the system
             NotificationManager notificationManager = context.getSystemService(NotificationManager.class);
             notificationManager.createNotificationChannel(channel);
         }

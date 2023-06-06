@@ -23,14 +23,15 @@ import androidx.fragment.app.Fragment;
  */
 public class Settings extends Fragment {
 
+    // Declare variables
     NumberPicker numberPicker;
-    Button btnSelectAge , btnSelectTimeOfBreak , btnRestart , btnNumOfDaysWorking , btnNumTravelExpenses;
-    int numberAge , numberSelectTimeOfBreak  , numOfDaysWorking = 0;
-    CheckBox cbMinSalary , cbSalaryOnBreak , sendCheckbox;
-    float numberHourlyWage , numberTravelExpenses;
-    EditText etAnother , phoneNumberEditText;
+    Button btnSelectAge, btnSelectTimeOfBreak, btnRestart, btnNumOfDaysWorking, btnNumTravelExpenses;
+    int numberAge, numberSelectTimeOfBreak, numOfDaysWorking = 0;
+    CheckBox cbMinSalary, cbSalaryOnBreak, sendCheckbox;
+    float numberHourlyWage, numberTravelExpenses;
+    EditText etAnother, phoneNumberEditText;
     TextView tvHourlyWage;
-    boolean SalaryOnBreak , sendSms;
+    boolean SalaryOnBreak, sendSms;
     SharedPreferences sharedPreferences;
     String phoneNumber;
 
@@ -80,6 +81,7 @@ public class Settings extends Fragment {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_settings, container, false);
 
+        // Initialize UI components
         cbSalaryOnBreak = view.findViewById(R.id.cbSalaryOnBreak);
         cbMinSalary = view.findViewById(R.id.cbMinSalary);
         tvHourlyWage = view.findViewById(R.id.tvHourlyWage);
@@ -93,62 +95,59 @@ public class Settings extends Fragment {
 
         sharedPreferences = getContext().getSharedPreferences("Definitions", 0);
 
-        if (sharedPreferences.getInt("selectedNumber" , 0) > 0){
-            btnSelectAge.setText("הגיל שלך הוא: "+ sharedPreferences.getInt("selectedNumber" , 0));
+        // Set values for UI components based on stored preferences
+        if (sharedPreferences.getInt("selectedNumber", 0) > 0) {
+            btnSelectAge.setText("הגיל שלך הוא: " + sharedPreferences.getInt("selectedNumber", 0));
         }
-        if (sharedPreferences.getBoolean("MinSalary" , false)){
-            tvHourlyWage.setText(sharedPreferences.getFloat("numberHourlyWageMinSalary" , 0) + " לשעה");
-        }
-        else {
-            if (sharedPreferences.getFloat("numberHourlyWageFloat" , 0) > 0) {
+        if (sharedPreferences.getBoolean("MinSalary", false)) {
+            tvHourlyWage.setText(sharedPreferences.getFloat("numberHourlyWageMinSalary", 0) + " לשעה");
+        } else {
+            if (sharedPreferences.getFloat("numberHourlyWageFloat", 0) > 0) {
                 tvHourlyWage.setText(sharedPreferences.getFloat("numberHourlyWageFloat", 0) + " לשעה");
                 cbMinSalary.setChecked(false);
             }
         }
-        if (sharedPreferences.getInt("numberSelectTimeOfBreak" , 0) > 0) {
-            btnSelectTimeOfBreak.setText("אורך ההפסקה בדקות הוא: "+ sharedPreferences.getInt("numberSelectTimeOfBreak", 0));
+        if (sharedPreferences.getInt("numberSelectTimeOfBreak", 0) > 0) {
+            btnSelectTimeOfBreak.setText("אורך ההפסקה בדקות הוא: " + sharedPreferences.getInt("numberSelectTimeOfBreak", 0));
         }
-        cbSalaryOnBreak.setChecked(sharedPreferences.getBoolean("SalaryOnBreak" , false));
+        cbSalaryOnBreak.setChecked(sharedPreferences.getBoolean("SalaryOnBreak", false));
 
-        if (sharedPreferences.getInt("NumOfDaysWorking" , 0) == 5){
+        if (sharedPreferences.getInt("NumOfDaysWorking", 0) == 5) {
             btnNumOfDaysWorking.setText("מספר ימי העבודה בשבוע: " + 5);
         }
-        if (sharedPreferences.getInt("NumOfDaysWorking" , 0) == 6){
+        if (sharedPreferences.getInt("NumOfDaysWorking", 0) == 6) {
             btnNumOfDaysWorking.setText("מספר ימי העבודה בשבוע: " + 6);
         }
-        if (sharedPreferences.getFloat("numberTravelExpenses" , 0 ) > 0){
-            btnNumTravelExpenses.setText("דמי נסיעות יומי: " + sharedPreferences.getFloat("numberTravelExpenses" , 0 ));
+        if (sharedPreferences.getFloat("numberTravelExpenses", 0) > 0) {
+            btnNumTravelExpenses.setText("דמי נסיעות יומי: " + sharedPreferences.getFloat("numberTravelExpenses", 0));
         }
-        if (sharedPreferences.getString("phoneNumber" , null) != null ){
-            phoneNumberEditText.setText(sharedPreferences.getString("phoneNumber" , null));
+        if (sharedPreferences.getString("phoneNumber", null) != null) {
+            phoneNumberEditText.setText(sharedPreferences.getString("phoneNumber", null));
         }
-        sendCheckbox.setChecked(sharedPreferences.getBoolean("sendSms" , false));
-
-
-
-
-
-
-
+        sendCheckbox.setChecked(sharedPreferences.getBoolean("sendSms", false));
 
         btnSelectAge.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 if (v == btnSelectAge) {
+                    // Display a dialog to select age
                     Dialog dialog = new Dialog(view.getContext());
                     dialog.setContentView(R.layout.number_picker_dialog);
                     numberPicker = dialog.findViewById(R.id.number_picker);
-                    numberPicker.setMinValue(1);
-                    numberPicker.setMaxValue(99);
+                    numberPicker.setMinValue(14);
+                    numberPicker.setMaxValue(120);
                     Button okButton = dialog.findViewById(R.id.btnOk_number_picker);
                     okButton.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
                             if (v == okButton) {
+                                // Get selected age and update the button text
                                 numberAge = numberPicker.getValue();
-                                btnSelectAge.setText("הגיל שלך הוא: "+ numberAge);
+                                btnSelectAge.setText("הגיל שלך הוא: " + numberAge);
+
+                                // Save selected age to shared preferences
                                 SharedPreferences.Editor editor = sharedPreferences.edit();
-                                editor.putInt("selectedNumber" , numberAge);
+                                editor.putInt("selectedNumber", numberAge);
                                 editor.commit();
                                 dialog.dismiss();
                             }
@@ -159,20 +158,20 @@ public class Settings extends Fragment {
             }
         });
 
-
         cbMinSalary.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 if (cbMinSalary.isChecked()) {
-
+                    // Calculate minimum salary based on age and display it
                     tvHourlyWage.setText(minSalary(numberAge) + " לשעה");
-                    SharedPreferences.Editor editor = sharedPreferences.edit();
-                    editor.putFloat("numberHourlyWageMinSalary" , (float) minSalary(numberAge));
-                    editor.putBoolean("MinSalary" , true);
-                    editor.commit();
 
-                }
-                else {
+                    // Save minimum salary and update preferences
+                    SharedPreferences.Editor editor = sharedPreferences.edit();
+                    editor.putFloat("numberHourlyWageMinSalary", (float) minSalary(numberAge));
+                    editor.putBoolean("MinSalary", true);
+                    editor.commit();
+                } else {
+                    // Display a dialog to enter custom hourly wage
                     Dialog dialog = new Dialog(view.getContext());
                     dialog.setContentView(R.layout.hourlywage_picker_dialog);
                     etAnother = dialog.findViewById(R.id.etAnother);
@@ -184,16 +183,18 @@ public class Settings extends Fragment {
                                 String strNumber = etAnother.getText().toString();
 
                                 if (!strNumber.isEmpty()) {
+                                    // Get custom hourly wage and display it
                                     numberHourlyWage = Float.parseFloat(strNumber);
                                     tvHourlyWage.setText(strNumber + " לשעה");
+
+                                    // Save custom hourly wage and update preferences
                                     SharedPreferences.Editor editor = sharedPreferences.edit();
-                                    editor.putFloat("numberHourlyWageFloat" , numberHourlyWage);
-                                    editor.putBoolean("MinSalary" , false);
+                                    editor.putFloat("numberHourlyWageFloat", numberHourlyWage);
+                                    editor.putBoolean("MinSalary", false);
                                     editor.commit();
                                     dialog.dismiss();
-                                }
-                                else{
-
+                                } else {
+                                    // Handle empty input case
                                 }
                             }
                         }
@@ -208,6 +209,7 @@ public class Settings extends Fragment {
             @Override
             public void onClick(View v) {
                 if (v == btnSelectTimeOfBreak) {
+                    // Create a dialog for selecting the time of break
                     Dialog dialog = new Dialog(view.getContext());
                     dialog.setContentView(R.layout.number_picker_dialog);
                     numberPicker = dialog.findViewById(R.id.number_picker);
@@ -218,80 +220,85 @@ public class Settings extends Fragment {
                         @Override
                         public void onClick(View v) {
                             if (v == okButton) {
+                                // Retrieve the selected time of break and update the button text
                                 numberSelectTimeOfBreak = numberPicker.getValue();
-                                btnSelectTimeOfBreak.setText("אורך ההפסקה בדקות הוא: "+ numberSelectTimeOfBreak);
+                                btnSelectTimeOfBreak.setText("אורך ההפסקה בדקות הוא: " + numberSelectTimeOfBreak);
+
+                                // Store the selected time of break in SharedPreferences
                                 SharedPreferences.Editor editor = sharedPreferences.edit();
-                                editor.putInt("numberSelectTimeOfBreak" , numberSelectTimeOfBreak);
+                                editor.putInt("numberSelectTimeOfBreak", numberSelectTimeOfBreak);
                                 editor.commit();
-                                dialog.dismiss();
+
+                                dialog.dismiss(); // Close the dialog
                             }
                         }
                     });
-                    dialog.show();
+                    dialog.show(); // Display the dialog
                 }
             }
         });
-
 
         cbSalaryOnBreak.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 if (cbSalaryOnBreak.isChecked()) {
+                    // Enable salary on break
                     SalaryOnBreak = true;
-                    SharedPreferences.Editor editor = sharedPreferences.edit();
-                    editor.putBoolean("SalaryOnBreak" , SalaryOnBreak);
-                    editor.commit();
-                }
-                else {
+                } else {
+                    // Disable salary on break
                     SalaryOnBreak = false;
-                    SharedPreferences.Editor editor = sharedPreferences.edit();
-                    editor.putBoolean("SalaryOnBreak" , SalaryOnBreak);
-                    editor.commit();
                 }
+
+                // Store the value of SalaryOnBreak in SharedPreferences
+                SharedPreferences.Editor editor = sharedPreferences.edit();
+                editor.putBoolean("SalaryOnBreak", SalaryOnBreak);
+                editor.commit();
             }
-
         });
-
-
-
 
         btnNumOfDaysWorking.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 if (v == btnNumOfDaysWorking) {
-
                     // Create an AlertDialog builder
                     AlertDialog.Builder builder = new AlertDialog.Builder(view.getContext());
 
-// Set the alert message and title
+                    // Set the alert message and title
                     builder.setMessage("כמה הימים אתה עובד בשבוע?")
                             .setTitle("Confirmation");
 
-// Set the positive button and its click listener
+                    // Set the positive button and its click listener
                     builder.setPositiveButton("5 ימים", new DialogInterface.OnClickListener() {
                         public void onClick(DialogInterface dialog, int id) {
-
+                            // Set the number of days working to 5
                             numOfDaysWorking = 5;
+
+                            // Store the number of days working in SharedPreferences
                             SharedPreferences.Editor editor = sharedPreferences.edit();
-                            editor.putInt("NumOfDaysWorking" , numOfDaysWorking);
+                            editor.putInt("NumOfDaysWorking", numOfDaysWorking);
                             editor.commit();
+
                             btnNumOfDaysWorking.setText("מספר ימי העבודה בשבוע: " + 5);
                         }
                     });
+
+                    // Set the negative button and its click listener
                     builder.setNegativeButton("6 ימים", new DialogInterface.OnClickListener() {
                         public void onClick(DialogInterface dialog, int id) {
-
+                            // Set the number of days working to 6
                             numOfDaysWorking = 6;
+
+                            // Store the number of days working in SharedPreferences
                             SharedPreferences.Editor editor = sharedPreferences.edit();
-                            editor.putInt("NumOfDaysWorking" , numOfDaysWorking);
+                            editor.putInt("NumOfDaysWorking", numOfDaysWorking);
                             editor.commit();
+
                             btnNumOfDaysWorking.setText("מספר ימי העבודה בשבוע: " + 6);
                         }
                     });
+
                     AlertDialog dialog = builder.create();
                     dialog.show();
-
-
                 }
             }
         });
@@ -299,89 +306,93 @@ public class Settings extends Fragment {
         btnNumTravelExpenses.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                    Dialog dialog = new Dialog(view.getContext());
-                    dialog.setContentView(R.layout.travel_expenses_picker_dialog);
-                    etAnother = dialog.findViewById(R.id.etTravelExpenses);
-                    Button okButton = dialog.findViewById(R.id.btnOk_etTravelExpenses);
-                    okButton.setOnClickListener(new View.OnClickListener() {
-                        @Override
-                        public void onClick(View v) {
-                            if (v == okButton) {
-                                String strNumberTravelExpenses = etAnother.getText().toString();
+                // Create a dialog for entering travel expenses
+                Dialog dialog = new Dialog(view.getContext());
+                dialog.setContentView(R.layout.travel_expenses_picker_dialog);
+                etAnother = dialog.findViewById(R.id.etTravelExpenses);
+                Button okButton = dialog.findViewById(R.id.btnOk_etTravelExpenses);
+                okButton.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        if (v == okButton) {
+                            // Retrieve the entered travel expenses and update the button text
+                            String strNumberTravelExpenses = etAnother.getText().toString();
 
-                                if (!strNumberTravelExpenses.isEmpty()) {
-                                    numberTravelExpenses = Float.parseFloat(strNumberTravelExpenses);
-                                    btnNumTravelExpenses.setText("דמי נסיעות יומי: " + numberTravelExpenses);
-                                    SharedPreferences.Editor editor = sharedPreferences.edit();
-                                    editor.putFloat("numberTravelExpenses" , numberTravelExpenses);
-                                    editor.commit();
-                                    dialog.dismiss();
-                                }
-                                else{
+                            if (!strNumberTravelExpenses.isEmpty()) {
+                                numberTravelExpenses = Float.parseFloat(strNumberTravelExpenses);
+                                btnNumTravelExpenses.setText("דמי נסיעות יומי: " + numberTravelExpenses);
 
-                                }
+                                // Store the travel expenses in SharedPreferences
+                                SharedPreferences.Editor editor = sharedPreferences.edit();
+                                editor.putFloat("numberTravelExpenses", numberTravelExpenses);
+                                editor.commit();
+
+                                dialog.dismiss(); // Close the dialog
+                            } else {
+                                // Handle the case when no travel expenses are entered
                             }
                         }
-                    });
-                    dialog.show();
-                }
+                    }
+                });
+                dialog.show(); // Display the dialog
+            }
         });
-
 
         sendCheckbox.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 if (sendCheckbox.isChecked()) {
+                    // Enable sending SMS
                     sendSms = true;
+
+                    // Retrieve the phone number from the edit text
                     phoneNumber = phoneNumberEditText.getText().toString();
+
+                    // Store the values of sendSms and phoneNumber in SharedPreferences
                     SharedPreferences.Editor editor = sharedPreferences.edit();
-                    editor.putBoolean("sendSms" , sendSms);
-                    editor.putString("phoneNumber"  , phoneNumber);
+                    editor.putBoolean("sendSms", sendSms);
+                    editor.putString("phoneNumber", phoneNumber);
                     editor.commit();
-                }
-                else {
+                } else {
+                    // Disable sending SMS
                     sendSms = false;
+
+                    // Store the value of sendSms in SharedPreferences
                     SharedPreferences.Editor editor = sharedPreferences.edit();
-                    editor.putBoolean("sendSms" , sendSms);
+                    editor.putBoolean("sendSms", sendSms);
                     editor.commit();
                 }
             }
-
         });
-
-
-
-
 
         btnRestart.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 if (v == btnRestart) {
-
-
                     // Create an AlertDialog builder
                     AlertDialog.Builder builder = new AlertDialog.Builder(view.getContext());
 
-// Set the alert message and title
+                    // Set the alert message and title
                     builder.setMessage("אתה בטוח שאתה רוצה לאפס את הנתונים שהוזנו?")
                             .setTitle("Confirmation");
 
-// Set the positive button and its click listener
+                    // Set the positive button and its click listener
                     builder.setPositiveButton("כן", new DialogInterface.OnClickListener() {
                         public void onClick(DialogInterface dialog, int id) {
-
+                            // Reset all the values in SharedPreferences to their default values
                             SharedPreferences.Editor editor = sharedPreferences.edit();
-                            editor.putInt("numberSelectTimeOfBreak" , 0);
+                            editor.putInt("numberSelectTimeOfBreak", 0);
                             editor.putFloat("numberHourlyWageFloat", 0);
-                            editor.putBoolean("MinSalary" , false);
-                            editor.putInt("selectedNumber" , 0);
-                            editor.putBoolean("SalaryOnBreak" , false);
-                            editor.putInt("NumOfDaysWorking" , 0);
-                            editor.putFloat("numberTravelExpenses" , 0);
-                            editor.putString("phoneNumber" , "");
-                            editor.putBoolean("sendSms" , false);
+                            editor.putBoolean("MinSalary", false);
+                            editor.putInt("selectedNumber", 0);
+                            editor.putBoolean("SalaryOnBreak", false);
+                            editor.putInt("NumOfDaysWorking", 0);
+                            editor.putFloat("numberTravelExpenses", 0);
+                            editor.putString("phoneNumber", "");
+                            editor.putBoolean("sendSms", false);
                             editor.commit();
 
+                            // Reset the UI elements to their default values
                             btnSelectAge.setText("גיל");
                             tvHourlyWage.setText("*** לשעה");
                             cbMinSalary.setChecked(false);
@@ -393,30 +404,30 @@ public class Settings extends Fragment {
                             sendCheckbox.setChecked(false);
                         }
                     });
+
+                    // Set the negative button and its click listener
                     builder.setNegativeButton("לא", new DialogInterface.OnClickListener() {
                         public void onClick(DialogInterface dialog, int id) {
                             // User cancelled the dialog
                         }
                     });
+
                     AlertDialog dialog = builder.create();
                     dialog.show();
-
-
                 }
             }
         });
 
-
         return view;
 
     }
-
-    public double minSalary (int age){
+    // Calculate Minimum salary
+    public double minSalary(int age) {
         double minSalary = 0;
 
         if (age < 16)
             minSalary = 22.54;
-        else if (age < 17 && age >=  16)
+        else if (age < 17 && age >= 16)
             minSalary = 24.15;
         else if (age < 18 && age >= 17)
             minSalary = 26.73;
@@ -424,8 +435,5 @@ public class Settings extends Fragment {
             minSalary = 29.96;
 
         return minSalary;
-
-
-
     }
 }

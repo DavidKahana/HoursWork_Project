@@ -26,11 +26,14 @@
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:background="?attr/selectableItemBackground"
+        android:clickable="true"
         android:id="@+id/tvItemStart"
         android:textSize="30sp"
         android:text="כניסה: "
         android:layout_marginRight="10dp"
         android:layout_marginBottom="10dp"/>
+
     </LinearLayout>
     <LinearLayout
         android:layout_width="match_parent"
@@ -47,6 +50,8 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:id="@+id/tvItemStop"
+        android:background="?attr/selectableItemBackground"
+        android:clickable="true"
         android:textSize="30sp"
         android:text="יציאה: "
         android:layout_marginRight="10dp"

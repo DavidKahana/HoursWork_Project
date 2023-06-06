@@ -18,7 +18,7 @@
             android:id="@+id/btnDate"
             android:textSize="30sp"
             android:layout_margin="30dp"
-            android:text="תבחר תאריך ושעה!"/>
+            android:text="בחר תאריך ושעה"/>
 
         <Button
             android:layout_width="match_parent"

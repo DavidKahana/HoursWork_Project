@@ -27,10 +27,10 @@ import java.util.Arrays;
  */
 public class Information extends Fragment {
 
-    Button btnMinSalary , btnTravelExpenses , btnOvertime , btnNotes;
-    TextView tvMinSalary , tvTravelExpenses , tvOvertime;
+    // Declare buttons and text views
+    Button btnMinSalary, btnTravelExpenses, btnOvertime, btnNotes;
+    TextView tvMinSalary, tvTravelExpenses, tvOvertime;
     private SharedPreferences sharedPreferences;
-
 
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -40,10 +40,6 @@ public class Information extends Fragment {
     // TODO: Rename and change types of parameters
     private String mParam1;
     private String mParam2;
-
-
-
-
 
     public Information() {
         // Required empty public constructor
@@ -67,7 +63,6 @@ public class Information extends Fragment {
         return fragment;
     }
 
-
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -75,16 +70,13 @@ public class Information extends Fragment {
             mParam1 = getArguments().getString(ARG_PARAM1);
             mParam2 = getArguments().getString(ARG_PARAM2);
         }
-
-
     }
-
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_information, container, false);
 
-
+        // Initialize text views and buttons
         tvMinSalary = view.findViewById(R.id.tvMinSalary);
         tvTravelExpenses = view.findViewById(R.id.tvTravelExpenses);
         tvOvertime = view.findViewById(R.id.tvOvertime);
@@ -94,20 +86,20 @@ public class Information extends Fragment {
         btnTravelExpenses = view.findViewById(R.id.btnTravelExpenses);
         btnOvertime = view.findViewById(R.id.btnOvertime);
 
-
+        // Set text for minimum salary
         String strMinSalary = "עד גיל 16 : 22.54\n" +
                 "מגיל 16 עד 17 : 24.15\n" +
                 "מגיל 17 עד 18 : 26.73\n" +
                 "מגיל 18 ומעלה : 29.96\n" +
-                "\n * מעודכן לאפריל 23"  ;
-
+                "\n * מעודכן לאפריל 23";
         tvMinSalary.setText(strMinSalary);
 
+        // Set text for travel expenses
         String strTravelExpenses = "בלחיצה על יום עבודה מסוים בדוח השעות יוצג הסכום שהרווחת באותו היום ללא חישוב דמי נסיעות.\n" +
                 "המערכת תוסיף לשכר החודשי שלך את דמי הנסיעות לפי חישוב יומי (כלומר עבור כל יום עבודה תקבל את הסכום שקבעת בהגדרות).";
-
         tvTravelExpenses.setText(strTravelExpenses);
 
+        // Set text for overtime information
         String strOverTime = "אם קבעת בהגדרות כי העסק שלך\n" +
                 "\n" +
                 "פועל חמישה ימים בשבוע, אז השעות הנוספות תחושבנה כך: \n" +
@@ -124,12 +116,9 @@ public class Information extends Fragment {
                 "* שעות נוספות של 150% מהשכר\n" +
                 "הרגיל תחושבנה על כל שעה שמעבר\n" +
                 "לעשר שעות.";
-
         tvOvertime.setText(strOverTime);
 
-
-
-
+        // Set click listener for notes button
         btnNotes.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -137,49 +126,50 @@ public class Information extends Fragment {
             }
         });
 
-
-
+        // Initialize shared preferences
         sharedPreferences = getContext().getSharedPreferences("notes", MODE_PRIVATE);
 
+        // Set click listener for minimum salary button
         if (btnMinSalary != null) {
             btnMinSalary.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    if (v == btnMinSalary){
+                    if (v == btnMinSalary) {
                         if (tvMinSalary.getVisibility() == View.GONE) {
                             tvMinSalary.setVisibility(View.VISIBLE);
-                        }
-                        else {
+                        } else {
                             tvMinSalary.setVisibility(View.GONE);
                         }
                     }
                 }
             });
         }
+
+        // Set click listener for travel expenses button
         if (btnTravelExpenses != null) {
             btnTravelExpenses.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    if (v == btnTravelExpenses){
+                    if (v == btnTravelExpenses) {
                         if (tvTravelExpenses.getVisibility() == View.GONE) {
                             tvTravelExpenses.setVisibility(View.VISIBLE);
-                        }
-                        else {
+                        } else {
                             tvTravelExpenses.setVisibility(View.GONE);
                         }
                     }
                 }
             });
         }
+
+        // Set click listener for overtime button
         if (btnOvertime != null) {
             btnOvertime.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    if (v == btnOvertime){
+                    if (v == btnOvertime) {
                         if (tvOvertime.getVisibility() == View.GONE) {
                             tvOvertime.setVisibility(View.VISIBLE);
-                        }
-                        else {
+                        } else {
                             tvOvertime.setVisibility(View.GONE);
                         }
                     }
@@ -189,25 +179,29 @@ public class Information extends Fragment {
 
         return view;
     }
+
+    /**
+     * Opens the notebook dialog for adding or editing notes.
+     */
     private void openNotebookDialog() {
         AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
         builder.setTitle("פנקס הערות");
         builder.setMessage("תכתוב בבקשה את הערות שלך פה:");
 
         final EditText notesEditText = new EditText(getContext());
-        notesEditText.setText(sharedPreferences.getString("notes" , ""));
+        notesEditText.setText(sharedPreferences.getString("notes", ""));
         builder.setView(notesEditText);
 
-        builder.setPositiveButton("Save", new DialogInterface.OnClickListener() {
+        builder.setPositiveButton("שמור", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 String notes = notesEditText.getText().toString();
                 saveNotes(notes);
-                Toast.makeText(getContext(), "Notes saved!", Toast.LENGTH_SHORT).show();
+                Toast.makeText(getContext(), "הערות נשמרו!", Toast.LENGTH_SHORT).show();
             }
         });
 
-        builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+        builder.setNegativeButton("ביטול", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 dialog.dismiss();
@@ -218,11 +212,14 @@ public class Information extends Fragment {
         dialog.show();
     }
 
+    /**
+     * Saves the notes in shared preferences.
+     *
+     * @param notes The notes to be saved.
+     */
     private void saveNotes(String notes) {
         SharedPreferences.Editor editor = sharedPreferences.edit();
         editor.putString("notes", notes);
         editor.apply();
     }
-
-
 }
