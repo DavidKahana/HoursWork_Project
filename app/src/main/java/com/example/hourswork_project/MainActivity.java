@@ -6,9 +6,11 @@ import androidx.core.app.NotificationManagerCompat;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 
+import android.app.AlarmManager;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
+import android.content.Context;
 import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
@@ -33,6 +35,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         setContentView(R.layout.activity_main);
 
         fragmentManager = getSupportFragmentManager();
+        NotificationHelper notificationHelper = new NotificationHelper();
 
         // Initialize buttons
         btnEntrance = (Button) findViewById(R.id.btnEntrance);
@@ -68,7 +71,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 }
             }, 10000);
 
-            NotificationHelper.setWeeklyNotification(this);
+            notificationHelper.setWeeklyNotification(getApplicationContext());
+
         }
 
         // Create a notification channel if the Android version is Oreo or above

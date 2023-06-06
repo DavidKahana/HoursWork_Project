@@ -10,6 +10,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Build;
+import android.util.Log;
 import android.widget.Toast;
 
 import androidx.core.app.NotificationCompat;
@@ -30,12 +31,15 @@ public class NotificationHelper extends BroadcastReceiver {
     public static void setWeeklyNotification(Context context) {
         AlarmManager alarmManager = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
 
+        Log.d("shaon", "shaon");
+
         // Set the alarm to start at 8 PM every Thursday
         Calendar calendar = Calendar.getInstance();
         calendar.set(Calendar.DAY_OF_WEEK, Calendar.THURSDAY);
-        calendar.set(Calendar.HOUR_OF_DAY, 20);
+        calendar.set(Calendar.HOUR_OF_DAY, 21);
         calendar.set(Calendar.MINUTE, 0);
         calendar.set(Calendar.SECOND, 0);
+        calendar.set(Calendar.MILLISECOND,0);
 
         // Create an intent for the BroadcastReceiver
         Intent intent = new Intent(context, NotificationHelper.class);
@@ -78,7 +82,7 @@ public class NotificationHelper extends BroadcastReceiver {
             // Register the channel with the system
             NotificationManager notificationManager = context.getSystemService(NotificationManager.class);
             notificationManager.createNotificationChannel(channel);
+
         }
     }
 }
-
