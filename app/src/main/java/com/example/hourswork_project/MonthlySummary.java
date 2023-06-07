@@ -1,21 +1,42 @@
 package com.example.hourswork_project;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
 
+import android.Manifest;
 import android.app.DatePickerDialog;
 import android.app.TimePickerDialog;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.pm.PackageManager;
+import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
+import android.os.Environment;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.DatePicker;
 import android.widget.TextView;
 import android.widget.TimePicker;
 import android.widget.Toast;
 
+import org.apache.poi.ss.usermodel.Cell;
+import org.apache.poi.ss.usermodel.Row;
+import org.apache.poi.ss.usermodel.Sheet;
+import org.apache.poi.ss.usermodel.Workbook;
+import org.apache.poi.xssf.usermodel.XSSFWorkbook;
+
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.OutputStream;
 import java.text.DateFormatSymbols;
 import java.text.DecimalFormat;
+import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
@@ -32,6 +53,12 @@ public class MonthlySummary extends AppCompatActivity {
     double salaryTotal, salaryDay, travelsDay, travelsMonth;
     long durationToatalMonth = 0, durationToatal125pMonth = 0, durationToatal150pMonth = 0;
     DecimalFormat decimalFormat = new DecimalFormat("#.##");
+    private static final int PERMISSION_REQUEST_CODE = 1;
+    private static final int CREATE_FILE_REQUEST_CODE = 2;
+    private Uri outputFileUri;
+    List<Work> works;
+    SimpleDateFormat date = new SimpleDateFormat("MM-dd-yyyy HH:mm");
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -65,10 +92,10 @@ public class MonthlySummary extends AppCompatActivity {
         // Setting month name and year to TextView
         tvMonthNameOfMonth.setText("חודש: " + getMonthName(numMonth) + " " + numYear);
         // Setting the number of days in the selected month to TextView
-        tvMonthNumOfDays_answer.setText(daysInEachMonth[numMonth - 1] + " ימים");
+        tvMonthNumOfDays_answer.setText(daysInEachMonth[numMonth - 1] + " עבודות");
 
         // Retrieving works for the selected month and year
-        List<Work> works = worksDataBase.getWorksByMonthAndYear(numMonth, numYear);
+        works = worksDataBase.getWorksByMonthAndYear(numMonth, numYear);
 
         // Calculating total duration of works for the selected month
         for (Work work : works) {
@@ -125,7 +152,7 @@ public class MonthlySummary extends AppCompatActivity {
 
         // Retrieving travel expenses for each day and calculating the total for the month
         travelsDay = sharedPreferences.getFloat("numberTravelExpenses", 0);
-        travelsMonth = daysInEachMonth[numMonth - 1] * travelsDay;
+        travelsMonth = worksDataBase.getUniqueWorkDaysInMonthAndYear(numMonth , numYear) * travelsDay;
 
         // Displaying salary details and total salary for the month
         tvMonthTotalsalaryDetail_answer.setText("עבודה: " + decimalFormat.format(salaryTotal) +
@@ -135,6 +162,128 @@ public class MonthlySummary extends AppCompatActivity {
 
         tvMonthTotalsalary_answer.setText(decimalFormat.format(salaryTotal) + " שקלים חדשים ");
     }
+
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.month, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        int itemId = item.getItemId();
+
+        if (itemId == R.id.menu_exel) {
+
+            checkPermissionsAndExport();
+
+            return true;
+        }
+
+        return super.onOptionsItemSelected(item);
+    }
+
+
+    private void checkPermissionsAndExport() {
+        // Check if storage permissions are granted
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            if (ContextCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE)
+                    != PackageManager.PERMISSION_GRANTED) {
+                // Permission not granted, request it
+                ActivityCompat.requestPermissions(
+                        this,
+                        new String[]{
+                                Manifest.permission.READ_EXTERNAL_STORAGE,
+                                Manifest.permission.WRITE_EXTERNAL_STORAGE
+                        },
+                        PERMISSION_REQUEST_CODE
+                );
+            } else {
+                // Permission already granted, start SAF file picker
+                startFilePicker();
+            }
+        } else {
+            // For older devices, start SAF file picker without checking permissions
+            startFilePicker();
+        }
+    }
+
+    private void startFilePicker() {
+        Intent intent = new Intent(Intent.ACTION_CREATE_DOCUMENT);
+        intent.addCategory(Intent.CATEGORY_OPENABLE);
+        intent.setType("application/vnd.openxmlformats-officedocument.spreadsheetml.sheet");
+        intent.putExtra(Intent.EXTRA_TITLE, "exported_file.xlsx");
+        startActivityForResult(intent, CREATE_FILE_REQUEST_CODE);
+    }
+
+    private void exportToExcel(List<Work> works) {
+
+        Workbook workbook = new XSSFWorkbook();
+        Sheet sheet = workbook.createSheet("Work Data");
+
+        // Create headers
+        Row headerRow = sheet.createRow(0);
+        headerRow.createCell(0).setCellValue("מספר מזהה של המשמרת");
+        headerRow.createCell(1).setCellValue("תאריך כניסה");
+        headerRow.createCell(2).setCellValue("תאריך סיום");
+        headerRow.createCell(3).setCellValue("סך הכל");
+
+        // Write work data to the sheet
+        for (int i = 0; i < works.size(); i++) {
+            Work work = works.get(i);
+            Row dataRow = sheet.createRow(i + 1);
+            Date dateEnter = new Date(work.getEndDate());
+            Date dateFinish = new Date(work.getStartDate());
+            dataRow.createCell(0).setCellValue(work.getId());
+            dataRow.createCell(1).setCellValue(date.format(dateEnter));
+            dataRow.createCell(2).setCellValue(date.format(dateFinish));
+            String str = formatDuration(getDurationMillis(dateEnter , dateFinish));
+            dataRow.createCell(3).setCellValue(str);
+        }
+        // Save the workbook to the selected file
+        try {
+            OutputStream outputStream = getContentResolver().openOutputStream(outputFileUri);
+            workbook.write(outputStream);
+            outputStream.close();
+            Toast.makeText(this, "Excel file exported successfully!", Toast.LENGTH_SHORT).show();
+        } catch (IOException e) {
+            e.printStackTrace();
+            Toast.makeText(this, "Failed to export Excel file!", Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        if (requestCode == PERMISSION_REQUEST_CODE) {
+            if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                // Permission granted, start SAF file picker
+                startFilePicker();
+            } else {
+                Toast.makeText(this, "Storage permission required to export the Excel file!", Toast.LENGTH_SHORT).show();
+            }
+        }
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == CREATE_FILE_REQUEST_CODE && resultCode == RESULT_OK) {
+            if (data != null && data.getData() != null) {
+                outputFileUri = data.getData();
+                exportToExcel(works);
+            }
+        }
+    }
+
+
+
+
+
+
+
+
 
     // Returns the name of the month based on the month number
     public String getMonthName(int monthNumber) {

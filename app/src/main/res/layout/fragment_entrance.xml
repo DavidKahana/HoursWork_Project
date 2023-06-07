@@ -27,29 +27,78 @@
             android:textSize="30sp"
             android:text="להתחיל"/>
 
-        <TextView
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:gravity="center"
-            android:textColor="#000000"
-            android:id="@+id/tvTimeEnter"
-            android:textSize="40sp"/>
-        <TextView
+            android:orientation="vertical">
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/tvEnterDate"
+                android:textSize="25sp"
+                android:layout_marginTop="10dp"
+                android:visibility="gone"
+                android:layout_marginRight="10dp"
+                android:text="תאריך כניסה:" />
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:gravity="center"
+                android:textColor="#000000"
+                android:id="@+id/tvTimeEnter"
+                android:textSize="40sp"/>
+
+        </LinearLayout>
+
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:gravity="center"
-            android:textColor="#000000"
-            android:id="@+id/tvTimeStop"
-            android:textSize="40sp"/>
-        <TextView
+            android:orientation="vertical">
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/tvFinishDate"
+                android:textSize="25sp"
+                android:visibility="gone"
+                android:layout_marginTop="10dp"
+                android:layout_marginRight="10dp"
+                android:text="תאריך יציאה:" />
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:gravity="center"
+                android:textColor="#000000"
+                android:id="@+id/tvTimeStop"
+                android:textSize="40sp"/>
+
+        </LinearLayout>
+
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:gravity="center"
-            android:textColor="#F44336"
-            android:id="@+id/tvDuration"
-            android:textSize="40sp"/>
+            android:orientation="vertical">
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/tvTotal"
+                android:textSize="25sp"
+                android:visibility="gone"
+                android:layout_marginTop="10dp"
+                android:layout_marginRight="10dp"
+                android:text="סך הכל:" />
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:gravity="center"
+                android:textColor="#F44336"
+                android:id="@+id/tvDuration"
+                android:textSize="40sp"/>
+
+        </LinearLayout>
     </LinearLayout>
 </LinearLayout>

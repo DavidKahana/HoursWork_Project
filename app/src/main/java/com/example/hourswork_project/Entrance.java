@@ -49,7 +49,7 @@ import java.util.logging.Handler;
 public class Entrance extends Fragment {
 
     Button btnStartStop, btnDateAndTime;
-    TextView tvTimeEnter, tvTimeStop, tvDuration;
+    TextView tvTimeEnter, tvTimeStop, tvDuration , tvEnterDate , tvFinishDate , tvTotal;
     Date dateAndTime, dateStart, dateStop;
     SharedPreferences sharedPreferences1, sharedPreferences2;
     SimpleDateFormat dateFormat;
@@ -118,6 +118,16 @@ public class Entrance extends Fragment {
         tvTimeEnter = view.findViewById(R.id.tvTimeEnter);
         tvTimeStop = view.findViewById(R.id.tvTimeStop);
         tvDuration = view.findViewById(R.id.tvDuration);
+        tvEnterDate = view.findViewById(R.id.tvEnterDate);
+        tvFinishDate = view.findViewById(R.id.tvFinishDate);
+        tvTotal = view.findViewById(R.id.tvTotal);
+
+
+        tvTotal.setVisibility(View.INVISIBLE);
+        tvEnterDate.setVisibility(View.INVISIBLE);
+        tvFinishDate.setVisibility(View.INVISIBLE);
+
+
         sharedPreferences1 = getContext().getSharedPreferences("Dates", 0);
 
         worksDataBase = new WorksDataBase(getContext());
@@ -282,7 +292,9 @@ public class Entrance extends Fragment {
 
             dateFormat = new SimpleDateFormat("MM-dd-yyyy HH:mm");
             date = dateFormat.format(dateAndTime);
-            tvTimeEnter.setText("שעת כניסה:" + '\n' + date);
+            tvEnterDate.setVisibility(View.VISIBLE);
+            tvTimeEnter.setText(date);
+
             tvTimeStop.setText("");
             tvDuration.setText("");
 
@@ -291,6 +303,7 @@ public class Entrance extends Fragment {
 
             btnDateAndTime.setText("בחר תאריך ושעה");
             btnStartStop.setText("לסיים");
+
         } else if (btnStartStop.getText().equals("לסיים") && dateAndTime != null) {
             // Stop the action
             long l = sharedPreferences1.getLong("date", 0);
@@ -301,11 +314,13 @@ public class Entrance extends Fragment {
             } else {
                 dateFormat = new SimpleDateFormat("MM-dd-yyyy HH:mm");
                 date = dateFormat.format(dateAndTime);
-                tvTimeStop.setText("שעת יציאה:" + '\n' + date);
+                tvFinishDate.setVisibility(View.VISIBLE);
+                tvTimeStop.setText(date);
 
                 strMessage += '\n' + "שעת יציאה:" + '\n' + date;
                 dateStop = dateAndTime;
                 duration = getDurationMillis(dateStart, dateStop);
+                tvTotal.setVisibility(View.VISIBLE);
                 tvDuration.setText(formatDuration(duration));
                 strMessage += '\n' + formatDuration(duration);
 

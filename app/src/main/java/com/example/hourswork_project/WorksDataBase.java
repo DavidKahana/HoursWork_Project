@@ -8,9 +8,13 @@ import android.database.MatrixCursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 
 public class WorksDataBase extends SQLiteOpenHelper {
 
@@ -294,4 +298,63 @@ public class WorksDataBase extends SQLiteOpenHelper {
         calendar.set(Calendar.MILLISECOND, 0);
         return calendar.getTimeInMillis();
     }
+
+    public int getUniqueWorkDaysInMonthAndYear(int month, int year) {
+        // Get the unique start days for the specified month and year
+        List<Long> uniqueStartDays = getUniqueStartDays(month, year);
+
+        // Count the number of unique workdays
+        return uniqueStartDays.size();
+    }
+
+    private List<Long> getUniqueStartDays(int month, int year) {
+        List<Long> uniqueStartDays = new ArrayList<>();
+
+        // Get the start and end timestamps for the specified month and year
+        Calendar calendar = Calendar.getInstance();
+        calendar.set(Calendar.YEAR, year);
+        calendar.set(Calendar.MONTH, month - 1);
+        calendar.set(Calendar.DAY_OF_MONTH, 1);
+        calendar.set(Calendar.HOUR_OF_DAY, 0);
+        calendar.set(Calendar.MINUTE, 0);
+        calendar.set(Calendar.SECOND, 0);
+        calendar.set(Calendar.MILLISECOND, 0);
+        long startOfMonth = calendar.getTimeInMillis();
+
+        calendar.add(Calendar.MONTH, 1);
+        calendar.add(Calendar.MILLISECOND, -1);
+        long endOfMonth = calendar.getTimeInMillis();
+
+        // Construct the query to retrieve the unique start days within the specified month and year
+        String selectQuery = "SELECT DISTINCT strftime('%Y-%m-%d', " + COLUMN_START_DATE + "/1000, 'unixepoch') AS day FROM " + TABLE_NAME +
+                " WHERE " + COLUMN_START_DATE + " >= " + startOfMonth +
+                " AND " + COLUMN_START_DATE + " <= " + endOfMonth;
+
+        SQLiteDatabase db = this.getWritableDatabase();
+        Cursor cursor = db.rawQuery(selectQuery, null);
+
+        if (cursor.moveToFirst()) {
+            do {
+                int dayIndex = cursor.getColumnIndex("day");
+                if (dayIndex >= 0) {
+                    String dateString = cursor.getString(dayIndex);
+                    try {
+                        Date date = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault()).parse(dateString);
+                        if (date != null) {
+                            uniqueStartDays.add(date.getTime());
+                        }
+                    } catch (ParseException e) {
+                        e.printStackTrace();
+                    }
+                }
+            } while (cursor.moveToNext());
+        }
+
+        cursor.close();
+        db.close();
+
+        return uniqueStartDays;
+    }
+
+
 }

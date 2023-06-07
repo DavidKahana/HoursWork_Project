@@ -19,6 +19,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:textColor="#8BC34A"
+                android:textStyle="bold"
                 android:text="סיכום חודשי"
                 android:textSize="40sp"
                 android:gravity="center"/>
@@ -28,6 +29,7 @@
                 android:textColor="#8CD4F4"
                 android:id="@+id/tvMonthNameOfMonth"
                 android:text="חודש"
+                android:textStyle="bold"
                 android:textSize="20sp"
                 android:gravity="center"/>
         </LinearLayout>
@@ -42,7 +44,7 @@
                 android:textSize="15sp"
                 android:layout_marginTop="10dp"
                 android:layout_marginRight="10dp"
-                android:text="מספר ימי העבודה בחודש זה:" />
+                android:text="מספר העבודות בחודש זה:" />
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -150,6 +152,7 @@
                 android:id="@+id/tvMonthTotalsalary_answer"
                 android:textSize="30sp"
                 android:text=""
+                android:textStyle="bold"
                 android:textColor="#F31808"
                 android:layout_marginRight="10dp"
                 android:layout_marginBottom="10dp"/>
