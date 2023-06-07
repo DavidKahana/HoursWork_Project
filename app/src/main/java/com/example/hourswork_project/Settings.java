@@ -45,6 +45,7 @@ public class Settings extends Fragment {
     boolean SalaryOnBreak, sendSms;
     SharedPreferences sharedPreferences;
     String phoneNumber;
+    ImageButton contactsButton;
     private static final int CONTACTS_REQUEST_CODE = 1;
 
     // TODO: Rename parameter arguments, choose names that match
@@ -104,7 +105,7 @@ public class Settings extends Fragment {
         phoneNumberEditText = view.findViewById(R.id.phone_number);
         sendCheckbox = view.findViewById(R.id.send_checkbox);
         btnNumTravelExpenses = view.findViewById(R.id.btnNumTravelExpenses);
-        ImageButton contactsButton = view.findViewById(R.id.contacts_button);
+        contactsButton = view.findViewById(R.id.contacts_button);
 
 
         sharedPreferences = getContext().getSharedPreferences("Definitions", 0);
