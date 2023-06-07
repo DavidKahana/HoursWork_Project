@@ -57,6 +57,7 @@ public class MonthlySummary extends AppCompatActivity {
     private static final int CREATE_FILE_REQUEST_CODE = 2;
     private Uri outputFileUri;
     List<Work> works;
+    String file;
     SimpleDateFormat date = new SimpleDateFormat("MM-dd-yyyy HH:mm");
 
 
@@ -210,10 +211,13 @@ public class MonthlySummary extends AppCompatActivity {
     }
 
     private void startFilePicker() {
+
+        file = getMonthNameEnglish(numMonth);
+
         Intent intent = new Intent(Intent.ACTION_CREATE_DOCUMENT);
         intent.addCategory(Intent.CATEGORY_OPENABLE);
         intent.setType("application/vnd.openxmlformats-officedocument.spreadsheetml.sheet");
-        intent.putExtra(Intent.EXTRA_TITLE, "exported_file.xlsx");
+        intent.putExtra(Intent.EXTRA_TITLE, file +".xlsx");
         startActivityForResult(intent, CREATE_FILE_REQUEST_CODE);
     }
 
@@ -246,10 +250,10 @@ public class MonthlySummary extends AppCompatActivity {
             OutputStream outputStream = getContentResolver().openOutputStream(outputFileUri);
             workbook.write(outputStream);
             outputStream.close();
-            Toast.makeText(this, "Excel file exported successfully!", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, "קובץ אקסל יוצא בהצלחה!", Toast.LENGTH_SHORT).show();
         } catch (IOException e) {
             e.printStackTrace();
-            Toast.makeText(this, "Failed to export Excel file!", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, "ייצוא קובץ Excel נכשל!", Toast.LENGTH_SHORT).show();
         }
     }
 
@@ -261,7 +265,7 @@ public class MonthlySummary extends AppCompatActivity {
                 // Permission granted, start SAF file picker
                 startFilePicker();
             } else {
-                Toast.makeText(this, "Storage permission required to export the Excel file!", Toast.LENGTH_SHORT).show();
+                Toast.makeText(this, "דרושה הרשאת אחסון כדי לייצא את קובץ האקסל!", Toast.LENGTH_SHORT).show();
             }
         }
     }
@@ -278,10 +282,16 @@ public class MonthlySummary extends AppCompatActivity {
     }
 
 
+    public String getMonthNameEnglish(int monthNumber) {
+        String[] monthNames = {"January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"};
 
-
-
-
+        // Check if the month number is within the valid range
+        if (monthNumber >= 1 && monthNumber <= monthNames.length) {
+            return monthNames[monthNumber - 1];
+        } else {
+            return "Invalid month number";
+        }
+    }
 
 
 
