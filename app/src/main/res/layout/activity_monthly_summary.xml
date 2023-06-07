@@ -63,7 +63,7 @@
                 android:layout_height="wrap_content"
                 android:id="@+id/tvMonthTotalHours"
                 android:textSize="15sp"
-                android:text="כך הכל שעות עבודה בחודש זה:"
+                android:text="סך הכל שעות עבודה בחודש זה:"
                 android:layout_marginRight="10dp"/>
             <TextView
                 android:layout_width="match_parent"
