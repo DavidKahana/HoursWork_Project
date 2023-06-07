@@ -1,19 +1,30 @@
 package com.example.hourswork_project;
 
+import android.Manifest;
+import android.annotation.SuppressLint;
+import android.app.Activity;
 import android.app.Dialog;
+import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.pm.PackageManager;
+import android.database.Cursor;
+import android.net.Uri;
 import android.os.Bundle;
+import android.provider.ContactsContract;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.NumberPicker;
 import android.widget.TextView;
 
 import androidx.appcompat.app.AlertDialog;
+import androidx.core.app.ActivityCompat;
 import androidx.fragment.app.Fragment;
 
 /**
@@ -34,6 +45,7 @@ public class Settings extends Fragment {
     boolean SalaryOnBreak, sendSms;
     SharedPreferences sharedPreferences;
     String phoneNumber;
+    private static final int CONTACTS_REQUEST_CODE = 1;
 
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -92,6 +104,8 @@ public class Settings extends Fragment {
         phoneNumberEditText = view.findViewById(R.id.phone_number);
         sendCheckbox = view.findViewById(R.id.send_checkbox);
         btnNumTravelExpenses = view.findViewById(R.id.btnNumTravelExpenses);
+        ImageButton contactsButton = view.findViewById(R.id.contacts_button);
+
 
         sharedPreferences = getContext().getSharedPreferences("Definitions", 0);
 
@@ -418,9 +432,95 @@ public class Settings extends Fragment {
             }
         });
 
+        contactsButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                openContacts();
+            }
+        });
+
         return view;
 
     }
+
+    private void openContacts() {
+        if (ActivityCompat.checkSelfPermission(getContext(), Manifest.permission.READ_CONTACTS) != PackageManager.PERMISSION_GRANTED) {
+            ActivityCompat.requestPermissions(getActivity(), new String[]{Manifest.permission.READ_CONTACTS}, CONTACTS_REQUEST_CODE);
+        } else {
+            launchContactsPicker();
+        }
+    }
+
+    private void launchContactsPicker() {
+        Intent intent = new Intent(Intent.ACTION_PICK, ContactsContract.Contacts.CONTENT_URI);
+        startActivityForResult(intent, CONTACTS_REQUEST_CODE);
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        if (requestCode == CONTACTS_REQUEST_CODE && grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+            launchContactsPicker();
+        }
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == CONTACTS_REQUEST_CODE && resultCode == Activity.RESULT_OK) {
+            Uri contactUri = data.getData();
+            if (contactUri != null) {
+                retrieveContactPhoneNumber(contactUri);
+            }
+        }
+    }
+
+    private void retrieveContactPhoneNumber(Uri contactUri) {
+        Cursor cursor = getContext().getContentResolver().query(contactUri, null, null, null, null);
+        if (cursor != null && cursor.moveToFirst()) {
+            @SuppressLint("Range") String contactId = cursor.getString(cursor.getColumnIndex(ContactsContract.Contacts._ID));
+            String selection = ContactsContract.CommonDataKinds.Phone.CONTACT_ID + " = ?";
+            String[] selectionArgs = {contactId};
+
+            Cursor phoneCursor = getContext().getContentResolver().query(
+                    ContactsContract.CommonDataKinds.Phone.CONTENT_URI,
+                    null,
+                    selection,
+                    selectionArgs,
+                    null
+            );
+
+            if (phoneCursor != null && phoneCursor.moveToFirst()) {
+                int phoneColumnIndex = phoneCursor.getColumnIndex(ContactsContract.CommonDataKinds.Phone.NUMBER);
+                String phoneNumber = phoneCursor.getString(phoneColumnIndex);
+                phoneNumberEditText.setText(phoneNumber);
+                phoneCursor.close();
+
+                sendSms = true;
+                sendCheckbox.setChecked(true);
+                // Retrieve the phone number from the edit text
+                phoneNumber = phoneNumberEditText.getText().toString();
+
+                // Store the values of sendSms and phoneNumber in SharedPreferences
+                SharedPreferences.Editor editor = sharedPreferences.edit();
+                editor.putBoolean("sendSms", sendSms);
+                editor.putString("phoneNumber", phoneNumber);
+                editor.commit();
+            }
+
+            cursor.close();
+        }
+    }
+
+
+
+
+
+
+
+
+
+
     // Calculate Minimum salary
     public double minSalary(int age) {
         double minSalary = 0;

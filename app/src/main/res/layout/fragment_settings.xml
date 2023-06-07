@@ -166,16 +166,33 @@
                 android:orientation="vertical"
                 android:padding="16dp">
 
-                <EditText
-                    android:id="@+id/phone_number"
+                <RelativeLayout
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:hint="מספר הפלאפון של המעסיק שלך"
-                    android:inputType="phone"
-                    android:padding="12dp"
-                    android:textSize="18sp"
-                    android:textColor="#000000"
-                    android:background="@drawable/custom_edittext"/>
+                    android:layout_height="wrap_content">
+
+
+                    <EditText
+                        android:id="@+id/phone_number"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:hint="        מספר הפלאפון של המעסיק שלך"
+                        android:inputType="phone"
+                        android:padding="12dp"
+                        android:textSize="18sp"
+                        android:textColor="#000000"
+                        android:background="@drawable/custom_edittext" />
+
+
+                    <ImageButton
+                        android:id="@+id/contacts_button"
+                        android:layout_width="48dp"
+                        android:layout_height="48dp"
+                        android:layout_alignParentEnd="false"
+                        android:layout_centerVertical="true"
+                        android:layout_marginEnd="8dp"
+                        android:background="@android:drawable/ic_menu_my_calendar" />
+
+                </RelativeLayout>
 
                 <CheckBox
                     android:id="@+id/send_checkbox"

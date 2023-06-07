@@ -251,7 +251,7 @@ public class Entrance extends Fragment {
 
                 Toast.makeText(getContext(), "ה SMS נשלח בהצלחה!", Toast.LENGTH_LONG).show();
             } catch (Exception e) {
-                Toast.makeText(getContext(), "SMS failed to send.", Toast.LENGTH_LONG).show();
+                Toast.makeText(getContext(), "שליחת הSMS נכשלה", Toast.LENGTH_LONG).show();
                 e.printStackTrace();
             }
         }
@@ -267,7 +267,7 @@ public class Entrance extends Fragment {
                     sendSMS(phoneNumber, strMessage);
                 } else {
                     Toast.makeText(getContext(),
-                            "SMS permission denied.", Toast.LENGTH_LONG).show();
+                            "שליחת הSMS נכשלה", Toast.LENGTH_LONG).show();
                 }
                 return;
             }
