@@ -19,70 +19,26 @@ import androidx.core.app.NotificationManagerCompat;
 import java.util.Calendar;
 
 public class NotificationHelper extends BroadcastReceiver {
-    private static final String CHANNEL_ID = "weekly_notification_channel";
-    private static final int NOTIFICATION_ID = 12345;
 
     @Override
     public void onReceive(Context context, Intent intent) {
-        // Trigger the method to show the notification
-        showNotification(context);
-    }
 
-    public static void setWeeklyNotification(Context context) {
-        AlarmManager alarmManager = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
+        Intent i = new Intent(context, MainActivity.class);
+        i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+        PendingIntent pendingIntent = PendingIntent.getActivity(context, 0, i, PendingIntent.FLAG_IMMUTABLE);
 
-        Log.d("shaon", "shaon");
-
-        // Set the alarm to start at 8 PM every Thursday
-        Calendar calendar = Calendar.getInstance();
-        calendar.set(Calendar.DAY_OF_WEEK, Calendar.THURSDAY);
-        calendar.set(Calendar.HOUR_OF_DAY, 21);
-        calendar.set(Calendar.MINUTE, 0);
-        calendar.set(Calendar.SECOND, 0);
-        calendar.set(Calendar.MILLISECOND,0);
-
-        // Create an intent for the BroadcastReceiver
-        Intent intent = new Intent(context, NotificationHelper.class);
-        PendingIntent pendingIntent = PendingIntent.getBroadcast(context, 0, intent, PendingIntent.FLAG_IMMUTABLE);
-
-        // Set the alarm to repeat every week
-        alarmManager.setRepeating(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(),
-                AlarmManager.INTERVAL_DAY * 7, pendingIntent);
-    }
-
-    private void showNotification(Context context) {
-        // Create the notification channel
-        createNotificationChannel(context);
-
-        // Build the notification
-        NotificationCompat.Builder builder = new NotificationCompat.Builder(context, CHANNEL_ID)
+        NotificationCompat.Builder builder = new NotificationCompat.Builder(context, "theAlarm")
+                .setContentIntent(pendingIntent)
                 .setSmallIcon(R.drawable.remind)
-                .setContentTitle("תזכורת")
-                .setContentText("תמלא את שעות העבודה שלך מהשבוע!")
-                .setPriority(NotificationCompat.PRIORITY_DEFAULT)
-                .setAutoCancel(true);
+                .setContentTitle("תזכורת שבועית")
+                .setContentText("אל תשכח למלא את שעות העבודה שלך שעבדת בשבוע האחרון!")
+                .setAutoCancel(true)
+                .setDefaults(NotificationCompat.DEFAULT_ALL)
+                .setPriority(NotificationCompat.PRIORITY_HIGH);
 
-        // Show the notification
-        NotificationManagerCompat notificationManager = NotificationManagerCompat.from(context);
-        notificationManager.notify(NOTIFICATION_ID, builder.build());
-    }
 
-    private void createNotificationChannel(Context context) {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            CharSequence channelName = "Weekly Notification Channel";
-            String channelDescription = "Recurring notification every Thursday at 8 PM";
-            int importance = NotificationManager.IMPORTANCE_DEFAULT;
-
-            // Create the notification channel
-            NotificationChannel channel = new NotificationChannel(CHANNEL_ID, channelName, importance);
-            channel.setDescription(channelDescription);
-            channel.enableLights(true);
-            channel.setLightColor(Color.GREEN);
-
-            // Register the channel with the system
-            NotificationManager notificationManager = context.getSystemService(NotificationManager.class);
-            notificationManager.createNotificationChannel(channel);
-
-        }
+        NotificationManagerCompat notificationManagerCompat = NotificationManagerCompat.from(context);
+        notificationManagerCompat.notify(111, builder.build());
     }
 }
+
